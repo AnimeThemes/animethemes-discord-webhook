@@ -1,135 +1,108 @@
-import { client } from "../app";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { AnimeRequest, Anime, AnimeWithFilter } from "../structs/types/Anime";
+import { ColorResolvable, EmbedBuilder } from "discord.js";
 
 import * as dotenv from 'dotenv';
+import StringFormatter from "../AnimeThemes/StringFormatter";
 
 dotenv.config();
 
 /**
  * Class DiscordEmbed
  * 
- * @property discordEmbedColor [number, number, number]
- * @property discordChannelId string 
- * @property discordEmbedTitle string
- * @property discordEmbedThumbnail string
- * @property discordEmbedDescription string
+ * @property embedColor ColorResolvable | null
+ * @property initialDescription string
+ * @property artists string
+ * @property title string
  * 
- * @method getDefaultEmbed EmbedBuilder
- * @method setChannelId EmbedBuilder
- * @method setColor EmbedBuilder
- * @method setTitle EmbedBuilder
- * @method setThumbnail EmbedBuilder
- * @method setDescription EmbedBuilder
- * @method notify Promise<string>
+ * @method getAnimeEmbed EmbedBuilder
+ * @method setEmbedColor DiscordEmbed
+ * @method createVideoEmbedByAnime EmbedBuilder
+ * @method createVideoEmbedByDescription EmbedBuilder
  */
 
-class DiscordEmbed {
+export default class DiscordEmbed {
 
-    private discordEmbedColor: [number, number, number] = [255, 255, 255];
-    private discordChannelId: string = process.env.DISCORD_CHANNEL_ID;
-    private discordEmbedTitle: string = '';
-    private discordEmbedThumbnail: string = '';
-    private discordEmbedDescription: string = '';
+    public embedColor: ColorResolvable | null = [0, 0, 0];
+    public initialDescription: string = '';
+    public artists: string = '';
+    public title: string = '';
 
     /**
-     * Build the control panel embed.
+     * Create the anime embed.
+     * 
+     * @param animeInfo  Anime | AnimeRequest
      * 
      * @returns EmbedBuilder
      */
-    getDefaultEmbed(): EmbedBuilder {
-        const embed = new EmbedBuilder()
-            .setColor([0, 255, 255])
-            .setDescription(description)
+    getAnimeEmbed(animeInfo: Anime | AnimeRequest): EmbedBuilder {
+        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, "")}\n\n**Link:** ${process.env.ANIME_URL + animeInfo.slug}`
+
+        return new EmbedBuilder()
+            .setTitle(animeInfo.name)
+            .setColor([154, 0, 255])
+            .setDescription(description);
+    }
+
+    /**
+     * Set the color and initial description of the embed.
+     * 
+     * @param type "added" | "updated"
+     * 
+     * @returns DiscordEmbed
+     */
+    setEmbedColor(type: "added" | "updated"): DiscordEmbed {
+        this.embedColor = type === "added" ? [46, 204, 113] : [255, 255, 0];
+        this.initialDescription = type === "added" ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
+
+        return this;
+    }
+
+    /**
+     * Create an embed of a video using anime information.
+     * 
+     * @param anime AnimeWithFilter
+     * 
+     * @returns EmbedBuilder
+     */
+    createVideoEmbedByAnime(anime: AnimeWithFilter): EmbedBuilder {
+        if (anime.song.artists.length !== 0) {
+            this.initialDescription += new StringFormatter().artistsDescription(anime.song.artists) + "\n";
+        }
         
-        return embed;
-    }
+        this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? "-" : anime?.episodes}
+        ${new StringFormatter().videoDescription(anime.video)}`
 
-    /**
-     * Set a channel to send the notification.
-     * 
-     * @returns EmbedBuilder
-     */
-    setChannelId(channelId: string): DiscordEmbed {
-        this.discordChannelId = channelId;
-
-        return this;
-    }
-
-    /**
-     * Set the color of the embed.
-     * 
-     * @returns EmbedBuilder
-     */
-    setColor(embedColor: [number, number, number]): DiscordEmbed {
-        this.discordEmbedColor = embedColor;
-
-        return this;
+        return new EmbedBuilder()
+            .setColor(this.embedColor)
+            .setTitle(`${anime?.theme_type}${anime?.version === null ? '' : `v${anime?.version}`}${anime?.song?.title === undefined ? '' : ` - ${anime?.song?.title}`}`)
+            .setDescription(this.initialDescription)
+            .setThumbnail(anime.image as string);
     }
 
     /**
      * Set the title of the embed.
      * 
-     * @returns EmbedBuilder
+     * @param title string
+     * 
+     * @returns DiscordEmbed 
      */
-    setTitle(embedTitle: string): DiscordEmbed {
-        this.discordEmbedTitle = embedTitle;
+    setTitle(title: string): DiscordEmbed {
+        this.title = title;
 
         return this;
     }
 
     /**
-     * Set the thumbnail of the embed.
+     * Create an embed of a video.
+     * 
+     * @param description string
      * 
      * @returns EmbedBuilder
      */
-    setThumbnail(embedThumbnail: string): DiscordEmbed {
-        this.discordEmbedThumbnail = embedThumbnail;
-
-        return this;
-    }
-
-    /**
-     * Set the description of the embed.
-     * 
-     * @returns EmbedBuilder
-     */
-    setDescription(embedDescription: string): DiscordEmbed {
-        this.discordEmbedDescription = embedDescription;
-
-        return this;
-    }
-
-    /**
-     * Send the notification
-     * 
-     * @returns Promise<string>
-     */
-    async notify(): Promise<string> {
-        const channel = client.channels.cache.find(channel => channel.id === this.discordChannelId) as TextChannel;
-
-        const embed = new EmbedBuilder()
-            .setColor(this.discordEmbedColor)
-            .setTitle(`**${this.discordEmbedTitle}**`)
-            .setThumbnail(this.discordEmbedThumbnail)
-            .setDescription(this.discordEmbedDescription);
-
-        try {
-            await channel.send({
-                embeds: [embed]
-            });
-
-            return 'Sucess';
-
-        } catch (err) {
-            return 'Error';
-        }
+    createVideoEmbedByDescription(description: string): EmbedBuilder {
+        return new EmbedBuilder()
+            .setColor([46, 204, 113])
+            .setTitle(this.title)
+            .setDescription(description);
     }
 }
-
-const description = `**New Anime:** Create a notification embed with all anime themes.
-
-**New Video:** Create a notification embed with the new video.
-
-**Update Video:** Create a notification embed with an updated video.`
-
-export default DiscordEmbed;

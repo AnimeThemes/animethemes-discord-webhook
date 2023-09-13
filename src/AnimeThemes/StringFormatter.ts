@@ -1,4 +1,4 @@
-import { Anime } from "../structs/types/Anime";
+import { AnimeThemeEntry, Artist, Video } from "../structs/types/Anime";
 
 import * as dotenv from "dotenv";
 
@@ -7,77 +7,52 @@ dotenv.config();
 /**
  * Class StringFormatter
  * 
- * @method addedOrUpdate StringFormatter
- * @method removeUnnecessaryText string
- * @method animeDescription string
+ * @method artistsDescription string
+ * @method entryDescription string
+ * @method videoDescription string
  */
 
-class StringFormatter {
-
-    private type: string = '';
+export default class StringFormatter {
 
     /**
-     * Set the initial message.
+     * Format Artists to a string.
      * 
-     * @param type "ADDED" | "UPDATED"
-     * 
-     * @returns StringFormatter
-     */
-    addedOrUpdate(type: "ADDED" | "UPDATED"): StringFormatter {
-        this.type = type === "ADDED" ? "New videos have been added" : "A video has been updated";
-
-        return this;
-    }
-
-    /**
-     * Remove multiplied text and format from array to string.
-     * 
-     * @param array any[]
+     * @param artists Artist[]
      * 
      * @returns string
      */
-    removeUnnecessaryText(array: any[]): string {
-        return array.join('\n\n').replace(/(?:^(New[^\n]+\.\n)|\bNew[^\n]+\.\n)/g, (match, group) => group ? match : "").replace(/\n{3,}/g, "\n\n");
-    }
+    artistsDescription(artists: Artist[]): string {
+        let addArtists = "**Artists:** ";
 
-    /**
-     * Generate a string formatted with anime themes.
-     * 
-     * @param anime Anime
-     * 
-     * @returns string
-     */
-    animeDescription(anime: Anime): string {
-        let stringDescription = `${this.type} [here](${process.env.ANIME_URL + anime.slug}).\n\n`;
-
-        for (let theme of anime.animethemes) {
-            stringDescription += `${theme.slug} - ${theme.song.title}`;
-    
-            if (theme.song.artists.length !== 0) {
-                let addArtists = " by ";
-                for (let artist of theme.song.artists) {
-                    addArtists += `[${artist.as === null ? artist.name : `${artist.as} (CV: ${artist.name})`}](${process.env.ARTIST_URL + artist.slug}), `;
-                }
-    
-                addArtists = addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');
-                stringDescription += addArtists;
-            }
-    
-            for (let entry of theme.animethemeentries) {
-                stringDescription += `${entry.version ? `v${entry.version}` : 'v1'}${entry.episodes ? ` - Episodes: ${entry.episodes}` : ''}\n`;
-    
-                for (let video of entry.videos) {
-                    stringDescription += `[${video.resolution}p ${video.tags ? `- ${video.tags}` : ''}](${video.link}) | `;
-                }
-    
-                stringDescription = stringDescription.replace(/\s\|\s$/, '\n');
-            }
-    
-            stringDescription += `\n`;
+        for (let artist of artists) {
+            addArtists += `[${artist.as === null ? artist.name : `${artist.as} (CV: ${artist.name})`}](${process.env.ARTIST_URL + artist.slug}), `;
         }
-    
-        return stringDescription;
+
+        return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');
+    }
+
+    /**
+     * Format AnimeThemeEntry to a string.
+     * 
+     * @param entry AnimeThemeEntry
+     * 
+     * @returns string
+     */
+    entryDescription(entry: AnimeThemeEntry): string {
+        return `${entry.spoiler === true ? '⚠️ Spoiler ' : ''}${entry.version === null ? 'v1' : `v${entry.version}`}${entry.episodes === null || entry.episodes.length === 0 ? "" : ` - Episodes: ${entry.episodes}`}\n`
+    }
+
+    /**
+     * Format Video to a string.
+     * 
+     * @param video Video
+     * 
+     * @returns string
+     */
+    videoDescription(video: Video): string {
+        return `**Resolution:** ${video.resolution}p
+        **Source:** ${video.source}
+        **Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}
+        **Link**: ${video.link}`;
     }
 }
-
-export default StringFormatter;
