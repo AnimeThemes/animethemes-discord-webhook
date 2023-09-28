@@ -1,8 +1,6 @@
 import { AnimeThemeEntry, Artist, Video } from "../structs/types/Anime";
 
-import * as dotenv from "dotenv";
-
-dotenv.config();
+import Config from "../config/config";
 
 /**
  * Class StringFormatter
@@ -25,7 +23,7 @@ export default class StringFormatter {
         let addArtists = "**Artists:** ";
 
         for (let artist of artists) {
-            addArtists += `[${artist.as === null ? artist.name : `${artist.as} (CV: ${artist.name})`}](${process.env.ARTIST_URL + artist.slug}), `;
+            addArtists += `[${artist.as === null ? artist.name : `${artist.as} (CV: ${artist.name})`}](${Config.ARTIST_URL + artist.slug}), `;
         }
 
         return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');

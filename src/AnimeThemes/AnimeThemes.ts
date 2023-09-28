@@ -1,10 +1,7 @@
 import { AnimeWithFilter, AnimeRequest, Anime, AnimeTheme, AnimeThemeEntry, Video } from "../structs/types/Anime";
 
-import * as dotenv from "dotenv";
-
+import Config from "../config/config";
 import axios from "axios";
-
-dotenv.config();
 
 /**
  * Class AnimeThemes
@@ -17,8 +14,6 @@ dotenv.config();
 
 export default class AnimeThemes {
 
-    private readonly default_url: string = process.env.API_ANIMETHEMES;
-
     /**
      * Queries the AnimeThemes API by anime ID and returns the desired object.
      * 
@@ -27,7 +22,7 @@ export default class AnimeThemes {
      * @returns Promise<Anime | null>
      */
     async getAnimeByID(animeID: number): Promise<Anime | null> {
-        let response = await axios.get(`${this.default_url}anime?filter[anime][id]=${animeID}&include=images,animesynonyms`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=images,animesynonyms`);
 
         if (response.data.anime.length === 0) return null;
 
@@ -54,7 +49,7 @@ export default class AnimeThemes {
      * @returns Promise<AnimeWithFilter | null> 
      */
     async getAnimeByIDWithFilter(animeID: number, videoID: number | undefined = undefined): Promise<AnimeWithFilter | null> {
-        let response = await axios.get(`${this.default_url}anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos`);
 
         if (response.data.anime.length === 0) return null;
 
@@ -116,7 +111,7 @@ export default class AnimeThemes {
      * @returns Promise<AnimeWithFilter | null>
      */
     async getVideoByID(videoID: number): Promise<AnimeWithFilter | null> {
-        let response = await axios.get(`${this.default_url}video?filter[video][id]=${videoID}&include=animethemeentries.animetheme.anime`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}video?filter[video][id]=${videoID}&include=animethemeentries.animetheme.anime`);
 
         if (response.data.videos.length === 0) return null;
 
@@ -136,7 +131,7 @@ export default class AnimeThemes {
      * @returns Promise<AnimeRequest | null>
      */
     async getAllVideos(animeID: number): Promise<AnimeRequest | null> {
-        let response = await axios.get(`${process.env.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=animesynonyms,images,animethemes.song.artists,animethemes.animethemeentries.videos`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=animesynonyms,images,animethemes.song.artists,animethemes.animethemeentries.videos`);
         
         if (response.data.anime.length === 0) return null;
 

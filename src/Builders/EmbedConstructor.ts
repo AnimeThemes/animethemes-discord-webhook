@@ -1,10 +1,8 @@
 import { AnimeRequest, Anime, AnimeWithFilter } from "../structs/types/Anime";
 import { ColorResolvable, EmbedBuilder } from "discord.js";
 
-import * as dotenv from 'dotenv';
+import Config from "../config/config";
 import StringFormatter from "../AnimeThemes/StringFormatter";
-
-dotenv.config();
 
 /**
  * Class DiscordEmbed
@@ -35,7 +33,7 @@ export default class DiscordEmbed {
      * @returns EmbedBuilder
      */
     getAnimeEmbed(animeInfo: Anime | AnimeRequest): EmbedBuilder {
-        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, "")}\n\n**Link:** ${process.env.ANIME_URL + animeInfo.slug}`
+        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, "")}\n\n**Link:** ${Config.ANIME_URL + animeInfo.slug}`
 
         return new EmbedBuilder()
             .setTitle(animeInfo.name)

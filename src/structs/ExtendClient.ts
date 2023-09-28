@@ -1,16 +1,14 @@
 import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { ComponentsModal } from './types/Commands';
 
-import * as dotenv from 'dotenv';
-
+import Config from '../config/config';
 import Event from "./types/Event";
 import fs from "fs";
-
-dotenv.config();
 
 export class ExtendClient extends Client {
 
     public commands: Collection<string, any> = new Collection();
+    public menuCommands: Collection<string, any> = new Collection();
     public modals: ComponentsModal = new Collection();
     public events: any = new Collection();
 
@@ -26,7 +24,7 @@ export class ExtendClient extends Client {
     public start() {
         this.registerModules();
         this.registerEvents();
-        this.login(process.env.DISCORD_TOKEN);
+        this.login(Config.DISCORD_TOKEN);
     }
 
     private registerCommands(commands: Array<ApplicationCommandDataResolvable>){
@@ -41,16 +39,26 @@ export class ExtendClient extends Client {
 
     private async registerModules() {
         const slashCommands: Array<ApplicationCommandDataResolvable> = new Array();
+        const menuCommands: Array<ApplicationCommandDataResolvable> = new Array();
 
-        const commandsFiles: string[] = fs.readdirSync('./src/slashCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+        const commandsSlash: string[] = fs.readdirSync('./src/slashCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+        const commandsMenu: string[] = fs.readdirSync('./src/menuCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
 
-        for (const file of commandsFiles) {
-            const command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
+        for (let file of commandsSlash) {
+            let command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
             this.commands.set(command.data.name, command);
             slashCommands.push(command.data.toJSON());
         }
 
-        this.on("ready", () => this.registerCommands(slashCommands));
+        for (let file of commandsMenu) {
+            let command = (await import(`../menuCommands/${file.slice(0, -3)}`)).default.command;
+            this.commands.set(command.data.name, command);
+            menuCommands.push(command.data);
+        }
+
+        let commands = slashCommands.concat(menuCommands);
+
+        this.once("ready", () => this.registerCommands(commands));
     }
 
     private async registerEvents() {

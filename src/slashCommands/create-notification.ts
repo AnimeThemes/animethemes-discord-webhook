@@ -2,12 +2,8 @@ import { Channel, CommandInteraction, EmbedBuilder, SlashCommandBuilder, ThreadC
 import { SlashCommand } from "../structs/types/Commands";
 import { client } from "../app";
 
-import * as dotenv from "dotenv";
-
 import AnimeThemes from "../AnimeThemes/AnimeThemes";
 import DiscordEmbed from "../Builders/EmbedConstructor";
-
-dotenv.config();
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()

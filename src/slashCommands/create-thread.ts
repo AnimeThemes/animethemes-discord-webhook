@@ -2,13 +2,10 @@ import { AttachmentBuilder, Channel, CommandInteraction, ForumChannel, SlashComm
 import { SlashCommand } from "../structs/types/Commands";
 import { client } from "../app";
 
-import * as dotenv from "dotenv";
-
 import AnimeThemes from "../AnimeThemes/AnimeThemes";
-import EmbedConstructor from "../Builders/EmbedConstructor";
 import Check from "../Rules/checks";
-
-dotenv.config();
+import Config from "../config/config";
+import EmbedConstructor from "../Builders/EmbedConstructor";
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
@@ -27,7 +24,7 @@ export default new SlashCommand({
     async execute(interaction: CommandInteraction) {
         await interaction.reply({ content: "Loading...", ephemeral: true });
 
-        const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === process.env.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+        const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === Config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
         const id = interaction.options.get("anime-id")?.value as number;
         const animeCustomName = interaction.options.get("name")?.value as string | undefined;
         

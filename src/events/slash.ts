@@ -15,7 +15,7 @@ export default new Event({
             return;
         }
 
-        if (interaction.isChatInputCommand()) {
+        if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
             command.execute(interaction);
             return;
         }
