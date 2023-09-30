@@ -12,6 +12,7 @@ export interface AnimeThemeEntry {
     version: string | null,
     episodes: string | null
     spoiler?: boolean,
+    nsfw?: boolean,
     videos: Video[]
 }
 
@@ -51,6 +52,7 @@ export type AnimeWithFilter = Anime & {
     episodes: string | null,
     version: string | null,
     spoiler?: boolean,
+    nsfw?: boolean,
     video: Video
 }
 

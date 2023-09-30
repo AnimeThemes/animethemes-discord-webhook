@@ -67,6 +67,8 @@ export default class DiscordEmbed {
             this.initialDescription += new StringFormatter().artistsDescription(anime.song.artists) + "\n";
         }
         
+        this.initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
+        this.initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
         this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? "-" : anime?.episodes}
         ${new StringFormatter().videoDescription(anime.video)}`
 

@@ -10,6 +10,7 @@ import axios from "axios";
  * @method getAnimeByIDWithFilter Promise<Anime | null>
  * @method getVideoByID Promise<Anime | null>
  * @method getAllVideos Promise<AnimeRequest | null>
+ * @method getFeaturedTheme Promise<Record<string, string>>
  */
 
 export default class AnimeThemes {
@@ -67,6 +68,7 @@ export default class AnimeThemes {
                     version: entry.version,
                     episodes: entry.episodes,
                     spoiler: entry.spoiler,
+                    nsfw: entry.nsfw,
 
                     videos: entry.videos.filter(video => !videoID || video.id === videoID).map((video: Video) => ({
                         resolution: video.resolution,
@@ -92,6 +94,7 @@ export default class AnimeThemes {
             episodes: anithem.animethemes[0].animethemeentries[0].episodes,
             version: anithem.animethemes[0].animethemeentries[0].version,
             spoiler: anithem.animethemes[0].animethemeentries[0].spoiler,
+            nsfw: anithem.animethemes[0].animethemeentries[0].nsfw,
             video: {
                 resolution: anithem.animethemes[0].animethemeentries[0].videos[0].resolution,
                 source: anithem.animethemes[0].animethemeentries[0].videos[0].source,
@@ -166,6 +169,22 @@ export default class AnimeThemes {
                     }))
                 }))
             }))
+        }
+    }
+
+    /**
+     * Get the featured theme.
+     * 
+     * @returns Promise<Record<string, string>>
+     */
+    async getFeaturedTheme(): Promise<Record<string, string>> {
+        let response = await axios.get(`${Config.API_ANIMETHEMES}config/wiki`);
+        let featuredTheme = response.data.wiki.featured_theme;
+
+        return {
+            anime: featuredTheme.animethemeentry.animetheme.anime.name as string,
+            theme: `${featuredTheme.animethemeentry.animetheme.slug}${featuredTheme.animethemeentry.version === null ? '' : `v${featuredTheme.animethemeentry.version}`}`,
+            link: featuredTheme.video.link as string
         }
     }
 }
