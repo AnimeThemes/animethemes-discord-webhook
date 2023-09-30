@@ -1,4 +1,4 @@
-import { AnimeThemeEntry, Artist, Video } from "../structs/types/Anime";
+import { Artist, Video } from "../structs/types/Anime";
 
 import Config from "../config/config";
 
@@ -6,7 +6,6 @@ import Config from "../config/config";
  * Class StringFormatter
  * 
  * @method artistsDescription string
- * @method entryDescription string
  * @method videoDescription string
  */
 
@@ -27,17 +26,6 @@ export default class StringFormatter {
         }
 
         return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');
-    }
-
-    /**
-     * Format AnimeThemeEntry to a string.
-     * 
-     * @param entry AnimeThemeEntry
-     * 
-     * @returns string
-     */
-    entryDescription(entry: AnimeThemeEntry): string {
-        return `${entry.spoiler === true ? '⚠️ Spoiler ' : ''}${entry.version === null ? 'v1' : `v${entry.version}`}${entry.episodes === null || entry.episodes.length === 0 ? "" : ` - Episodes: ${entry.episodes}`}\n`
     }
 
     /**

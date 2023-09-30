@@ -9,7 +9,6 @@ import axios from "axios";
  * @method getAnimeByID Promise<Anime | null>
  * @method getAnimeByIDWithFilter Promise<Anime | null>
  * @method getVideoByID Promise<Anime | null>
- * @method getAllVideos Promise<AnimeRequest | null>
  * @method getFeaturedTheme Promise<Record<string, string>>
  */
 
@@ -124,52 +123,6 @@ export default class AnimeThemes {
         let info = await this.getAnimeByIDWithFilter(animeID, videoID);
 
         return info;
-    }
-
-    /**
-     * Get all videos by anime ID.
-     * 
-     * @param animeID number
-     * 
-     * @returns Promise<AnimeRequest | null>
-     */
-    async getAllVideos(animeID: number): Promise<AnimeRequest | null> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=animesynonyms,images,animethemes.song.artists,animethemes.animethemeentries.videos`);
-        
-        if (response.data.anime.length === 0) return null;
-
-        let anime = response.data.anime[0] as AnimeRequest;
-
-        return {
-            id: anime.id,
-            name: anime.name,
-            slug: anime.slug,
-            image: anime.images?.filter((image: { facet: string } ) => image.facet === 'Large Cover')[0].link,
-            synopsis: anime.synopsis,
-            synonyms: anime.animesynonyms?.map((synonym: { text: string }) => synonym.text),
-            animethemes: anime.animethemes.map((theme: AnimeTheme) => ({
-                slug: theme.slug,
-                song: {
-                    title: theme.song.title,
-                    artists: theme.song.artists
-                },
-
-                animethemeentries: theme.animethemeentries.map((entry: AnimeThemeEntry) => ({
-                    version: entry.version,
-                    episodes: entry.episodes,
-                    spoiler: entry.spoiler,
-
-                    videos: entry.videos.map((video: Video) => ({
-                        resolution: video.resolution,
-                        tags: video.tags,
-                        nc: video.nc,
-                        overlap: video.overlap,
-                        source: video.source,
-                        link: video.link
-                    }))
-                }))
-            }))
-        }
     }
 
     /**

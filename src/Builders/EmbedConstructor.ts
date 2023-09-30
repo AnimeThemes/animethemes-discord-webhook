@@ -10,12 +10,10 @@ import StringFormatter from "../AnimeThemes/StringFormatter";
  * @property embedColor ColorResolvable | null
  * @property initialDescription string
  * @property artists string
- * @property title string
  * 
- * @method getAnimeEmbed EmbedBuilder
  * @method setEmbedColor DiscordEmbed
+ * @method getAnimeEmbed EmbedBuilder
  * @method createVideoEmbedByAnime EmbedBuilder
- * @method createVideoEmbedByDescription EmbedBuilder
  */
 
 export default class DiscordEmbed {
@@ -23,7 +21,20 @@ export default class DiscordEmbed {
     public embedColor: ColorResolvable | null = [0, 0, 0];
     public initialDescription: string = '';
     public artists: string = '';
-    public title: string = '';
+
+    /**
+     * Set the color and initial description of the embed.
+     * 
+     * @param type "added" | "updated"
+     * 
+     * @returns DiscordEmbed
+     */
+    setEmbedColor(type: "added" | "updated"): DiscordEmbed {
+        this.embedColor = type === "added" ? [46, 204, 113] : [255, 255, 0];
+        this.initialDescription = type === "added" ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
+
+        return this;
+    }
 
     /**
      * Create the anime embed.
@@ -39,20 +50,6 @@ export default class DiscordEmbed {
             .setTitle(animeInfo.name)
             .setColor([154, 0, 255])
             .setDescription(description);
-    }
-
-    /**
-     * Set the color and initial description of the embed.
-     * 
-     * @param type "added" | "updated"
-     * 
-     * @returns DiscordEmbed
-     */
-    setEmbedColor(type: "added" | "updated"): DiscordEmbed {
-        this.embedColor = type === "added" ? [46, 204, 113] : [255, 255, 0];
-        this.initialDescription = type === "added" ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
-
-        return this;
     }
 
     /**
@@ -77,32 +74,5 @@ export default class DiscordEmbed {
             .setTitle(`${anime?.theme_type}${anime?.version === null ? '' : `v${anime?.version}`}${anime?.song?.title === undefined ? '' : ` - ${anime?.song?.title}`}`)
             .setDescription(this.initialDescription)
             .setThumbnail(anime.image as string);
-    }
-
-    /**
-     * Set the title of the embed.
-     * 
-     * @param title string
-     * 
-     * @returns DiscordEmbed 
-     */
-    setTitle(title: string): DiscordEmbed {
-        this.title = title;
-
-        return this;
-    }
-
-    /**
-     * Create an embed of a video.
-     * 
-     * @param description string
-     * 
-     * @returns EmbedBuilder
-     */
-    createVideoEmbedByDescription(description: string): EmbedBuilder {
-        return new EmbedBuilder()
-            .setColor([46, 204, 113])
-            .setTitle(this.title)
-            .setDescription(description);
     }
 }
