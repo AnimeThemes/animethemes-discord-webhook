@@ -1,6 +1,6 @@
 import { ActionRowBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from "discord.js";
-import { MenuCommand } from "../structs/types/Commands";
-import { client } from "../app";
+import { MenuCommand } from "structs/types/Commands";
+import { client } from "app";
 
 export default new MenuCommand({
     data: new ContextMenuCommandBuilder()

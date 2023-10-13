@@ -1,6 +1,6 @@
-import { AnimeWithFilter, AnimeRequest, Anime, AnimeTheme, AnimeThemeEntry, Video } from "../structs/types/Anime";
+import { AnimeWithFilter, AnimeRequest, Anime, AnimeTheme, AnimeThemeEntry, Video } from "structs/types/Anime";
 
-import Config from "../config/config";
+import Config from "config/config";
 import axios from "axios";
 
 /**
@@ -84,6 +84,7 @@ export default class AnimeThemes {
         return {
             id: anime.id,
             name: anime.name,
+            slug: anime.slug,
             image: anime.images?.filter((image: { facet: string }) => image.facet === 'Large Cover')[0].link,
             song: {
                 title: anithem.animethemes[0].song.title,

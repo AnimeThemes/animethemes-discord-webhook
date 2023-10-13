@@ -2,15 +2,16 @@
   "name": "animethemes-discord",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/app.js",
+  "main": "src/app.ts",
   "scripts": {
-    "start": "tsc --project ./tsconfig.json && node ./dist/app.js"
+    "start": "bun run src/app.ts",
+    "build": "tsc --project ./tsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.0.1",
+    "bun-types": "^1.0.6",
     "ts-node": "^10.9.1"
   },
   "dependencies": {

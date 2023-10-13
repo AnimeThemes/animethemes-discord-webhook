@@ -1,11 +1,11 @@
 import { AttachmentBuilder, Channel, CommandInteraction, ForumChannel, SlashCommandBuilder } from "discord.js";
-import { SlashCommand } from "../structs/types/Commands";
-import { client } from "../app";
+import { SlashCommand } from "structs/types/Commands";
+import { client } from "app";
 
-import AnimeThemes from "../AnimeThemes/AnimeThemes";
-import Check from "../Rules/checks";
-import Config from "../config/config";
-import EmbedConstructor from "../Builders/EmbedConstructor";
+import AnimeThemes from "AnimeThemes/AnimeThemes";
+import Check from "Rules/checks";
+import Config from "config/config";
+import EmbedConstructor from "Builders/EmbedConstructor";
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()

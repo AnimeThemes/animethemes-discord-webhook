@@ -1,6 +1,6 @@
-import { Artist, Video } from "../structs/types/Anime";
+import { AnimeWithFilter, Artist, Video } from "structs/types/Anime";
 
-import Config from "../config/config";
+import Config from "config/config";
 
 /**
  * Class StringFormatter
@@ -35,10 +35,15 @@ export default class StringFormatter {
      * 
      * @returns string
      */
-    videoDescription(video: Video): string {
-        return `**Resolution:** ${video.resolution}p
-        **Source:** ${video.source}
-        **Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}
-        **Link**: ${video.link}`;
+    videoDescription(anime: AnimeWithFilter): string {
+        const video = anime.video as Video;
+        const version = anime.version === null ? '' : `v${anime.version}`;
+        const tags = video.tags.length === 0 ? '' : `-${video.tags}`;
+        let string = `**Resolution:** ${video.resolution}p\n`;
+            string += `**Source:** ${video.source}\n`;
+            string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
+            string += `**Link**: ${Config.ANIME_URL}${anime.slug}/${anime.theme_type}${version}${tags}`;
+
+        return string;
     }
 }

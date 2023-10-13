@@ -1,8 +1,8 @@
-import { AnimeRequest, Anime, AnimeWithFilter } from "../structs/types/Anime";
+import { AnimeRequest, Anime, AnimeWithFilter } from "structs/types/Anime";
 import { ColorResolvable, EmbedBuilder } from "discord.js";
 
-import Config from "../config/config";
-import StringFormatter from "../AnimeThemes/StringFormatter";
+import Config from "config/config";
+import StringFormatter from "AnimeThemes/StringFormatter";
 
 /**
  * Class DiscordEmbed
@@ -67,7 +67,7 @@ export default class DiscordEmbed {
         this.initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
         this.initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
         this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? "-" : anime?.episodes}
-        ${new StringFormatter().videoDescription(anime.video)}`
+        ${new StringFormatter().videoDescription(anime)}`
 
         return new EmbedBuilder()
             .setColor(this.embedColor)

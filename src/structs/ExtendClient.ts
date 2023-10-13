@@ -1,9 +1,9 @@
-import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
-import { ComponentsModal } from './types/Commands';
+import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from "discord.js";
+import { readdirSync } from "fs";
+import { ComponentsModal } from "structs/types/Commands";
 
-import Config from '../config/config';
-import Event from "./types/Event";
-import fs from "fs";
+import Config from "config/config";
+import Event from "structs/types/Event";
 
 export class ExtendClient extends Client {
 
@@ -41,8 +41,8 @@ export class ExtendClient extends Client {
         const slashCommands: Array<ApplicationCommandDataResolvable> = new Array();
         const menuCommands: Array<ApplicationCommandDataResolvable> = new Array();
 
-        const commandsSlash: string[] = fs.readdirSync('./src/slashCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
-        const commandsMenu: string[] = fs.readdirSync('./src/menuCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+        const commandsSlash: string[] = readdirSync('./src/slashCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+        const commandsMenu: string[] = readdirSync('./src/menuCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
 
         for (let file of commandsSlash) {
             let command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
@@ -62,7 +62,7 @@ export class ExtendClient extends Client {
     }
 
     private async registerEvents() {
-        const eventFiles: string[] = fs.readdirSync('./src/events').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+        const eventFiles: string[] = readdirSync('./src/events').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
         
         for (const file of eventFiles) {
             const event: Event = (await import(`../events/${file.slice(0, -3)}`)).default as Event;

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, BaseInteraction, CommandInteraction, Events, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder } from "discord.js";
-import { SlashCommand } from "../structs/types/Commands";
-import { client } from "../app";
+import { SlashCommand } from "structs/types/Commands";
+import { client } from "app";
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
