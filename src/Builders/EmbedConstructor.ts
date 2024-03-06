@@ -44,7 +44,7 @@ export default class DiscordEmbed {
      * @returns EmbedBuilder
      */
     getAnimeEmbed(animeInfo: Anime | AnimeRequest): EmbedBuilder {
-        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, "")}\n\n**Link:** ${Config.ANIME_URL + animeInfo.slug}`
+        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, "")}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`
 
         return new EmbedBuilder()
             .setTitle(animeInfo.name)

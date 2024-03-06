@@ -22,7 +22,7 @@ export default class AnimeThemes {
      * @returns Promise<Anime | null>
      */
     async getAnimeByID(animeID: number): Promise<Anime | null> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=images,animesynonyms`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/anime?filter[anime][id]=${animeID}&include=images,animesynonyms`);
 
         if (response.data.anime.length === 0) return null;
 
@@ -49,7 +49,7 @@ export default class AnimeThemes {
      * @returns Promise<AnimeWithFilter | null> 
      */
     async getAnimeByIDWithFilter(animeID: number, videoID: number | undefined = undefined): Promise<AnimeWithFilter | null> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos`);
 
         if (response.data.anime.length === 0) return null;
 
@@ -114,7 +114,7 @@ export default class AnimeThemes {
      * @returns Promise<AnimeWithFilter | null>
      */
     async getVideoByID(videoID: number): Promise<AnimeWithFilter | null> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}video?filter[video][id]=${videoID}&include=animethemeentries.animetheme.anime`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/video?filter[video][id]=${videoID}&include=animethemeentries.animetheme.anime`);
 
         if (response.data.videos.length === 0) return null;
 
@@ -132,7 +132,7 @@ export default class AnimeThemes {
      * @returns Promise<Record<string, string>>
      */
     async getFeaturedTheme(): Promise<Record<string, string>> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}config/wiki`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/config/wiki`);
         let featuredTheme = response.data.wiki.featured_theme;
 
         return {
