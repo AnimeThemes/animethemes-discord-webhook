@@ -5,6 +5,9 @@ import { ComponentsModal } from 'structs/types/Commands';
 import Config from 'config/config';
 import Event from 'structs/types/Event';
 
+/**
+ * Class ExtendClient.
+ */
 export class ExtendClient extends Client {
 
     public commands: Collection<string, any> = new Collection();

@@ -3,7 +3,7 @@ import { SlashCommand } from 'structs/types/Commands';
 import { client } from 'app';
 
 import AnimeThemes from 'AnimeThemes/AnimeThemes';
-import Check from 'Rules/checks';
+import Check from 'Rules/Check';
 import Config from 'config/config';
 import EmbedConstructor from 'Builders/EmbedConstructor';
 

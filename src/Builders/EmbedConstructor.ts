@@ -7,13 +7,13 @@ import StringFormatter from 'AnimeThemes/StringFormatter';
 /**
  * Class DiscordEmbed.
  * 
- * @property embedColor ColorResolvable | null
- * @property initialDescription string
- * @property artists string
+ * @property  embedColor  ColorResolvable | null
+ * @property  initialDescription  string
+ * @property  artists  string
  * 
- * @method setEmbedColor DiscordEmbed
- * @method getAnimeEmbed EmbedBuilder
- * @method createVideoEmbedByAnime EmbedBuilder
+ * @method  setEmbedColor  DiscordEmbed
+ * @method  getAnimeEmbed  EmbedBuilder
+ * @method  createVideoEmbedByAnime  EmbedBuilder
  */
 export default class DiscordEmbed {
 
@@ -24,7 +24,7 @@ export default class DiscordEmbed {
     /**
      * Set the color and initial description of the embed.
      * 
-     * @param type 'added' | 'updated'
+     * @param  type  'added' | 'updated'
      * 
      * @returns DiscordEmbed
      */
@@ -38,7 +38,7 @@ export default class DiscordEmbed {
     /**
      * Create the anime embed.
      * 
-     * @param animeInfo  Anime | AnimeRequest
+     * @param  animeInfo  Anime | AnimeRequest
      * 
      * @returns EmbedBuilder
      */
@@ -54,7 +54,7 @@ export default class DiscordEmbed {
     /**
      * Create an embed of a video using anime information.
      * 
-     * @param anime AnimeWithFilter
+     * @param  anime  AnimeWithFilter
      * 
      * @returns EmbedBuilder
      */

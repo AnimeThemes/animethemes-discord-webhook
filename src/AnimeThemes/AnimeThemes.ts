@@ -6,17 +6,17 @@ import axios from 'axios';
 /**
  * Class AnimeThemes.
  * 
- * @method getAnimeByID Promise<Anime | null>
- * @method getAnimeByIDWithFilter Promise<Anime | null>
- * @method getVideoByID Promise<Anime | null>
- * @method getFeaturedTheme Promise<Record<string, string>>
+ * @method  getAnimeByID  Promise<Anime | null>
+ * @method  getAnimeByIDWithFilter  Promise<Anime | null>
+ * @method  getVideoByID  Promise<Anime | null>
+ * @method  getFeaturedTheme  Promise<Record<string, string>>
  */
 export default class AnimeThemes {
 
     /**
      * Queries the AnimeThemes API by anime ID and returns the desired object.
      * 
-     * @param animeID number
+     * @param  animeID  number
      * 
      * @returns Promise<Anime | null>
      */
@@ -42,8 +42,8 @@ export default class AnimeThemes {
     /**
      * Queries the AnimeThemes API by anime ID and filters by a videoID, returns the desired object.
      * 
-     * @param animeID number
-     * @param videoID number | undefined
+     * @param  animeID  number
+     * @param  videoID  number | undefined
      * 
      * @returns Promise<AnimeWithFilter | null> 
      */
@@ -108,7 +108,7 @@ export default class AnimeThemes {
     /**
      * Queries the AnimeThemes API by video ID and returns the desired object.
      * 
-     * @param videoID number
+     * @param  videoID  number
      * 
      * @returns Promise<AnimeWithFilter | null>
      */

@@ -1,17 +1,17 @@
 import { AnimeRequest, Anime } from 'structs/types/Anime';
 
 /**
- * Class Check
+ * Class Check.
  * 
- * @method animeName string | null
+ * @method  animeName  string | null
  */
 export default class Check {
 
     /**
      * Regulates the thread name.
      * 
-     * @param anime Anime | AnimeRequest
-     * @param animeCustomName string | undefined
+     * @param  anime  Anime | AnimeRequest
+     * @param  animeCustomName  string | undefined
      * 
      * @returns string | null
      */

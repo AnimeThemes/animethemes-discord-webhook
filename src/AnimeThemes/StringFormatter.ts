@@ -5,15 +5,15 @@ import Config from 'config/config';
 /**
  * Class StringFormatter.
  * 
- * @method artistsDescription string
- * @method videoDescription string
+ * @method  artistsDescription  string
+ * @method  videoDescription  string
  */
 export default class StringFormatter {
 
     /**
      * Format Artists to a string.
      * 
-     * @param artists Artist[]
+     * @param  artists  Artist[]
      * 
      * @returns string
      */
@@ -30,7 +30,7 @@ export default class StringFormatter {
     /**
      * Format Video to a string.
      * 
-     * @param video Video
+     * @param  video  Video
      * 
      * @returns string
      */

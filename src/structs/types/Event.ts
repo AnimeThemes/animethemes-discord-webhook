@@ -1,5 +1,5 @@
 /**
- * Represents an Event
+ * Class Event.
  */
 export default class Event {
     name: string
