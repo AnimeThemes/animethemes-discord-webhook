@@ -1,11 +1,11 @@
-import { AnimeRequest, Anime, AnimeWithFilter } from "structs/types/Anime";
-import { ColorResolvable, EmbedBuilder } from "discord.js";
+import { AnimeRequest, Anime, AnimeWithFilter } from 'structs/types/Anime';
+import { ColorResolvable, EmbedBuilder } from 'discord.js';
 
-import Config from "config/config";
-import StringFormatter from "AnimeThemes/StringFormatter";
+import Config from 'config/config';
+import StringFormatter from 'AnimeThemes/StringFormatter';
 
 /**
- * Class DiscordEmbed
+ * Class DiscordEmbed.
  * 
  * @property embedColor ColorResolvable | null
  * @property initialDescription string
@@ -15,7 +15,6 @@ import StringFormatter from "AnimeThemes/StringFormatter";
  * @method getAnimeEmbed EmbedBuilder
  * @method createVideoEmbedByAnime EmbedBuilder
  */
-
 export default class DiscordEmbed {
 
     public embedColor: ColorResolvable | null = [0, 0, 0];
@@ -25,13 +24,13 @@ export default class DiscordEmbed {
     /**
      * Set the color and initial description of the embed.
      * 
-     * @param type "added" | "updated"
+     * @param type 'added' | 'updated'
      * 
      * @returns DiscordEmbed
      */
-    setEmbedColor(type: "added" | "updated"): DiscordEmbed {
-        this.embedColor = type === "added" ? [46, 204, 113] : [255, 255, 0];
-        this.initialDescription = type === "added" ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
+    setEmbedColor(type: 'added' | 'updated'): DiscordEmbed {
+        this.embedColor = type === 'added' ? [46, 204, 113] : [255, 255, 0];
+        this.initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
 
         return this;
     }
@@ -44,7 +43,7 @@ export default class DiscordEmbed {
      * @returns EmbedBuilder
      */
     getAnimeEmbed(animeInfo: Anime | AnimeRequest): EmbedBuilder {
-        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, "")}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`
+        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`
 
         return new EmbedBuilder()
             .setTitle(animeInfo.name)
@@ -61,12 +60,12 @@ export default class DiscordEmbed {
      */
     createVideoEmbedByAnime(anime: AnimeWithFilter): EmbedBuilder {
         if (anime.song.artists.length !== 0) {
-            this.initialDescription += new StringFormatter().artistsDescription(anime.song.artists) + "\n";
+            this.initialDescription += new StringFormatter().artistsDescription(anime.song.artists) + '\n';
         }
         
         this.initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
         this.initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
-        this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? "-" : anime?.episodes}
+        this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}
         ${new StringFormatter().videoDescription(anime)}`
 
         return new EmbedBuilder()

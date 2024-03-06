@@ -1,14 +1,13 @@
-import { AnimeWithFilter, Artist, Video } from "structs/types/Anime";
+import { AnimeWithFilter, Artist, Video } from 'structs/types/Anime';
 
-import Config from "config/config";
+import Config from 'config/config';
 
 /**
- * Class StringFormatter
+ * Class StringFormatter.
  * 
  * @method artistsDescription string
  * @method videoDescription string
  */
-
 export default class StringFormatter {
 
     /**
@@ -19,7 +18,7 @@ export default class StringFormatter {
      * @returns string
      */
     artistsDescription(artists: Artist[]): string {
-        let addArtists = "**Artists:** ";
+        let addArtists = '**Artists:** ';
 
         for (let artist of artists) {
             addArtists += `[${artist.as === null ? artist.name : `${artist.as} (CV: ${artist.name})`}](${Config.ARTIST_URL + '/' + artist.slug}), `;

@@ -1,4 +1,4 @@
-import { AnimeRequest, Anime } from "structs/types/Anime";
+import { AnimeRequest, Anime } from 'structs/types/Anime';
 
 /**
  * Class Check

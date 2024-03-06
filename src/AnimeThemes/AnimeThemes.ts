@@ -1,17 +1,16 @@
-import { AnimeWithFilter, AnimeRequest, Anime, AnimeTheme, AnimeThemeEntry, Video } from "structs/types/Anime";
+import { AnimeWithFilter, AnimeRequest, Anime, AnimeTheme, AnimeThemeEntry, Video } from 'structs/types/Anime';
 
-import Config from "config/config";
-import axios from "axios";
+import Config from 'config/config';
+import axios from 'axios';
 
 /**
- * Class AnimeThemes
+ * Class AnimeThemes.
  * 
  * @method getAnimeByID Promise<Anime | null>
  * @method getAnimeByIDWithFilter Promise<Anime | null>
  * @method getVideoByID Promise<Anime | null>
  * @method getFeaturedTheme Promise<Record<string, string>>
  */
-
 export default class AnimeThemes {
 
     /**

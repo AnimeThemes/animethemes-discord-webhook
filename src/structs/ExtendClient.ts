@@ -1,9 +1,9 @@
-import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from "discord.js";
-import { readdirSync } from "fs";
-import { ComponentsModal } from "structs/types/Commands";
+import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
+import { readdirSync } from 'fs';
+import { ComponentsModal } from 'structs/types/Commands';
 
-import Config from "config/config";
-import Event from "structs/types/Event";
+import Config from 'config/config';
+import Event from 'structs/types/Event';
 
 export class ExtendClient extends Client {
 
@@ -30,7 +30,7 @@ export class ExtendClient extends Client {
     private registerCommands(commands: Array<ApplicationCommandDataResolvable>){
         this.application?.commands.set(commands)
             .then(() => {
-                console.log("✅ Slash Commands (/) defined");
+                console.log('✅ Slash Commands (/) defined');
             })
             .catch(error => {
                 console.log(`❌ An error occurred while trying to set the Slash Commands (/): \n${error}`);
@@ -58,7 +58,7 @@ export class ExtendClient extends Client {
 
         let commands = slashCommands.concat(menuCommands);
 
-        this.once("ready", () => this.registerCommands(commands));
+        this.once('ready', () => this.registerCommands(commands));
     }
 
     private async registerEvents() {

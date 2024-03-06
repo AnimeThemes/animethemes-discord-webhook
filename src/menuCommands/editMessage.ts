@@ -1,6 +1,6 @@
-import { ActionRowBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from "discord.js";
-import { MenuCommand } from "structs/types/Commands";
-import { client } from "app";
+import { ActionRowBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from 'discord.js';
+import { MenuCommand } from 'structs/types/Commands';
+import { client } from 'app';
 
 export default new MenuCommand({
     data: new ContextMenuCommandBuilder()
@@ -13,7 +13,7 @@ export default new MenuCommand({
         const options = interaction.options as any;
         const message = options._hoistedOptions[0].message as Message;
 
-        if (message.author.id !== client.user?.id) return await interaction.reply({ content: "This message is not from the bot", ephemeral: true });
+        if (message.author.id !== client.user?.id) return await interaction.reply({ content: 'This message is not from the bot', ephemeral: true });
 
         const modal = new ModalBuilder()
             .setCustomId('modal-edit-message')
@@ -46,7 +46,7 @@ export default new MenuCommand({
                 msg.edit({
                     content: interactionModal.fields.getTextInputValue('input-edit-message')
                 })
-                .then(async () => await interactionModal.followUp({ content: "Done", ephemeral: true }))
+                .then(async () => await interactionModal.followUp({ content: 'Done', ephemeral: true }))
                 .catch((err) => console.error(err));
             });
         });
