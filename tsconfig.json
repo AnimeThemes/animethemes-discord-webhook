@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "types": ["bun-types"],
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,

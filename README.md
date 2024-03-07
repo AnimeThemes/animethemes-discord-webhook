@@ -86,5 +86,4 @@ Content-Type: application/json
 
 ## Used technologies
 
-- [Bun](https://bun.sh/) as the TypeScript runtime and HTTP server.
 - [Discord.js](https://discord.js.org/) to communicate with Discord's API.
