@@ -14,7 +14,7 @@ export default () => {
         return null;
     });
 
-    server.get("/", async (request) => {
+    server.post("/", async (request) => {
         const { model, action } = request.body as any;
 
         const embedConfigForAction = getEmbedConfigForAction(action.type, request.body);
