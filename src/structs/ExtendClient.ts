@@ -2,12 +2,9 @@ import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collectio
 import { readdirSync } from 'fs';
 import { ComponentsModal } from 'structs/types/Commands';
 
-import Config from 'config/config';
+import Config from 'config/Config';
 import Event from 'structs/types/Event';
 
-/**
- * Class ExtendClient.
- */
 export class ExtendClient extends Client {
 
     public commands: Collection<string, any> = new Collection();

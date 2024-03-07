@@ -4,7 +4,7 @@ import { client } from 'app';
 
 import AnimeThemes from 'AnimeThemes/AnimeThemes';
 import Check from 'Rules/Check';
-import Config from 'config/config';
+import Config from 'config/Config';
 import EmbedConstructor from 'Builders/EmbedConstructor';
 
 export default new SlashCommand({
@@ -26,13 +26,13 @@ export default new SlashCommand({
 
         const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === Config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
         const id = interaction.options.get('anime-id')?.value as number;
-        const animeCustomName = interaction.options.get('name')?.value as string | undefined;
+        const customAnimeName = interaction.options.get('name')?.value as string | undefined;
         
         const anime = await new AnimeThemes().getAnimeByID(id);
 
         if (anime === null) { try { return await interaction.editReply({ content: 'anime = null' }); } catch (err) { return } }
 
-        const name = new Check().animeName(anime, animeCustomName);
+        const name = new Check().animeName(anime, customAnimeName);
 
         if (name === null) { try { return await interaction.editReply({ content: 'name.length > 100' }); } catch (err) { return } }
 

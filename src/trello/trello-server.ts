@@ -1,11 +1,11 @@
-import Fastify from "fastify";
 import { TextChannel } from "discord.js";
 import { client } from "app";
 import { createTrelloEmbed } from "trello/trello-embed";
 import { getEmbedConfigForAction } from "trello/trello-action";
 import { toTrelloImageUrl } from "trello/trello-util";
 
-import Config from "config/config";
+import Fastify from "fastify";
+import Config from "config/Config";
 
 export default () => {
     const server = Fastify({ logger: true });

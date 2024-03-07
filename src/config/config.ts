@@ -2,9 +2,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-/**
- * Class Config.
- */
 export default class Config {
     public static readonly DISCORD_TOKEN = process.env.DISCORD_TOKEN;
     public static readonly DISCORD_FORUM_CHANNEL_ID = process.env.DISCORD_FORUM_CHANNEL_ID;

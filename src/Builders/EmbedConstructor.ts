@@ -1,20 +1,9 @@
-import { AnimeRequest, Anime, AnimeWithFilter } from 'structs/types/Anime';
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
+import { AnimeRequest, Anime, AnimeWithFilter } from 'structs/types/Anime';
 
-import Config from 'config/config';
+import Config from 'config/Config';
 import StringFormatter from 'AnimeThemes/StringFormatter';
 
-/**
- * Class DiscordEmbed.
- * 
- * @property  embedColor  ColorResolvable | null
- * @property  initialDescription  string
- * @property  artists  string
- * 
- * @method  setEmbedColor  DiscordEmbed
- * @method  getAnimeEmbed  EmbedBuilder
- * @method  createVideoEmbedByAnime  EmbedBuilder
- */
 export default class DiscordEmbed {
 
     public embedColor: ColorResolvable | null = [0, 0, 0];
@@ -24,9 +13,8 @@ export default class DiscordEmbed {
     /**
      * Set the color and initial description of the embed.
      * 
-     * @param  type  'added' | 'updated'
-     * 
-     * @returns DiscordEmbed
+     * @param  {'added' | 'updated'}  type
+     * @returns {DiscordEmbed}
      */
     setEmbedColor(type: 'added' | 'updated'): DiscordEmbed {
         this.embedColor = type === 'added' ? [46, 204, 113] : [255, 255, 0];
@@ -38,9 +26,8 @@ export default class DiscordEmbed {
     /**
      * Create the anime embed.
      * 
-     * @param  animeInfo  Anime | AnimeRequest
-     * 
-     * @returns EmbedBuilder
+     * @param  {Anime | AnimeRequest}  animeInfo
+     * @returns {EmbedBuilder}
      */
     getAnimeEmbed(animeInfo: Anime | AnimeRequest): EmbedBuilder {
         const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`
@@ -54,9 +41,9 @@ export default class DiscordEmbed {
     /**
      * Create an embed of a video using anime information.
      * 
-     * @param  anime  AnimeWithFilter
+     * @param  {AnimeWithFilter}  anime
      * 
-     * @returns EmbedBuilder
+     * @returns {EmbedBuilder}
      */
     createVideoEmbedByAnime(anime: AnimeWithFilter): EmbedBuilder {
         if (anime.song.artists.length !== 0) {
@@ -65,12 +52,12 @@ export default class DiscordEmbed {
         
         this.initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
         this.initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
-        this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}
-        ${new StringFormatter().videoDescription(anime)}`
+        this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
+        this.initialDescription += new StringFormatter().videoDescription(anime);
 
         return new EmbedBuilder()
             .setColor(this.embedColor)
-            .setTitle(`${anime?.theme_type}${anime?.version === null ? '' : `v${anime?.version}`}${anime?.song?.title === undefined ? '' : ` - ${anime?.song?.title}`}`)
+            .setTitle(`${anime?.theme_type}${anime?.version === null ? '' : `v${anime?.version}`}${anime?.song?.title === undefined ? '' : ` - ${anime.song.title ?? '*T.B.A.*'}`}`)
             .setDescription(this.initialDescription)
             .setThumbnail(anime.image as string);
     }
