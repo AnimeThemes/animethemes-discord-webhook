@@ -11,9 +11,7 @@ export default () => {
     const server = Fastify({ logger: true });
 
     server.head("/", async () => {
-        return new Response(null, {
-            status: 200,
-        });
+        return null;
     });
 
     server.get("/", async (request) => {
@@ -23,9 +21,7 @@ export default () => {
 
         if (!embedConfigForAction) {
             console.log(action.type);
-            return new Response(null, {
-                status: 200,
-            });
+            return null;
         }
 
         const embedConfig = {
@@ -43,12 +39,13 @@ export default () => {
             embeds: [createTrelloEmbed(embedConfig)],
         });
 
-        return new Response(null, {
-            status: 200,
-        });
+        return null;
     });
 
-    server.listen({ port: +Config.SERVER_PORT ?? 3000 }, (err, address) => {
+    server.listen({
+        host: Config.SERVER_HOST,
+        port: +Config.SERVER_PORT ?? 3000
+    }, (err, address) => {
         if (err) {
             server.log.error(err);
             process.exit(1);

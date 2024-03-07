@@ -25,15 +25,10 @@ DISCORD_WEBHOOK_ID = ...
 ; The token of the Discord webhook as explained above.
 DISCORD_WEBHOOK_TOKEN = ...
 
-; (Optional) The port to run the webhook on. If not set, 3000 will be used.
+; (Optional) The host and port to run the webhook on. If not set, localhost and 3000 will be used.
+SERVER_HOST = animethemes.moe
 SERVER_PORT = 3001
 ```
-
-## Deployment
-
-This project is using Docker for deployment. An already preconfigured `docker-compose.yml` file is included so all you
-need to do is to run the `docker compose up -d` command. The webhook is now running in the background. To stop the
-process, you can use `docker compose down`. Logs are available with `docker compose logs`.
 
 ## Add Trello boards
 
