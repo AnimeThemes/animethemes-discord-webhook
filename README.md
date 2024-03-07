@@ -6,12 +6,14 @@
 
 ## Prerequisites
 
-- Create a Discord webhook linked to the channel where you want notifications to be sent to. You'll receive an URL
-  containing the webhook ID and token, it will look something like this:
-  ```
-  https://discord.com/api/webhooks/123456789/abcdefghijklmnopqrstuvwxyz
-  ```
-  In this example `123456789` is the ID and `abcdefghijklmnopqrstuvwxyz` is the token. Save these for later.
+- Go to [Discord Developer Portal](https://discord.com/developers/applications).
+- Create a application.
+- Go to the Bot tab and save the token (reset the token if needed).
+- Disable "Public Bot" option and enable the following options: Presence Intent, Server Members Intent and Message Content Intent.
+- To add the bot to the server: replace <BOT_ID> with the APPLICATION ID and run this in your browser.
+```
+https://discord.com/oauth2/authorize?client_id=<BOT_ID>&permissions=8&scope=bot
+```
 
 ## Configuration
 
@@ -19,11 +21,19 @@ To get started you need to define some environment variables. This can be done b
 root directory:
 
 ```ini
-; The ID of the Discord webhook as explained above.
-DISCORD_WEBHOOK_ID = ...
+; The Bot Discord Token that you saved above.
+DISCORD_TOKEN = ...
 
-; The token of the Discord webhook as explained above.
-DISCORD_WEBHOOK_TOKEN = ...
+; The ID of the Discord Forum Channel.
+DISCORD_FORUM_CHANNEL_ID = 1149167546906456124
+
+; The ID of the Discord Trello Text Channel.
+DISCORD_TRELLO_CHANNEL_ID = 785620580384505867
+
+; The AnimeThemes URLs.
+API_ANIMETHEMES = https://api.animethemes.moe
+ARTIST_URL = https://animethemes.moe/artist
+ANIME_URL = https://animethemes.moe/anime
 
 ; (Optional) The host and port to run the webhook on. If not set, localhost and 3000 will be used.
 SERVER_HOST = animethemes.moe

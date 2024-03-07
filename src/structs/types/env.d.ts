@@ -6,6 +6,7 @@ declare namespace NodeJS {
         API_ANIMETHEMES: string;
         ARTIST_URL: string;
         ANIME_URL: string;
+        SERVER_HOST: string;
         SERVER_PORT: string;
     }
 }
