@@ -33,7 +33,7 @@ export default class StringFormatter {
         let string = `**Resolution:** ${video.resolution}p\n`;
             string += `**Source:** ${video.source}\n`;
             string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
-            string += `**Link**: ${Config.ANIME_URL}/${anime.slug}/${anime.theme_type}${version}${tags}`;
+            string += `**Link**: ${Config.ANIME_URL}/${anime.slug}/${anime.themeSlug}${version}${tags}`;
 
         return string;
     }
