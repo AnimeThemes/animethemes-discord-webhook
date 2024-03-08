@@ -1,4 +1,4 @@
-import { AnimeWithFilter, AnimeRequest, Anime, AnimeTheme, AnimeThemeEntry, Video } from 'structs/types/Anime';
+import { AnimeWithFilter, Anime, AnimeTheme, AnimeThemeEntry, Video, AnimeRequestByID, AnimeRequestByVideoID, FeatureTheme } from 'structs/types/Anime';
 
 import Config from 'config/Config';
 import axios from 'axios';
@@ -12,22 +12,20 @@ export default class AnimeThemes {
      * @returns {Promise<Anime | null>}
      */
     async getAnimeByID(animeID: number): Promise<Anime | null> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}/anime?filter[anime][id]=${animeID}&include=images,animesynonyms`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/anime?filter[anime][id]=${animeID}&include=images,animesynonyms&fields[anime]=name,slug,season,synopsis`);
 
         if (response.data.anime.length === 0) return null;
 
-        let anime = response.data.anime[0] as AnimeRequest;
+        let anime = response.data.anime[0] as AnimeRequestByID;
 
         return {
-            id: anime.id,
             name: anime.name,
             slug: anime.slug,
-            synopsis: anime.synopsis,
-            year: anime.year,
             season: anime.season,
-            synonyms: anime.animesynonyms?.map((synonym: { text: string }) => synonym.text),
-            image: anime.images?.filter((image: { facet: string }) => image.facet === 'Large Cover')[0].link
-        }
+            synopsis: anime.synopsis,
+            synonyms: anime.animesynonyms.map(synonym => synonym?.text),
+            imageURL: anime.images.filter(image => image?.facet === 'Large Cover')[0].link,
+        };
     }
 
     /**
@@ -38,48 +36,45 @@ export default class AnimeThemes {
      * @returns {Promise<AnimeWithFilter | null>}
      */
     async getAnimeByIDWithFilter(animeID: number, videoID: number | undefined = undefined): Promise<AnimeWithFilter | null> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}/anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos`);
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos&fields[anime]=name,slug`);
 
         if (response.data.anime.length === 0) return null;
 
-        let anime = response.data.anime[0] as AnimeRequest;
+        let anime = response.data.anime[0] as AnimeRequestByVideoID;
 
         let anithem = {
             animethemes: anime.animethemes.map((theme: AnimeTheme) => ({
                 slug: theme.slug,
                 song: {
-                    title: theme.song.title,
-                    artists: theme.song.artists
+                    title: theme.song === null ? null : theme.song.title,
+                    artists: theme.song === null ? [] : theme.song.artists,
                 },
-
                 animethemeentries: theme.animethemeentries.map((entry: AnimeThemeEntry) => ({
                     version: entry.version,
                     episodes: entry.episodes,
                     spoiler: entry.spoiler,
                     nsfw: entry.nsfw,
-
                     videos: entry.videos.filter(video => !videoID || video.id === videoID).map((video: Video) => ({
                         resolution: video.resolution,
                         source: video.source,
                         overlap: video.overlap,
                         nc: video.nc,
                         tags: video.tags,
-                        link: video.link
+                        link: video.link,
                     }))
                 })).filter(entry => entry.videos.length !== 0)
-            })).filter(theme => theme.animethemeentries.length !== 0)
-        }
+            })).filter(theme => theme.animethemeentries.length !== 0),
+        };
         
         return {
-            id: anime.id,
             name: anime.name,
             slug: anime.slug,
-            image: anime.images?.filter((image: { facet: string }) => image.facet === 'Large Cover')[0].link,
+            imageURL: anime.images?.filter(image => image.facet === 'Large Cover')[0].link,
             song: {
                 title: anithem.animethemes[0].song.title,
-                artists: anithem.animethemes[0].song.artists
+                artists: anithem.animethemes[0].song.artists,
             },
-            theme_type: anithem.animethemes[0].slug,
+            themeSlug: anithem.animethemes[0].slug,
             episodes: anithem.animethemes[0].animethemeentries[0].episodes,
             version: anithem.animethemes[0].animethemeentries[0].version,
             spoiler: anithem.animethemes[0].animethemeentries[0].spoiler,
@@ -90,9 +85,9 @@ export default class AnimeThemes {
                 overlap: anithem.animethemes[0].animethemeentries[0].videos[0].overlap,
                 nc: anithem.animethemes[0].animethemeentries[0].videos[0].nc,
                 tags: anithem.animethemes[0].animethemeentries[0].videos[0].tags,
-                link: anithem.animethemes[0].animethemeentries[0].videos[0].link
-            }
-        }
+                link: anithem.animethemes[0].animethemeentries[0].videos[0].link,
+            },
+        };
     }
 
     /**
@@ -121,12 +116,12 @@ export default class AnimeThemes {
      */
     async getFeaturedTheme(): Promise<Record<string, string>> {
         let response = await axios.get(`${Config.API_ANIMETHEMES}/config/wiki`);
-        let featuredTheme = response.data.wiki.featured_theme;
+        let featuredTheme = response.data.wiki.featured_theme as FeatureTheme;
 
         return {
-            anime: featuredTheme.animethemeentry.animetheme.anime.name as string,
+            anime: featuredTheme.animethemeentry.animetheme.anime.name,
             theme: `${featuredTheme.animethemeentry.animetheme.slug}${featuredTheme.animethemeentry.version === null ? '' : `v${featuredTheme.animethemeentry.version}`}`,
-            link: featuredTheme.video.link as string
-        }
+            link: featuredTheme.video.link,
+        };
     }
 }

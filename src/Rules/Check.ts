@@ -1,15 +1,15 @@
-import { AnimeRequest, Anime } from 'structs/types/Anime';
+import { Anime } from 'structs/types/Anime';
 
 export default class Check {
 
     /**
      * Regulates the thread name.
      * 
-     * @param  {Anime | AnimeRequest}  anime
+     * @param  {Anime}  anime
      * @param  {string | undefined}  customAnimeName
      * @returns {string | null}
      */
-    animeName(anime: Anime | AnimeRequest, customAnimeName: string | undefined): string | null {
+    animeName(anime: Anime, customAnimeName: string | undefined): string | null {
         let name: string = customAnimeName === undefined ? anime.name : customAnimeName;
 
         if (name.length > 100) {

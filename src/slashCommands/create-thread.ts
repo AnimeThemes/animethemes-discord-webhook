@@ -40,7 +40,7 @@ export default new SlashCommand({
             name: name,
             message: {
                 embeds: [new EmbedConstructor().getAnimeEmbed(anime)],
-                files: [new AttachmentBuilder(anime.image as string)]
+                files: [new AttachmentBuilder(anime.imageURL as string)]
             }
         })
         .then(async () => {
@@ -53,5 +53,5 @@ export default new SlashCommand({
                 await interaction.editReply({ content: 'Error: Thread Creation' });
             } catch (err) { console.error(err) }
         });
-    }
+    },
 })

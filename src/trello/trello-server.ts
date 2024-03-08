@@ -1,20 +1,20 @@
-import { TextChannel } from "discord.js";
-import { client } from "app";
-import { createTrelloEmbed } from "trello/trello-embed";
-import { getEmbedConfigForAction } from "trello/trello-action";
-import { toTrelloImageUrl } from "trello/trello-util";
+import { TextChannel } from 'discord.js';
+import { client } from 'app';
+import { createTrelloEmbed } from 'trello/trello-embed';
+import { getEmbedConfigForAction } from 'trello/trello-action';
+import { toTrelloImageUrl } from 'trello/trello-util';
 
-import Fastify from "fastify";
-import Config from "config/Config";
+import Fastify from 'fastify';
+import Config from 'config/Config';
 
 export default () => {
     const server = Fastify({ logger: true });
 
-    server.head("/", async () => {
+    server.head('/', async () => {
         return null;
     });
 
-    server.post("/", async (request) => {
+    server.post('/', async (request) => {
         const { model, action } = request.body as any;
 
         const embedConfigForAction = getEmbedConfigForAction(action.type, request.body);
@@ -25,7 +25,7 @@ export default () => {
         }
 
         const embedConfig = {
-            actionTitle: `No action handler defined for "${action.type}"`,
+            actionTitle: `No action handler defined for '${action.type}'`,
             boardName: model.name,
             boardUrl: model.url,
             actionUserName: action.memberCreator.fullName,

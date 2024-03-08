@@ -55,5 +55,5 @@ export default new SlashCommand({
                 await interaction.editReply({ content: 'Error: Notification Creation' });
             } catch (err) { console.error(err) }
         });
-    }
+    },
 })

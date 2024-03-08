@@ -1,15 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-
-export interface TrelloEmbedConfig {
-    actionTitle: string;
-    actionDescription?: string;
-    imageUrl?: string;
-    color?: number;
-    boardName: string;
-    boardUrl: string;
-    actionUserName: string;
-    actionUserImageUrl: string;
-}
+import { TrelloEmbedConfig } from 'structs/types/Trello';
 
 export function createTrelloEmbed(config: TrelloEmbedConfig) {
     const embed = new EmbedBuilder()

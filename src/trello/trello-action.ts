@@ -1,4 +1,4 @@
-import { TrelloEmbedConfig } from 'trello/trello-embed';
+import { TrelloEmbedConfig, TrelloCreateCardAction, TrelloUpdateCardAction, TrelloCommentCardAction, TrelloMemberToCardAction, TrelloUpdateCheckItemStateOnCardAction } from 'structs/types/Trello';
 import { toTrelloCardLink, toTrelloImageUrl } from 'trello/trello-util';
 
 const colors = {
@@ -7,7 +7,7 @@ const colors = {
 } satisfies { [key: string]: number };
 
 const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null } = {
-    createCard(data) {
+    createCard(data: TrelloCreateCardAction) {
         const { action } = data;
         const { card, list } = action.data;
 
@@ -17,7 +17,7 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
             color: colors.green,
         };
     },
-    updateCard(data) {
+    updateCard(data: TrelloUpdateCardAction) {
         const { action } = data;
         const { card, old, listBefore, listAfter } = action.data;
 
@@ -46,7 +46,7 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
 
         return null;
     },
-    commentCard(data) {
+    commentCard(data: TrelloCommentCardAction) {
         const { action } = data;
         const { card, text } = action.data;
 
@@ -56,7 +56,7 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
             color: colors.green,
         };
     },
-    addMemberToCard(data) {
+    addMemberToCard(data: TrelloMemberToCardAction) {
         const { action } = data;
         const { card, member } = action.data;
 
@@ -69,7 +69,7 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
             color: colors.green,
         };
     },
-    removeMemberFromCard(data) {
+    removeMemberFromCard(data: TrelloMemberToCardAction) {
         const { action } = data;
         const { card, member } = action.data;
 
@@ -80,7 +80,7 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
             color: colors.red,
         };
     },
-    updateCheckItemStateOnCard(data) {
+    updateCheckItemStateOnCard(data: TrelloUpdateCheckItemStateOnCardAction) {
         const { action } = data;
         const { card, checkItem } = action.data;
         const isComplete = checkItem.state === 'complete';
@@ -89,7 +89,7 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
             actionTitle: isComplete
                 ? `✅ ${action.memberCreator.fullName} checked episode ${checkItem.name} of '${card.name}'`
                 : `❎ ${action.memberCreator.fullName} un-checked episode ${checkItem.name} of '${card.name}'`,
-            actionDescription: toTrelloCardLink(action.data.card),
+            actionDescription: toTrelloCardLink(card),
             color: isComplete ? colors.green : colors.red,
         };
     },

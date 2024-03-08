@@ -1,5 +1,5 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
-import { AnimeRequest, Anime, AnimeWithFilter } from 'structs/types/Anime';
+import { Anime, AnimeWithFilter } from 'structs/types/Anime';
 
 import Config from 'config/Config';
 import StringFormatter from 'AnimeThemes/StringFormatter';
@@ -26,11 +26,11 @@ export default class DiscordEmbed {
     /**
      * Create the anime embed.
      * 
-     * @param  {Anime | AnimeRequest}  animeInfo
+     * @param  {Anime}  animeInfo
      * @returns {EmbedBuilder}
      */
-    getAnimeEmbed(animeInfo: Anime | AnimeRequest): EmbedBuilder {
-        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`
+    getAnimeEmbed(animeInfo: Anime): EmbedBuilder {
+        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`;
 
         return new EmbedBuilder()
             .setTitle(animeInfo.name)
@@ -42,7 +42,6 @@ export default class DiscordEmbed {
      * Create an embed of a video using anime information.
      * 
      * @param  {AnimeWithFilter}  anime
-     * 
      * @returns {EmbedBuilder}
      */
     createVideoEmbedByAnime(anime: AnimeWithFilter): EmbedBuilder {
@@ -52,13 +51,13 @@ export default class DiscordEmbed {
         
         this.initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
         this.initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
-        this.initialDescription +=  `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
+        this.initialDescription += `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
         this.initialDescription += new StringFormatter().videoDescription(anime);
 
         return new EmbedBuilder()
             .setColor(this.embedColor)
-            .setTitle(`${anime?.theme_type}${anime?.version === null ? '' : `v${anime?.version}`}${anime?.song?.title === undefined ? '' : ` - ${anime.song.title ?? '*T.B.A.*'}`}`)
+            .setTitle(`${anime?.themeSlug}${anime?.version === null ? '' : `v${anime?.version}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
             .setDescription(this.initialDescription)
-            .setThumbnail(anime.image as string);
+            .setThumbnail(anime.imageURL as string);
     }
 }

@@ -9,8 +9,8 @@ export class SlashCommand {
     constructor(options: { data: Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>, execute: (interaction: CommandInteraction) => any }) {
         this.command = {
             data: options.data,
-            execute: options.execute
-        }
+            execute: options.execute,
+        };
     }
 }
 
@@ -20,7 +20,7 @@ export class MenuCommand {
     constructor(options: { data: Omit<ContextMenuCommandBuilder, ''>, execute: (interaction: ContextMenuCommandInteraction) => any }) {
         this.command = {
             data: options.data,
-            execute: options.execute
-        }
+            execute: options.execute,
+        };
     }
 }

@@ -25,5 +25,5 @@ export default new Event({
                 type: 2,
             });
         }, 3 * 60 * 60 * 1000);
-    }
+    },
 })

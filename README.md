@@ -9,7 +9,7 @@
 - Go to [Discord Developer Portal](https://discord.com/developers/applications) and create a application.
 - Go to the Bot tab and save the token (reset the token if needed).
 - Disable "Public Bot" option and enable the following options: Presence Intent, Server Members Intent and Message Content Intent.
-- To add the bot to the server: replace <BOT_ID> with the APPLICATION ID and run this in your browser.
+- Replace `<BOT_ID>` with the APPLICATION ID and run this in your browser:
 ```
 https://discord.com/oauth2/authorize?client_id=<BOT_ID>&permissions=8&scope=bot
 ```
