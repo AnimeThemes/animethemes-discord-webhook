@@ -1,4 +1,4 @@
-import { ActionRowBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from 'discord.js';
 import { MenuCommand } from 'structs/types/Commands';
 import { client } from 'app';
 
@@ -26,9 +26,17 @@ export default new MenuCommand({
             .setStyle(2)
             .setValue(message.content as string);
 
-        const row = new ActionRowBuilder().addComponents(messageInput);
+        const imageInput = new TextInputBuilder()
+            .setCustomId('input-edit-image')
+            .setLabel('IMAGE LINK')
+            .setRequired(false)
+            .setStyle(2)
+            .setValue(message.attachments.map(a => a.proxyURL).join(','));
 
-        modal.setComponents([row] as any[]);
+        const row = new ActionRowBuilder().addComponents(messageInput);
+        const row2 = new ActionRowBuilder().addComponents(imageInput);
+
+        modal.setComponents([row, row2] as any[]);
         await interaction.showModal(modal);
 
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {
@@ -44,7 +52,8 @@ export default new MenuCommand({
 
             channel.messages.fetch(message.id).then((msg: Message) => {
                 msg.edit({
-                    content: interactionModal.fields.getTextInputValue('input-edit-message')
+                    content: interactionModal.fields.getTextInputValue('input-edit-message'),
+                    files: interactionModal.fields.getTextInputValue('input-edit-image').split(',').map(image => new AttachmentBuilder(image)),
                 })
                 .then(async () => await interactionModal.followUp({ content: 'Done', ephemeral: true }))
                 .catch((err) => console.error(err));
