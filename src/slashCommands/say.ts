@@ -1,4 +1,4 @@
-import { ActionRowBuilder, BaseInteraction, CommandInteraction, Events, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder } from 'discord.js';
+import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, CommandInteraction, Events, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder } from 'discord.js';
 import { SlashCommand } from 'structs/types/Commands';
 import { client } from 'app';
 
@@ -25,9 +25,17 @@ export default new SlashCommand({
             .setRequired(true)
             .setStyle(2);
 
-        const row = new ActionRowBuilder().addComponents(text);
+        const image = new TextInputBuilder()
+            .setCustomId('input-image')
+            .setLabel('Image Link')
+            .setRequired(false)
+            .setPlaceholder('Comma-separated Links')
+            .setStyle(2);
 
-        modal.setComponents([row] as any[]);
+        const row = new ActionRowBuilder().addComponents(text);
+        const row2 = new ActionRowBuilder().addComponents(image);
+
+        modal.setComponents([row, row2] as any[]);
         await interaction.showModal(modal);
         
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {
@@ -41,11 +49,13 @@ export default new SlashCommand({
 
             const { fields } = interactionModal;
             const message = fields.getTextInputValue('input-message');
+            const images = fields.getTextInputValue('input-image').split(',');
 
             const channel = guild?.channels.cache.find(c => c.id === interaction.options.get('channel')?.value) as TextChannel;
 
             channel.send({
-                content: message
+                content: message,
+                files: images.map(image => new AttachmentBuilder(image)),
             })
             .then(async () => {
                 await interactionModal.followUp({ content: 'Done', ephemeral: true });
