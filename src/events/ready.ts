@@ -10,18 +10,18 @@ export default new Event({
     async execute() {
         console.log('Bot Online');
         let animethemes = new AnimeThemes();
-        let featured_theme = await animethemes.getFeaturedTheme();
+        let featuredtheme = await animethemes.getFeaturedTheme();
 
         client.user?.setActivity({
-            name: `${featured_theme.anime} ${featured_theme.theme}`,
+            name: `${featuredtheme.anime} ${featuredtheme.theme}`,
             type: 2,
         });
 
         setInterval(async () => {
-            let featured_theme = await animethemes.getFeaturedTheme();
+            let featuredtheme = await animethemes.getFeaturedTheme();
 
             client.user?.setActivity({
-                name: `${featured_theme.anime} ${featured_theme.theme}`,
+                name: `${featuredtheme.anime} ${featuredtheme.theme}`,
                 type: 2,
             });
         }, 3 * 60 * 60 * 1000);

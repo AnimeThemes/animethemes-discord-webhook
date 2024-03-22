@@ -115,8 +115,8 @@ export default class AnimeThemes {
      * @returns {Promise<Record<string, string>>}
      */
     async getFeaturedTheme(): Promise<Record<string, string>> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}/config/wiki`);
-        let featuredTheme = response.data.wiki.featured_theme as FeatureTheme;
+        let response = await axios.get(`${Config.API_ANIMETHEMES}/current/featuredtheme?include=animethemeentry.animetheme.anime,video`);
+        let featuredTheme = response.data.featuredtheme as FeatureTheme;
 
         return {
             anime: featuredTheme.animethemeentry.animetheme.anime.name,
