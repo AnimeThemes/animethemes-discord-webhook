@@ -68,7 +68,9 @@ export interface Video {
 export interface Artist {
     name: string;
     slug: string;
-    as: string | null;
+    artistsong: {
+        as: string | null;
+    };
 };
 
 export interface FeatureTheme {
