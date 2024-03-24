@@ -14,7 +14,7 @@ export default class StringFormatter {
         let addArtists = '**Artists:** ';
 
         for (let artist of artists) {
-            addArtists += `[${artist.as === null ? artist.name : `${artist.as} (CV: ${artist.name})`}](${Config.ARTIST_URL + '/' + artist.slug}), `;
+            addArtists += `[${artist.artistsong.as === null ? artist.name : `${artist.artistsong.as} (CV: ${artist.name})`}](${Config.ARTIST_URL + '/' + artist.slug}), `;
         }
 
         return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');
