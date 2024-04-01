@@ -49,13 +49,13 @@ export default new SlashCommand({
 
             const { fields } = interactionModal;
             const message = fields.getTextInputValue('input-message');
-            const images = fields.getTextInputValue('input-image').split(',');
+            const images = fields.getTextInputValue('input-image').split(',').filter(Boolean);
 
             const channel = guild?.channels.cache.find(c => c.id === interaction.options.get('channel')?.value) as TextChannel;
 
             channel.send({
                 content: message,
-                files: images.map(image => new AttachmentBuilder(image)),
+                files: images.length !== 0 ? images.map(image => new AttachmentBuilder(image)) : [],
             })
             .then(async () => {
                 await interactionModal.followUp({ content: 'Done', ephemeral: true });

@@ -49,11 +49,12 @@ export default new MenuCommand({
             await interactionModal.deferReply({ ephemeral: true });
 
             const channel = guild?.channels.cache.find(c => c.id === interaction.channelId) as TextChannel;
+            let imagesList = interactionModal.fields.getTextInputValue('input-edit-image').split(',').filter(Boolean);
 
             channel.messages.fetch(message.id).then((msg: Message) => {
                 msg.edit({
                     content: interactionModal.fields.getTextInputValue('input-edit-message'),
-                    files: interactionModal.fields.getTextInputValue('input-edit-image').split(',').map(image => new AttachmentBuilder(image)),
+                    files: imagesList.length !== 0 ? imagesList.map(image => new AttachmentBuilder(image)) : [],
                 })
                 .then(async () => await interactionModal.followUp({ content: 'Done', ephemeral: true }))
                 .catch((err) => console.error(err));
