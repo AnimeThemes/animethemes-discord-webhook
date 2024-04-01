@@ -53,7 +53,7 @@ export default new MenuCommand({
             channel.messages.fetch(message.id).then((msg: Message) => {
                 msg.edit({
                     content: interactionModal.fields.getTextInputValue('input-edit-message'),
-                    files: interactionModal.fields.getTextInputValue('input-edit-image').split(',').map(image => new AttachmentBuilder(image)),
+                    files: interactionModal.fields.getTextInputValue('input-edit-image').split(',').filter(Boolean).map(image => new AttachmentBuilder(image)),
                 })
                 .then(async () => await interactionModal.followUp({ content: 'Done', ephemeral: true }))
                 .catch((err) => console.error(err));
