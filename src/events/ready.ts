@@ -12,18 +12,22 @@ export default new Event({
         let animethemes = new AnimeThemes();
         let featuredtheme = await animethemes.getFeaturedTheme();
 
-        client.user?.setActivity({
-            name: `${featuredtheme.anime} ${featuredtheme.theme}`,
-            type: 2,
-        });
-
-        setInterval(async () => {
-            let featuredtheme = await animethemes.getFeaturedTheme();
-
+        if (featuredtheme !== null) {
             client.user?.setActivity({
                 name: `${featuredtheme.anime} ${featuredtheme.theme}`,
                 type: 2,
             });
+        }
+
+        setInterval(async () => {
+            let featuredtheme = await animethemes.getFeaturedTheme();
+
+            if (featuredtheme !== null) {
+                client.user?.setActivity({
+                    name: `${featuredtheme.anime} ${featuredtheme.theme}`,
+                    type: 2,
+                });
+            }
         }, 3 * 60 * 60 * 1000);
     },
 })
