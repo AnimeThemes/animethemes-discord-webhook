@@ -112,16 +112,21 @@ export default class AnimeThemes {
     /**
      * Get the featured theme.
      * 
-     * @returns {Promise<Record<string, string>>}
+     * @returns {Promise<Record<string, string> | null>}
      */
-    async getFeaturedTheme(): Promise<Record<string, string>> {
-        let response = await axios.get(`${Config.API_ANIMETHEMES}/current/featuredtheme?include=animethemeentry.animetheme.anime,video`);
-        let featuredTheme = response.data.featuredtheme as FeatureTheme;
+    async getFeaturedTheme(): Promise<Record<string, string> | null> {
+        let response = (await axios.get(`${Config.API_ANIMETHEMES}/current/featuredtheme?include=animethemeentry.animetheme.anime,video`)).data;
 
-        return {
-            anime: featuredTheme.animethemeentry.animetheme.anime.name,
-            theme: `${featuredTheme.animethemeentry.animetheme.slug}${featuredTheme.animethemeentry.version === null ? '' : `v${featuredTheme.animethemeentry.version}`}`,
-            link: featuredTheme.video.link,
-        };
+        if (response.hasOwnProperty('featuredtheme')) {
+            let featuredTheme = response.featuredtheme as FeatureTheme;
+
+            return {
+                anime: featuredTheme.animethemeentry.animetheme.anime.name,
+                theme: `${featuredTheme.animethemeentry.animetheme.slug}${featuredTheme.animethemeentry.version === null ? '' : `v${featuredTheme.animethemeentry.version}`}`,
+                link: featuredTheme.video.link,
+            };
+        }
+
+        return null;
     }
 }
