@@ -6,9 +6,9 @@ export default class StringFormatter {
 
     /**
      * Format Artists to a string.
-     * 
+     *
      * @param  {Artist[]}  artists  
-     * @returns {string}
+     * @return {string}
      */
     artistsDescription(artists: Artist[]): string {
         let addArtists = '**Artists:** ';
@@ -22,9 +22,9 @@ export default class StringFormatter {
 
     /**
      * Format Video to a string.
-     * 
+     *
      * @param  {AnimeWithFilter}  anime
-     * @returns {string}
+     * @return {string}
      */
     videoDescription(anime: AnimeWithFilter): string {
         const video = anime.video as Video;

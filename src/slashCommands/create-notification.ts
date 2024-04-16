@@ -1,9 +1,10 @@
 import { Channel, CommandInteraction, EmbedBuilder, SlashCommandBuilder, ThreadChannel } from 'discord.js';
-import { SlashCommand } from 'structs/types/Commands';
+import { editReply, reply } from 'lib/discord';
+import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
 
 import AnimeThemes from 'AnimeThemes/AnimeThemes';
-import DiscordEmbed from 'Builders/EmbedConstructor';
+import DiscordEmbed from 'Builders/DiscordEmbed';
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
@@ -27,7 +28,7 @@ export default new SlashCommand({
             })),
 
     async execute(interaction: CommandInteraction) {
-        await interaction.reply({ content: 'Loading...', ephemeral: true });
+        await reply(interaction, 'Loading...');
 
         const ids = interaction.options.get('videos-id')?.value as string;
         const type = interaction.options.get('type')?.value as 'added' | 'updated';
@@ -37,7 +38,9 @@ export default new SlashCommand({
         for (let id of ids.split(',')) {
             let anime = await new AnimeThemes().getVideoByID(parseInt(id));
 
-            if (anime === null) { try { return await interaction.editReply({ content: 'anime null' }); } catch (err) { return } }
+            if (anime === null) {
+                return await editReply(interaction, 'anime null');
+            }
 
             embeds.push(new DiscordEmbed().setEmbedColor(type).createVideoEmbedByAnime(anime));
         }
@@ -46,14 +49,11 @@ export default new SlashCommand({
             embeds: embeds
         })
         .then(async () => {
-            try {
-                await interaction.editReply({ content: 'Notification Created' });
-            } catch (err) { console.error(err) }
+            await editReply(interaction, 'New notification has been created.');
         })
-        .catch(async () => {
-            try {
-                await interaction.editReply({ content: 'Error: Notification Creation' });
-            } catch (err) { console.error(err) }
+        .catch(async (err) => {
+            console.error(err);
+            await editReply(interaction, 'Error: Notification Creation.');
         });
     },
 })

@@ -12,9 +12,9 @@ export default class DiscordEmbed {
 
     /**
      * Set the color and initial description of the embed.
-     * 
+     *
      * @param  {'added' | 'updated'}  type
-     * @returns {DiscordEmbed}
+     * @return {DiscordEmbed}
      */
     setEmbedColor(type: 'added' | 'updated'): DiscordEmbed {
         this.embedColor = type === 'added' ? [46, 204, 113] : [255, 255, 0];
@@ -25,9 +25,9 @@ export default class DiscordEmbed {
 
     /**
      * Create the anime embed.
-     * 
+     *
      * @param  {Anime}  animeInfo
-     * @returns {EmbedBuilder}
+     * @return {EmbedBuilder}
      */
     getAnimeEmbed(animeInfo: Anime): EmbedBuilder {
         const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`;
@@ -40,9 +40,9 @@ export default class DiscordEmbed {
 
     /**
      * Create an embed of a video using anime information.
-     * 
+     *
      * @param  {AnimeWithFilter}  anime
-     * @returns {EmbedBuilder}
+     * @return {EmbedBuilder}
      */
     createVideoEmbedByAnime(anime: AnimeWithFilter): EmbedBuilder {
         if (anime.song.artists.length !== 0) {

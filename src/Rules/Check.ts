@@ -4,10 +4,10 @@ export default class Check {
 
     /**
      * Regulates the thread name.
-     * 
+     *
      * @param  {Anime}  anime
      * @param  {string | undefined}  customAnimeName
-     * @returns {string | null}
+     * @return {string | null}
      */
     animeName(anime: Anime, customAnimeName: string | undefined): string | null {
         let name: string = customAnimeName === undefined ? anime.name : customAnimeName;

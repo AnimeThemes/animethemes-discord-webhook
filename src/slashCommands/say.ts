@@ -1,6 +1,7 @@
 import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, CommandInteraction, Events, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder } from 'discord.js';
-import { SlashCommand } from 'structs/types/Commands';
+import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
+import { deferReply, followUp, showModal } from 'lib/discord';
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
@@ -36,7 +37,7 @@ export default new SlashCommand({
         const row2 = new ActionRowBuilder().addComponents(image);
 
         modal.setComponents([row, row2] as any[]);
-        await interaction.showModal(modal);
+        await showModal(interaction, modal);
         
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {
             if (!i.isModalSubmit()) return;
@@ -45,7 +46,7 @@ export default new SlashCommand({
 
             const interactionModal = i as ModalSubmitInteraction;
 
-            await interactionModal.deferReply({ ephemeral: true });
+            await deferReply(interactionModal);
 
             const { fields } = interactionModal;
             const message = fields.getTextInputValue('input-message');
@@ -57,7 +58,7 @@ export default new SlashCommand({
                 files: fields.getTextInputValue('input-image').split(',').filter(Boolean).map(image => new AttachmentBuilder(image)),
             })
             .then(async () => {
-                await interactionModal.followUp({ content: 'Done', ephemeral: true });
+                await followUp(interactionModal, 'Done');
             })
             .catch((err) => console.error(err));
         });
