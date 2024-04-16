@@ -1,5 +1,6 @@
 import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from 'discord.js';
-import { MenuCommand } from 'structs/types/Commands';
+import { deferReply, followUp, reply, showModal } from 'lib/discord';
+import { MenuCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
 
 export default new MenuCommand({
@@ -13,7 +14,7 @@ export default new MenuCommand({
         const options = interaction.options as any;
         const message = options._hoistedOptions[0].message as Message;
 
-        if (message.author.id !== client.user?.id) return await interaction.reply({ content: 'This message is not from the bot', ephemeral: true });
+        if (message.author.id !== client.user?.id) return await reply(interaction, 'This message is not from the bot.');
 
         const modal = new ModalBuilder()
             .setCustomId('modal-edit-message')
@@ -37,7 +38,7 @@ export default new MenuCommand({
         const row2 = new ActionRowBuilder().addComponents(imageInput);
 
         modal.setComponents([row, row2] as any[]);
-        await interaction.showModal(modal);
+        await showModal(interaction, modal);
 
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {
             if (!i.isModalSubmit()) return;
@@ -46,7 +47,7 @@ export default new MenuCommand({
 
             const interactionModal = i as ModalSubmitInteraction;
 
-            await interactionModal.deferReply({ ephemeral: true });
+            await deferReply(interactionModal);
 
             const channel = guild?.channels.cache.find(c => c.id === interaction.channelId) as TextChannel;
 
@@ -55,7 +56,7 @@ export default new MenuCommand({
                     content: interactionModal.fields.getTextInputValue('input-edit-message'),
                     files: interactionModal.fields.getTextInputValue('input-edit-image').split(',').filter(Boolean).map(image => new AttachmentBuilder(image)),
                 })
-                .then(async () => await interactionModal.followUp({ content: 'Done', ephemeral: true }))
+                .then(async () => await followUp(interactionModal, 'Done'))
                 .catch((err) => console.error(err));
             });
         });

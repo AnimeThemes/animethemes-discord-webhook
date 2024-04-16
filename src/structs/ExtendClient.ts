@@ -1,6 +1,6 @@
 import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { readdirSync } from 'fs';
-import { ComponentsModal } from 'structs/types/Commands';
+import { ComponentsModal } from 'structs/types/DiscordCommands';
 
 import Config from 'config/Config';
 import Event from 'structs/types/Event';

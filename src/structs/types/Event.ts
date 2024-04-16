@@ -1,6 +1,3 @@
-/**
- * Class Event.
- */
 export default class Event {
     name: string;
     once: boolean;
