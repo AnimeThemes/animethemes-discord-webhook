@@ -1,7 +1,6 @@
 import { AnimeWithFilter, Anime, AnimeTheme, AnimeThemeEntry, Video, AnimeRequestByID, AnimeRequestByVideoID, FeatureTheme } from 'structs/types/Anime';
 
 import axios from 'lib/axios';
-import StringFormatter from './StringFormatter';
 
 export default class AnimeThemes {
 
