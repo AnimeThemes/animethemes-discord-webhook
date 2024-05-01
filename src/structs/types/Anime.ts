@@ -30,8 +30,8 @@ export type AnimeWithFilter = Partial<Anime> & {
         type: string;
         sequence: number | null;
         group: {
-            name: string;
-            slug: string;
+            name: string | null;
+            slug: string | null;
         };
     };
     song: {
@@ -49,8 +49,8 @@ export interface AnimeTheme {
     type: string;
     sequence: number | null;
     group: {
-        name: string;
-        slug: string;
+        name: string | null;
+        slug: string | null;
     };
     song: {
         title: string;
@@ -94,7 +94,7 @@ export interface FeatureTheme {
             type: string;
             sequence: number | null;
             group: {
-                slug: string;
+                slug: string | null;
             };
         };
         version: string | number | null;
