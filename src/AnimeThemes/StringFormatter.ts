@@ -28,13 +28,37 @@ export default class StringFormatter {
      */
     videoDescription(anime: AnimeWithFilter): string {
         const video = anime.video as Video;
-        const version = anime.version === null ? '' : `v${anime.version}`;
-        const tags = video.tags.length === 0 ? '' : `-${video.tags}`;
         let string = `**Resolution:** ${video.resolution}p\n`;
             string += `**Source:** ${video.source}\n`;
             string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
-            string += `**Link**: ${Config.ANIME_URL}/${anime.slug}/${anime.themeSlug}${version}${tags}`;
+            string += `**Link**: ${Config.ANIME_URL}/${anime.slug}/${this.createVideoSlug(anime)}`;
 
         return string;
+    }
+
+    /**
+     * Slug format is:
+     *
+     * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
+     * 
+     * @param  {AnimeWithFilter}  anime
+     * @returns {string}
+     */
+    createVideoSlug(anime: AnimeWithFilter): string {
+        let slug = anime.theme.type + (anime.theme.sequence || 1);
+
+        if (anime.version && anime.version !== 1) {
+            slug += `v${anime.version}`;
+        }
+
+        if (anime.theme.group) {
+            slug += `-${anime.theme.group.slug}`;
+        }
+
+        if (anime.video.tags) {
+            slug += `-${anime.video.tags}`;
+        }
+
+        return slug;
     }
 }

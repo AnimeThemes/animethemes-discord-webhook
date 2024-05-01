@@ -54,9 +54,11 @@ export default class DiscordEmbed {
         this.initialDescription += `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
         this.initialDescription += new StringFormatter().videoDescription(anime);
 
+        let theme = anime?.theme;
+
         return new EmbedBuilder()
             .setColor(this.embedColor)
-            .setTitle(`${anime?.themeSlug}${anime?.version === null ? '' : `v${anime?.version}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
+            .setTitle(`${theme.type + (theme.sequence || 1)}${anime?.version === null ? '' : `v${anime?.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
             .setDescription(this.initialDescription)
             .setThumbnail(anime.imageURL as string);
     }

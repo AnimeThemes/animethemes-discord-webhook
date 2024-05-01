@@ -26,11 +26,18 @@ export type AnimeRequestByVideoID = AnimeRequestByID & {
 };
 
 export type AnimeWithFilter = Partial<Anime> & {
+    theme: {
+        type: string;
+        sequence: number | null;
+        group: {
+            name: string;
+            slug: string;
+        };
+    };
     song: {
         title: string | null;
         artists: Artist[] | [];
     };
-    themeSlug: string;
     episodes: string | null;
     version: string | number | null;
     spoiler: boolean;
@@ -39,7 +46,12 @@ export type AnimeWithFilter = Partial<Anime> & {
 };
 
 export interface AnimeTheme {
-    slug: string;
+    type: string;
+    sequence: number | null;
+    group: {
+        name: string;
+        slug: string;
+    };
     song: {
         title: string;
         artists: Artist[] | [];
@@ -79,11 +91,16 @@ export interface FeatureTheme {
             anime: {
                 name: string;
             };
-            slug: string;
+            type: string;
+            sequence: number | null;
+            group: {
+                slug: string;
+            };
         };
         version: string | number | null;
     };
     video: {
         link: string;
+        tags: string | null;
     };
 };

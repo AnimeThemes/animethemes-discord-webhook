@@ -49,7 +49,12 @@ export default class AnimeThemes {
     
             let anithem = {
                 animethemes: anime.animethemes.map((theme: AnimeTheme) => ({
-                    slug: theme.slug,
+                    group: {
+                        name: theme.group.name,
+                        slug: theme.group.slug,
+                    },
+                    type: theme.type,
+                    sequence: theme.sequence,
                     song: {
                         title: theme.song === null ? null : theme.song.title,
                         artists: theme.song === null ? [] : theme.song.artists,
@@ -79,7 +84,14 @@ export default class AnimeThemes {
                     title: anithem.animethemes[0].song.title,
                     artists: anithem.animethemes[0].song.artists,
                 },
-                themeSlug: anithem.animethemes[0].slug,
+                theme: {
+                    type: anithem.animethemes[0].type,
+                    sequence: anithem.animethemes[0].sequence,
+                    group: {
+                        name: anithem.animethemes[0].group.name,
+                        slug: anithem.animethemes[0].group.slug,
+                    },
+                },
                 episodes: anithem.animethemes[0].animethemeentries[0].episodes,
                 version: anithem.animethemes[0].animethemeentries[0].version,
                 spoiler: anithem.animethemes[0].animethemeentries[0].spoiler,
@@ -134,11 +146,13 @@ export default class AnimeThemes {
 
             if (response.hasOwnProperty('featuredtheme')) {
                 let featuredTheme = response.featuredtheme as FeatureTheme;
-    
+                let video = featuredTheme.video;
+                let entry = featuredTheme.animethemeentry;
+                let theme = entry.animetheme;
+
                 return {
-                    anime: featuredTheme.animethemeentry.animetheme.anime.name,
-                    theme: `${featuredTheme.animethemeentry.animetheme.slug}${featuredTheme.animethemeentry.version === null ? '' : `v${featuredTheme.animethemeentry.version}`}`,
-                    link: featuredTheme.video.link,
+                    anime: theme.anime.name,
+                    theme: `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${video.tags === null ? '' : `-${video.tags}`}`,
                 };
             }
     
