@@ -41,7 +41,7 @@ export default class AnimeThemes {
      */
     async getAnimeByIDWithFilter(animeID: number, videoID: number | undefined = undefined): Promise<AnimeWithFilter | null> {
         try {
-            let response = await axios.get(`/anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.animethemeentries.videos&fields[anime]=name,slug`);
+            let response = await axios.get(`/anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.group,animethemes.animethemeentries.videos&fields[anime]=name,slug`);
 
             if (response.data.anime.length === 0) return null;
     
@@ -50,8 +50,8 @@ export default class AnimeThemes {
             let anithem = {
                 animethemes: anime.animethemes.map((theme: AnimeTheme) => ({
                     group: {
-                        name: theme.group.name,
-                        slug: theme.group.slug,
+                        name: theme.group === null ? null : theme.group.name,
+                        slug: theme.group === null ? null : theme.group.slug,
                     },
                     type: theme.type,
                     sequence: theme.sequence,
@@ -142,7 +142,7 @@ export default class AnimeThemes {
      */
     async getFeaturedTheme(): Promise<Record<string, string> | null> {
         try {
-            let response = (await axios.get(`/current/featuredtheme?include=animethemeentry.animetheme.anime,video`)).data;
+            let response = (await axios.get(`/current/featuredtheme?include=animethemeentry.animetheme.anime,animethemeentry.animetheme.group,video`)).data;
 
             if (response.hasOwnProperty('featuredtheme')) {
                 let featuredTheme = response.featuredtheme as FeatureTheme;
@@ -152,7 +152,7 @@ export default class AnimeThemes {
 
                 return {
                     anime: theme.anime.name,
-                    theme: `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${video.tags === null ? '' : `-${video.tags}`}`,
+                    theme: `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${video.tags === null || video.tags.length === 0 ? '' : `-${video.tags}`}`,
                 };
             }
     
