@@ -1,65 +1,49 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
+import { artistsDescription, videoDescription } from 'AnimeThemes/StringFormatter';
 import { Anime, AnimeWithFilter } from 'structs/types/Anime';
 
 import Config from 'config/Config';
-import StringFormatter from 'AnimeThemes/StringFormatter';
 
-export default class DiscordEmbed {
+/**
+ * Create the anime embed.
+ *
+ * @param  {Anime}  animeInfo
+ * @return {EmbedBuilder}
+ */
+export function getAnimeEmbed(animeInfo: Anime): EmbedBuilder {
+    const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`;
 
-    public embedColor: ColorResolvable | null = [0, 0, 0];
-    public initialDescription: string = '';
-    public artists: string = '';
+    return new EmbedBuilder()
+        .setTitle(animeInfo.name)
+        .setColor([154, 0, 255])
+        .setDescription(description);
+}
 
-    /**
-     * Set the color and initial description of the embed.
-     *
-     * @param  {'added' | 'updated'}  type
-     * @return {DiscordEmbed}
-     */
-    setEmbedColor(type: 'added' | 'updated'): DiscordEmbed {
-        this.embedColor = type === 'added' ? [46, 204, 113] : [255, 255, 0];
-        this.initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
+/**
+ * Create an embed of a video using anime information.
+ *
+ * @param  {AnimeWithFilter}  anime
+ * @return {EmbedBuilder}
+ */
+export function createVideoEmbedByAnime(anime: AnimeWithFilter, type: 'added' | 'updated'): EmbedBuilder {
+    const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
+    let initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
 
-        return this;
+
+    if (anime.song.artists.length !== 0) {
+        initialDescription += artistsDescription(anime.song.artists) + '\n';
     }
+    
+    initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
+    initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
+    initialDescription += `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
+    initialDescription += videoDescription(anime);
 
-    /**
-     * Create the anime embed.
-     *
-     * @param  {Anime}  animeInfo
-     * @return {EmbedBuilder}
-     */
-    getAnimeEmbed(animeInfo: Anime): EmbedBuilder {
-        const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${Config.ANIME_URL + '/' + animeInfo.slug}`;
+    let theme = anime?.theme;
 
-        return new EmbedBuilder()
-            .setTitle(animeInfo.name)
-            .setColor([154, 0, 255])
-            .setDescription(description);
-    }
-
-    /**
-     * Create an embed of a video using anime information.
-     *
-     * @param  {AnimeWithFilter}  anime
-     * @return {EmbedBuilder}
-     */
-    createVideoEmbedByAnime(anime: AnimeWithFilter): EmbedBuilder {
-        if (anime.song.artists.length !== 0) {
-            this.initialDescription += new StringFormatter().artistsDescription(anime.song.artists) + '\n';
-        }
-        
-        this.initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
-        this.initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
-        this.initialDescription += `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
-        this.initialDescription += new StringFormatter().videoDescription(anime);
-
-        let theme = anime?.theme;
-
-        return new EmbedBuilder()
-            .setColor(this.embedColor)
-            .setTitle(`${theme.type + (theme.sequence || 1)}${anime?.version === null ? '' : `v${anime?.version}`}${theme.group.slug === null ? '' : `-${theme.group.slug}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
-            .setDescription(this.initialDescription)
-            .setThumbnail(anime.imageURL as string);
-    }
+    return new EmbedBuilder()
+        .setColor(embedColor)
+        .setTitle(`${theme.type + (theme.sequence || 1)}${anime?.version === null ? '' : `v${anime?.version}`}${theme.group.slug === null ? '' : `-${theme.group.slug}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
+        .setDescription(initialDescription)
+        .setThumbnail(anime.imageURL as string);
 }

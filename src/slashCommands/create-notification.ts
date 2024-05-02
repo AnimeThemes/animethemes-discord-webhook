@@ -1,10 +1,9 @@
 import { Channel, CommandInteraction, EmbedBuilder, SlashCommandBuilder, ThreadChannel } from 'discord.js';
+import { getVideoByID } from 'AnimeThemes/AnimeThemes';
+import { createVideoEmbedByAnime } from 'Builders/DiscordEmbed';
 import { editReply, reply } from 'lib/discord';
 import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
-
-import AnimeThemes from 'AnimeThemes/AnimeThemes';
-import DiscordEmbed from 'Builders/DiscordEmbed';
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
@@ -36,13 +35,13 @@ export default new SlashCommand({
 
         let embeds: EmbedBuilder[] = [];
         for (let id of ids.split(',')) {
-            let anime = await new AnimeThemes().getVideoByID(parseInt(id));
+            let anime = await getVideoByID(parseInt(id));
 
             if (anime === null) {
                 return await editReply(interaction, 'anime null');
             }
 
-            embeds.push(new DiscordEmbed().setEmbedColor(type).createVideoEmbedByAnime(anime));
+            embeds.push(createVideoEmbedByAnime(anime, type));
         }
 
         thread.send({

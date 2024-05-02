@@ -1,12 +1,12 @@
 import { AttachmentBuilder, Channel, CommandInteraction, ForumChannel, SlashCommandBuilder } from 'discord.js';
+import { getAnimeByID } from 'AnimeThemes/AnimeThemes';
+import { getAnimeEmbed } from 'Builders/DiscordEmbed';
 import { editReply, reply } from 'lib/discord';
+import { animeName } from 'Rules/Check';
 import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
 
-import AnimeThemes from 'AnimeThemes/AnimeThemes';
-import Check from 'Rules/Check';
 import Config from 'config/Config';
-import DiscordEmbed from 'Builders/DiscordEmbed';
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
@@ -29,13 +29,13 @@ export default new SlashCommand({
         const id = interaction.options.get('anime-id')?.value as number;
         const customAnimeName = interaction.options.get('name')?.value as string | undefined;
         
-        const anime = await new AnimeThemes().getAnimeByID(id);
+        const anime = await getAnimeByID(id);
 
         if (anime === null) {
             return await editReply(interaction, 'anime = null');
         }
 
-        const name = new Check().animeName(anime, customAnimeName);
+        const name = animeName(anime, customAnimeName);
 
         if (name === null) {
             return await editReply(interaction, 'name.length > 100');
@@ -44,7 +44,7 @@ export default new SlashCommand({
         forumChannel.threads.create({
             name: name,
             message: {
-                embeds: [new DiscordEmbed().getAnimeEmbed(anime)],
+                embeds: [getAnimeEmbed(anime)],
                 files: [new AttachmentBuilder(anime.imageURL as string)]
             }
         })
