@@ -58,7 +58,7 @@ export default class DiscordEmbed {
 
         return new EmbedBuilder()
             .setColor(this.embedColor)
-            .setTitle(`${theme.type + (theme.sequence || 1)}${anime?.version === null ? '' : `v${anime?.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
+            .setTitle(`${theme.type + (theme.sequence || 1)}${anime?.version === null ? '' : `v${anime?.version}`}${theme.group.slug === null ? '' : `-${theme.group.slug}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
             .setDescription(this.initialDescription)
             .setThumbnail(anime.imageURL as string);
     }
