@@ -2,7 +2,7 @@ import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collectio
 import { readdirSync } from 'fs';
 import { ComponentsModal } from 'discord/commands';
 
-import Event from 'discord/event';
+import Event from 'discord/Event';
 import Config from 'utils/config';
 
 export class ExtendClient extends Client {
