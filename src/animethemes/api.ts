@@ -1,4 +1,4 @@
-import { AnimeWithFilter, Anime, AnimeTheme, AnimeThemeEntry, Video, AnimeRequestByID, AnimeRequestByVideoID, FeatureTheme } from 'structs/types/Anime';
+import { AnimeWithFilter, Anime, AnimeTheme, AnimeThemeEntry, Video, AnimeRequestByID, AnimeRequestByVideoID, FeatureTheme } from 'types/anime';
 
 import axios from 'lib/axios';
 

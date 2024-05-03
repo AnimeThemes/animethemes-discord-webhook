@@ -1,6 +1,6 @@
 import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, CommandInteraction, Events, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder } from 'discord.js';
-import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
+import { SlashCommand } from 'discord/commands';
 import { deferReply, followUp, showModal } from 'lib/discord';
 
 export default new SlashCommand({

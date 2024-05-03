@@ -1,10 +1,10 @@
 import type { AxiosError } from 'axios';
 
 import Axios from 'axios';
-import Config from 'config/Config';
+import config from 'utils/config';
 
 export default Axios.create({
-    baseURL: Config.API_ANIMETHEMES,
+    baseURL: config.API_ANIMETHEMES,
 });
 
 export function handleAxiosError(error: AxiosError<{ message?: string }>) {

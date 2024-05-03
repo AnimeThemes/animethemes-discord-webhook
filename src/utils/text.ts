@@ -1,4 +1,4 @@
-import { Anime } from 'structs/types/Anime';
+import { Anime } from 'types/anime';
 
 /**
  * Regulates the thread name.

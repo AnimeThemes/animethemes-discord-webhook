@@ -1,7 +1,7 @@
 import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from 'discord.js';
-import { deferReply, followUp, reply, showModal } from 'lib/discord';
-import { MenuCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
+import { deferReply, followUp, reply, showModal } from 'lib/discord';
+import { MenuCommand } from 'discord/commands';
 
 export default new MenuCommand({
     data: new ContextMenuCommandBuilder()

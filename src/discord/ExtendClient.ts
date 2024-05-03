@@ -1,9 +1,9 @@
 import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { readdirSync } from 'fs';
-import { ComponentsModal } from 'structs/types/DiscordCommands';
+import { ComponentsModal } from 'discord/commands';
 
-import Config from 'config/Config';
-import Event from 'structs/types/Event';
+import Event from 'discord/event';
+import Config from 'utils/config';
 
 export class ExtendClient extends Client {
 

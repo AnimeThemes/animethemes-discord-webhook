@@ -1,9 +1,9 @@
 import { Channel, CommandInteraction, EmbedBuilder, SlashCommandBuilder, ThreadChannel } from 'discord.js';
-import { getVideoByID } from 'AnimeThemes/AnimeThemes';
-import { createVideoEmbedByAnime } from 'Builders/DiscordEmbed';
-import { editReply, reply } from 'lib/discord';
-import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
+import { getVideoByID } from 'animethemes/api';
+import { SlashCommand } from 'discord/commands';
+import { createVideoEmbedByAnime } from 'discord/embeds';
+import { editReply, reply } from 'lib/discord';
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()

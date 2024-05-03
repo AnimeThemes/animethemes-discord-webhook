@@ -1,6 +1,6 @@
-import { AnimeWithFilter, Artist, Video } from 'structs/types/Anime';
+import { AnimeWithFilter, Artist, Video } from 'types/anime';
 
-import Config from 'config/Config';
+import config from 'utils/config';
 
 /**
  * Format Artists to a string.
@@ -12,7 +12,7 @@ export function artistsDescription(artists: Artist[]): string {
     let addArtists = '**Artists:** ';
 
     for (let artist of artists) {
-        addArtists += `[${artist.artistsong.as === null ? artist.name : `${artist.artistsong.as} (CV: ${artist.name})`}](${Config.ARTIST_URL + '/' + artist.slug}), `;
+        addArtists += `[${artist.artistsong.as === null ? artist.name : `${artist.artistsong.as} (CV: ${artist.name})`}](${config.ARTIST_URL + '/' + artist.slug}), `;
     }
 
     return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');
@@ -29,7 +29,7 @@ export function videoDescription(anime: AnimeWithFilter): string {
     let string = `**Resolution:** ${video.resolution}p\n`;
         string += `**Source:** ${video.source}\n`;
         string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
-        string += `**Link**: ${Config.ANIME_URL}/${anime.slug}/${createVideoSlug(anime)}`;
+        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(anime)}`;
 
     return string;
 }

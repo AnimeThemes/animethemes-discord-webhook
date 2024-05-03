@@ -1,11 +1,11 @@
 import { TextChannel } from 'discord.js';
 import { client } from 'app';
-import { createTrelloEmbed } from 'trello/trello-embed';
-import { getEmbedConfigForAction } from 'trello/trello-action';
-import { toTrelloImageUrl } from 'trello/trello-util';
+import { createTrelloEmbed } from 'discord/embeds';
+import { getEmbedConfigForAction } from 'trello/action';
+import { toTrelloImageUrl } from 'utils/trello';
 
 import Fastify from 'fastify';
-import Config from 'config/Config';
+import config from 'utils/config';
 
 export default () => {
     const server = Fastify({ logger: true });
@@ -33,7 +33,7 @@ export default () => {
             ...embedConfigForAction,
         };
 
-        const channel = client.channels.cache.find(channel => channel.id === Config.DISCORD_TRELLO_CHANNEL_ID) as TextChannel;
+        const channel = client.channels.cache.find(channel => channel.id === config.DISCORD_TRELLO_CHANNEL_ID) as TextChannel;
 
         await channel.send({
             embeds: [createTrelloEmbed(embedConfig)],
@@ -43,8 +43,8 @@ export default () => {
     });
 
     server.listen({
-        host: Config.SERVER_HOST,
-        port: +Config.SERVER_PORT ?? 3000
+        host: config.SERVER_HOST,
+        port: +config.SERVER_PORT ?? 3000
     }, (err, address) => {
         if (err) {
             server.log.error(err);
