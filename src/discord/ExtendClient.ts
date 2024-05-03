@@ -3,7 +3,7 @@ import { readdirSync } from 'fs';
 import { ComponentsModal } from 'discord/commands';
 
 import Event from 'discord/Event';
-import Config from 'utils/config';
+import config from 'utils/config';
 
 export class ExtendClient extends Client {
 
@@ -24,7 +24,7 @@ export class ExtendClient extends Client {
     public start() {
         this.registerModules();
         this.registerEvents();
-        this.login(Config.DISCORD_TOKEN);
+        this.login(config.DISCORD_TOKEN);
     }
 
     private registerCommands(commands: Array<ApplicationCommandDataResolvable>){
