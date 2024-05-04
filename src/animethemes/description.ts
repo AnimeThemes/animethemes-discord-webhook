@@ -49,7 +49,7 @@ export function createVideoSlug(anime: AnimeWithFilter): string {
         slug += `v${anime.version}`;
     }
 
-    if (anime.theme.group) {
+    if (anime.theme.group.slug) {
         slug += `-${anime.theme.group.slug}`;
     }
 
