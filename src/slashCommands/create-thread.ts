@@ -1,12 +1,12 @@
 import { AttachmentBuilder, Channel, CommandInteraction, ForumChannel, SlashCommandBuilder } from 'discord.js';
-import { editReply, reply } from 'lib/discord';
-import { SlashCommand } from 'structs/types/DiscordCommands';
 import { client } from 'app';
+import { getAnimeByID } from 'animethemes/api';
+import { SlashCommand } from 'discord/commands';
+import { createAnimeEmbed } from 'discord/embeds';
+import { editReply, reply } from 'lib/discord';
+import { animeName } from 'utils/text';
 
-import AnimeThemes from 'AnimeThemes/AnimeThemes';
-import Check from 'Rules/Check';
-import Config from 'config/Config';
-import DiscordEmbed from 'Builders/DiscordEmbed';
+import config from 'utils/config';
 
 export default new SlashCommand({
     data: new SlashCommandBuilder()
@@ -25,17 +25,17 @@ export default new SlashCommand({
     async execute(interaction: CommandInteraction) {
         await reply(interaction, 'Loading...');
 
-        const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === Config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+        const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
         const id = interaction.options.get('anime-id')?.value as number;
         const customAnimeName = interaction.options.get('name')?.value as string | undefined;
         
-        const anime = await new AnimeThemes().getAnimeByID(id);
+        const anime = await getAnimeByID(id);
 
         if (anime === null) {
             return await editReply(interaction, 'anime = null');
         }
 
-        const name = new Check().animeName(anime, customAnimeName);
+        const name = animeName(anime, customAnimeName);
 
         if (name === null) {
             return await editReply(interaction, 'name.length > 100');
@@ -44,7 +44,7 @@ export default new SlashCommand({
         forumChannel.threads.create({
             name: name,
             message: {
-                embeds: [new DiscordEmbed().getAnimeEmbed(anime)],
+                embeds: [createAnimeEmbed(anime)],
                 files: [new AttachmentBuilder(anime.imageURL as string)]
             }
         })

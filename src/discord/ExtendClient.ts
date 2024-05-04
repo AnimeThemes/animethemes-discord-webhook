@@ -1,9 +1,9 @@
 import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
 import { readdirSync } from 'fs';
-import { ComponentsModal } from 'structs/types/DiscordCommands';
+import { ComponentsModal } from 'discord/commands';
 
-import Config from 'config/Config';
-import Event from 'structs/types/Event';
+import Event from 'discord/Event';
+import config from 'utils/config';
 
 export class ExtendClient extends Client {
 
@@ -24,7 +24,7 @@ export class ExtendClient extends Client {
     public start() {
         this.registerModules();
         this.registerEvents();
-        this.login(Config.DISCORD_TOKEN);
+        this.login(config.DISCORD_TOKEN);
     }
 
     private registerCommands(commands: Array<ApplicationCommandDataResolvable>){

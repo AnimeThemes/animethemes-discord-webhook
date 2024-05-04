@@ -1,5 +1,5 @@
-import { TrelloEmbedConfig, TrelloCreateCardAction, TrelloUpdateCardAction, TrelloCommentCardAction, TrelloMemberToCardAction, TrelloUpdateCheckItemStateOnCardAction } from 'structs/types/Trello';
-import { toTrelloCardLink, toTrelloImageUrl } from 'trello/trello-util';
+import { TrelloEmbedConfig, TrelloCreateCardAction, TrelloUpdateCardAction, TrelloCommentCardAction, TrelloMemberToCardAction, TrelloUpdateCheckItemStateOnCardAction } from 'types/trello';
+import { toTrelloCardLink, toTrelloImageUrl } from 'utils/trello';
 
 const colors = {
     green: 0x00ff00,

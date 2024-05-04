@@ -1,16 +1,15 @@
 import { Events } from 'discord.js';
 import { client } from 'app';
+import { getFeaturedTheme } from 'animethemes/api';
 
-import AnimeThemes from 'AnimeThemes/AnimeThemes';
-import Event from 'structs/types/Event';
+import Event from 'discord/Event';
 
 export default new Event({
     name: Events.ClientReady,
     once: true,
     async execute() {
         console.log('Bot Online');
-        let animethemes = new AnimeThemes();
-        let featuredtheme = await animethemes.getFeaturedTheme();
+        let featuredtheme = await getFeaturedTheme();
 
         if (featuredtheme !== null) {
             client.user?.setActivity({
@@ -20,7 +19,7 @@ export default new Event({
         }
 
         setInterval(async () => {
-            let featuredtheme = await animethemes.getFeaturedTheme();
+            let featuredtheme = await getFeaturedTheme();
 
             if (featuredtheme !== null) {
                 client.user?.setActivity({
