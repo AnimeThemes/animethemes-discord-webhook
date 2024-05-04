@@ -1,7 +1,7 @@
 import { CommandInteraction, Events } from 'discord.js';
 import { client } from 'app';
 
-import Event from 'discord/Event';
+import Event from 'discord/event';
 
 export default new Event({
     name: Events.InteractionCreate,

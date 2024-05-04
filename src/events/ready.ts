@@ -2,7 +2,7 @@ import { Events } from 'discord.js';
 import { client } from 'app';
 import { getFeaturedTheme } from 'animethemes/api';
 
-import Event from 'discord/Event';
+import Event from 'discord/event';
 
 export default new Event({
     name: Events.ClientReady,
