@@ -61,7 +61,7 @@ export async function getFeaturedTheme(): Promise<Record<string, string> | null>
 
             return {
                 anime: theme.anime.name,
-                theme: `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${video.tags === null || video.tags.length === 0 ? '' : `-${video.tags}`}`,
+                theme: `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${video.tags.length === 0 ? '' : `-${video.tags}`}`,
             };
         }
 

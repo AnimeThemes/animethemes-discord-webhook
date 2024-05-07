@@ -61,13 +61,13 @@ export interface FeaturedTheme {
             type: string;
             sequence: number | null;
             group: {
-                slug: string | null;
-            };
+                slug: string;
+            } | null;
         };
-        version: string | number | null;
+        version: number | null;
     };
     video: {
         link: string;
-        tags: string | null;
+        tags: string;
     };
 };
