@@ -1,80 +1,47 @@
 export interface Anime {
     name: string;
-    slug: string;
     season: 'Winter' | 'Spring' | 'Summer' | 'Fall';
-    synopsis: string;
-    synonyms: string[];
-    imageURL: string;
-};
-
-export interface AnimeRequestByID {
-    name: string;
     slug: string;
-    season: 'Winter' | 'Spring' | 'Summer' | 'Fall';
     synopsis: string;
-    animesynonyms: {
-        text: string;
-    }[] | [];
-    images: {
-        facet: 'Large Cover' | 'Small Cover' | 'Grill';
+    images: Array<{
+        id: number;
+        facet: string;
+        path: string;
         link: string;
-    }[] | [];
-};
-
-export type AnimeRequestByVideoID = AnimeRequestByID & {
-    animethemes: AnimeTheme[];
-};
-
-export type AnimeWithFilter = Partial<Anime> & {
-    theme: {
+    }>;
+    animesynonyms: Array<{
+        id: number;
+        text: string;
         type: string;
-        sequence: number | null;
-        group: {
-            name: string | null;
-            slug: string | null;
-        };
-    };
-    song: {
-        title: string | null;
-        artists: Artist[] | [];
-    };
-    episodes: string | null;
-    version: string | number | null;
-    spoiler: boolean;
-    nsfw: boolean;
-    video: Video;
-};
-
-export interface AnimeTheme {
-    type: string;
-    sequence: number | null;
-    group: {
-        name: string | null;
-        slug: string | null;
-    };
-    song: {
-        title: string;
-        artists: Artist[] | [];
-    } | null;
-    animethemeentries: AnimeThemeEntry[];
-};
-
-export interface AnimeThemeEntry {
-    version: string | number | null;
-    episodes: string | null;
-    spoiler: boolean;
-    nsfw: boolean;
-    videos: Video[];
+    }>;
 };
 
 export interface Video {
-    id?: number;
-    source: string;
-    overlap: string;
-    nc: boolean;
-    resolution: number;
+    basename: string;
+    filename: string;
+    overlap: string | null;
+    resolution: number | null;
+    source: string | null;
     tags: string;
-    link: string;
+    animethemeentries: Array<{
+        episodes: string | null;
+        nsfw: boolean;
+        spoiler: boolean;
+        version: number | null;
+        animetheme: {
+            sequence: number | null;
+            type: string;
+            anime: Partial<Anime>;
+            group: {
+                name: string;
+                slug: string;
+            } | null;
+            song: {
+                title: string;
+                artists: Array<Artist>;
+            } | null;
+        }
+    }>
 };
 
 export interface Artist {
@@ -85,7 +52,7 @@ export interface Artist {
     };
 };
 
-export interface FeatureTheme {
+export interface FeaturedTheme {
     animethemeentry: {
         animetheme: {
             anime: {

@@ -1,6 +1,6 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
 import { artistsDescription, videoDescription } from 'animethemes/description';
-import { Anime, AnimeWithFilter } from 'types/anime';
+import { Anime, Video } from 'types/anime';
 import { TrelloEmbedConfig } from 'types/trello';
 
 import config from 'utils/config';
@@ -8,14 +8,14 @@ import config from 'utils/config';
 /**
  * Create the anime embed.
  *
- * @param  {Anime}  animeInfo
+ * @param  {Anime}  anime
  * @return {EmbedBuilder}
  */
-export function createAnimeEmbed(animeInfo: Anime): EmbedBuilder {
-    const description = `**Synopsis:** ${animeInfo.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + animeInfo.slug}`;
+export function createAnimeEmbed(anime: Anime): EmbedBuilder {
+    const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
 
     return new EmbedBuilder()
-        .setTitle(animeInfo.name)
+        .setTitle(anime.name)
         .setColor([154, 0, 255])
         .setDescription(description);
 }
@@ -23,36 +23,38 @@ export function createAnimeEmbed(animeInfo: Anime): EmbedBuilder {
 /**
  * Create an embed of a video using anime information.
  *
- * @param  {AnimeWithFilter}  anime
+ * @param  {Video}  video
  * @param  {'added' | 'updated'}  type
  * @return {EmbedBuilder}
  */
-export function createVideoEmbedByAnime(anime: AnimeWithFilter, type: 'added' | 'updated'): EmbedBuilder {
+export function createVideoEmbedByAnime(video: Video, type: 'added' | 'updated'): EmbedBuilder {
     const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
     let initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
 
-    if (anime.song.artists.length !== 0) {
-        initialDescription += artistsDescription(anime.song.artists) + '\n';
+    let entry = video.animethemeentries[0];
+    let theme = entry.animetheme;
+    let anime = theme.anime;
+
+    if (theme.song && theme.song.artists.length !== 0) {
+        initialDescription += artistsDescription(theme.song.artists) + '\n';
     }
     
-    initialDescription += anime.spoiler ? '⚠️ Spoiler\n' : '';
-    initialDescription += anime.nsfw ? '🔞 NSFW\n' : '';
-    initialDescription += `**Episodes:** ${anime?.episodes === null || anime?.episodes.length === 0 ? '-' : anime?.episodes}\n`;
-    initialDescription += videoDescription(anime);
-
-    let theme = anime?.theme;
+    initialDescription += entry.spoiler ? '⚠️ Spoiler\n' : '';
+    initialDescription += entry.nsfw ? '🔞 NSFW\n' : '';
+    initialDescription += `**Episodes:** ${entry.episodes === null || entry.episodes.length === 0 ? '-' : entry.episodes}\n`;
+    initialDescription += videoDescription(video);
 
     return new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(`${theme.type + (theme.sequence || 1)}${anime?.version === null ? '' : `v${anime?.version}`}${theme.group.slug === null ? '' : `-${theme.group.slug}`}${anime.song.title === null ? '*T.B.A.*' : ` - ${anime.song.title}`}`)
+        .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${theme.song === null ? '*T.B.A.*' : ` - ${theme.song.title}`}`)
         .setDescription(initialDescription)
-        .setThumbnail(anime.imageURL as string);
+        .setThumbnail(anime.images?.find(image => image.facet === 'Small Cover')?.link as string);
 }
 
 /**
  * Create the trello embed.
  *
- * @param {TrelloEmbedConfig} config
+ * @param  {TrelloEmbedConfig} config
  * @returns {EmbedBuilder}
  */
 export function createTrelloEmbed(config: TrelloEmbedConfig): EmbedBuilder {

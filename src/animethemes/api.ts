@@ -1,4 +1,4 @@
-import { AnimeWithFilter, Anime, AnimeTheme, AnimeThemeEntry, Video, AnimeRequestByID, AnimeRequestByVideoID, FeatureTheme } from 'types/anime';
+import { Anime, FeaturedTheme, Video } from 'types/anime';
 
 import axios from 'lib/axios';
 
@@ -14,95 +14,9 @@ export async function getAnimeByID(animeID: number): Promise<Anime | null> {
 
         if (response.data.anime.length === 0) return null;
 
-        let anime = response.data.anime[0] as AnimeRequestByID;
+        let anime = response.data.anime[0];
 
-        return {
-            name: anime.name,
-            slug: anime.slug,
-            season: anime.season,
-            synopsis: anime.synopsis,
-            synonyms: anime.animesynonyms.map(synonym => synonym?.text),
-            imageURL: anime.images.filter(image => image?.facet === 'Large Cover')[0].link,
-        };
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-}
-
-/**
- * Queries the AnimeThemes API by anime ID and filters by a videoID, returns the desired object.
- *
- * @param  {number}  animeID
- * @param  {number | undefined}  videoID
- * @return {Promise<AnimeWithFilter | null>}
- */
-export async function getAnimeByIDWithFilter(animeID: number, videoID: number | undefined = undefined): Promise<AnimeWithFilter | null> {
-    try {
-        let response = await axios.get(`/anime?filter[anime][id]=${animeID}&include=images,animethemes.song.artists,animethemes.group,animethemes.animethemeentries.videos&fields[anime]=name,slug`);
-
-        if (response.data.anime.length === 0) return null;
-
-        let anime = response.data.anime[0] as AnimeRequestByVideoID;
-
-        let anithem = {
-            animethemes: anime.animethemes.map((theme: AnimeTheme) => ({
-                group: {
-                    name: theme.group === null ? null : theme.group.name,
-                    slug: theme.group === null ? null : theme.group.slug,
-                },
-                type: theme.type,
-                sequence: theme.sequence,
-                song: {
-                    title: theme.song === null ? null : theme.song.title,
-                    artists: theme.song === null ? [] : theme.song.artists,
-                },
-                animethemeentries: theme.animethemeentries.map((entry: AnimeThemeEntry) => ({
-                    version: entry.version,
-                    episodes: entry.episodes,
-                    spoiler: entry.spoiler,
-                    nsfw: entry.nsfw,
-                    videos: entry.videos.filter(video => !videoID || video.id === videoID).map((video: Video) => ({
-                        resolution: video.resolution,
-                        source: video.source,
-                        overlap: video.overlap,
-                        nc: video.nc,
-                        tags: video.tags,
-                        link: video.link,
-                    }))
-                })).filter(entry => entry.videos.length !== 0)
-            })).filter(theme => theme.animethemeentries.length !== 0),
-        };
-        
-        return {
-            name: anime.name,
-            slug: anime.slug,
-            imageURL: anime.images?.filter(image => image.facet === 'Large Cover')[0].link,
-            song: {
-                title: anithem.animethemes[0].song.title,
-                artists: anithem.animethemes[0].song.artists,
-            },
-            theme: {
-                type: anithem.animethemes[0].type,
-                sequence: anithem.animethemes[0].sequence,
-                group: {
-                    name: anithem.animethemes[0].group.name,
-                    slug: anithem.animethemes[0].group.slug,
-                },
-            },
-            episodes: anithem.animethemes[0].animethemeentries[0].episodes,
-            version: anithem.animethemes[0].animethemeentries[0].version,
-            spoiler: anithem.animethemes[0].animethemeentries[0].spoiler,
-            nsfw: anithem.animethemes[0].animethemeentries[0].nsfw,
-            video: {
-                resolution: anithem.animethemes[0].animethemeentries[0].videos[0].resolution,
-                source: anithem.animethemes[0].animethemeentries[0].videos[0].source,
-                overlap: anithem.animethemes[0].animethemeentries[0].videos[0].overlap,
-                nc: anithem.animethemes[0].animethemeentries[0].videos[0].nc,
-                tags: anithem.animethemes[0].animethemeentries[0].videos[0].tags,
-                link: anithem.animethemes[0].animethemeentries[0].videos[0].link,
-            },
-        };
+        return anime as Anime;
     } catch (err) {
         console.error(err);
         return null;
@@ -113,20 +27,17 @@ export async function getAnimeByIDWithFilter(animeID: number, videoID: number | 
  * Queries the AnimeThemes API by video ID and returns the desired object.
  *
  * @param  {number}  videoID
- * @return {Promise<AnimeWithFilter | null>}
+ * @return {Promise<Video | null>}
  */
-export async function getVideoByID(videoID: number): Promise<AnimeWithFilter | null> {
+export async function getVideo(videoID: number): Promise<Video | null> {
     try {
-        let response = await axios.get(`/video?filter[video][id]=${videoID}&include=animethemeentries.animetheme.anime`);
+        let response = await axios.get(`/video?filter[video][id]=${videoID}&include=animethemeentries.animetheme.anime.images,animethemeentries.animetheme.song.artists,animethemeentries.animetheme.group`);
 
         if (response.data.videos.length === 0) return null;
 
-        let video = response.data.videos[0];
+        let video = response.data.videos[0] as Video;
 
-        let animeID: number = video.animethemeentries[0].animetheme.anime.id;
-        let info = await getAnimeByIDWithFilter(animeID, videoID);
-
-        return info;
+        return video;
     } catch (err) {
         console.error(err);
         return null;
@@ -143,7 +54,7 @@ export async function getFeaturedTheme(): Promise<Record<string, string> | null>
         let response = (await axios.get(`/current/featuredtheme?include=animethemeentry.animetheme.anime,animethemeentry.animetheme.group,video`)).data;
 
         if (response.hasOwnProperty('featuredtheme')) {
-            let featuredTheme = response.featuredtheme as FeatureTheme;
+            let featuredTheme = response.featuredtheme as FeaturedTheme;
             let video = featuredTheme.video;
             let entry = featuredTheme.animethemeentry;
             let theme = entry.animetheme;
