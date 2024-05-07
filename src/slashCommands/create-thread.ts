@@ -45,7 +45,7 @@ export default new SlashCommand({
             name: name,
             message: {
                 embeds: [createAnimeEmbed(anime)],
-                files: [new AttachmentBuilder(anime.imageURL as string)]
+                files: [new AttachmentBuilder(anime.images.find(image => image?.facet === 'Large Cover')?.link as string)]
             }
         })
         .then(async () => {

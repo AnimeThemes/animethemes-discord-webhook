@@ -1,4 +1,4 @@
-import { AnimeWithFilter, Artist, Video } from 'types/anime';
+import { Artist, Video } from 'types/anime';
 
 import config from 'utils/config';
 
@@ -21,15 +21,15 @@ export function artistsDescription(artists: Artist[]): string {
 /**
  * Format Video to a string.
  *
- * @param  {AnimeWithFilter}  anime
+ * @param  {Video}  video
  * @return {string}
  */
-export function videoDescription(anime: AnimeWithFilter): string {
-    const video = anime.video as Video;
+export function videoDescription(video: Video): string {
+    let anime = video.animethemeentries[0].animetheme.anime;
     let string = `**Resolution:** ${video.resolution}p\n`;
         string += `**Source:** ${video.source}\n`;
         string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
-        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(anime)}`;
+        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video)}`;
 
     return string;
 }
@@ -39,22 +39,25 @@ export function videoDescription(anime: AnimeWithFilter): string {
  *
  * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
  * 
- * @param  {AnimeWithFilter}  anime
+ * @param  {Video}  video
  * @returns {string}
  */
-export function createVideoSlug(anime: AnimeWithFilter): string {
-    let slug = anime.theme.type + (anime.theme.sequence || 1);
+export function createVideoSlug(video: Video): string {
+    let entry = video.animethemeentries[0];
+    let theme = entry.animetheme;
 
-    if (anime.version && anime.version !== 1) {
-        slug += `v${anime.version}`;
+    let slug = theme.type + (theme.sequence || 1);
+
+    if (entry.version && entry.version !== 1) {
+        slug += `v${entry.version}`;
     }
 
-    if (anime.theme.group.slug) {
-        slug += `-${anime.theme.group.slug}`;
+    if (theme.group) {
+        slug += `-${theme.group.slug}`;
     }
 
-    if (anime.video.tags) {
-        slug += `-${anime.video.tags}`;
+    if (video.tags) {
+        slug += `-${video.tags}`;
     }
 
     return slug;

@@ -11,9 +11,9 @@ export function animeName(anime: Anime, customAnimeName: string | undefined): st
     let name: string = customAnimeName === undefined ? anime.name : customAnimeName;
 
     if (name.length > 100) {
-        name = anime.synonyms?.reduce((previous: string, current: string): string => {
+        name = anime.animesynonyms.map(synonym => synonym.text).reduce((previous, current) => {
             return current.length < previous.length ? current : previous;
-        }) as string;
+        });
 
         if (name.length > 100) return null;
     }
