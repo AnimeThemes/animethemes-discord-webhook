@@ -19,6 +19,7 @@ export interface Anime {
 export interface Video {
     basename: string;
     filename: string;
+    link: string;
     overlap: string | null;
     resolution: number | null;
     source: string | null;
@@ -28,21 +29,23 @@ export interface Video {
         nsfw: boolean;
         spoiler: boolean;
         version: number | null;
-        animetheme: {
-            sequence: number | null;
-            type: string;
-            anime: Partial<Anime>;
-            group: {
-                name: string;
-                slug: string;
-            } | null;
-            song: {
-                title: string;
-                artists: Array<Artist>;
-            } | null;
-        }
+        animetheme: AnimeTheme;
     }>
 };
+
+export interface AnimeTheme {
+    sequence: number | null;
+    type: string;
+    anime: Partial<Anime>;
+    group: {
+        name: string;
+        slug: string;
+    } | null;
+    song: {
+        title: string;
+        artists: Array<Artist>;
+    } | null;
+}
 
 export interface Artist {
     name: string;
@@ -54,20 +57,8 @@ export interface Artist {
 
 export interface FeaturedTheme {
     animethemeentry: {
-        animetheme: {
-            anime: {
-                name: string;
-            };
-            type: string;
-            sequence: number | null;
-            group: {
-                slug: string;
-            } | null;
-        };
+        animetheme: AnimeTheme;
         version: number | null;
     };
-    video: {
-        link: string;
-        tags: string;
-    };
+    video: Partial<Video>;
 };

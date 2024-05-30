@@ -1,4 +1,4 @@
-import { Artist, Video } from 'types/anime';
+import { AnimeTheme, Artist, Video } from 'types/anime';
 
 import config from 'utils/config';
 
@@ -29,7 +29,7 @@ export function videoDescription(video: Video): string {
     let string = `**Resolution:** ${video.resolution}p\n`;
         string += `**Source:** ${video.source}\n`;
         string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
-        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video)}`;
+        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`;
 
     return string;
 }
@@ -38,14 +38,13 @@ export function videoDescription(video: Video): string {
  * Slug format is:
  *
  * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
- * 
+ *
+ * @param  {AnimeTheme}  theme
+ * @param  {Record<string, any>}  entry
  * @param  {Video}  video
  * @returns {string}
  */
-export function createVideoSlug(video: Video): string {
-    let entry = video.animethemeentries[0];
-    let theme = entry.animetheme;
-
+export function createVideoSlug(theme: AnimeTheme, entry: Record<string, any>, video: Video): string {
     let slug = theme.type + (theme.sequence || 1);
 
     if (entry.version && entry.version !== 1) {
