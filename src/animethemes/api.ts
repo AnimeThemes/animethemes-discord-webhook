@@ -1,4 +1,5 @@
 import { Anime, FeaturedTheme, Video } from 'types/anime';
+import { createVideoSlug } from 'animethemes/description';
 
 import axios from 'lib/axios';
 
@@ -60,8 +61,8 @@ export async function getFeaturedTheme(): Promise<Record<string, string> | null>
             let theme = entry.animetheme;
 
             return {
-                anime: theme.anime.name,
-                theme: `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${video.tags.length === 0 ? '' : `-${video.tags}`}`,
+                anime: theme.anime.name as string,
+                theme: createVideoSlug(theme, entry, video as Video),
             };
         }
 
