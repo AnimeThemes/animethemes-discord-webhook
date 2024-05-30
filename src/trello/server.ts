@@ -1,20 +1,17 @@
 import { TextChannel } from 'discord.js';
-import { client } from 'app';
+import { client, server } from 'app';
 import { createTrelloEmbed } from 'discord/embeds';
 import { getEmbedConfigForAction } from 'trello/action';
 import { toTrelloImageUrl } from 'utils/trello';
 
-import Fastify from 'fastify';
 import config from 'utils/config';
 
 export default () => {
-    const server = Fastify({ logger: true });
-
     server.head('/', async () => {
         return null;
     });
 
-    server.post('/', async (request) => {
+    server.post('/trello', async (request) => {
         const { model, action } = request.body as any;
 
         const embedConfigForAction = getEmbedConfigForAction(action.type, request.body);
@@ -40,16 +37,5 @@ export default () => {
         });
 
         return null;
-    });
-
-    server.listen({
-        host: config.SERVER_HOST,
-        port: +config.SERVER_PORT ?? 3000
-    }, (err, address) => {
-        if (err) {
-            server.log.error(err);
-            process.exit(1);
-        }
-        console.log(`Listening on: ${address}`);
     });
 }
