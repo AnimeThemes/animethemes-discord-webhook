@@ -7,7 +7,7 @@ import auth from 'api/middleware/auth';
 import config from 'utils/config';
 
 export default () => {
-    server.post('/thread', { preHandler: auth}, async (req, res) => {
+    server.post('/thread', { preHandler: auth }, async (req, res) => {
         try {
             const anime = req.body as Anime;
 
@@ -27,6 +27,36 @@ export default () => {
         } catch (err) {
             console.error(err);
             return res.code(500).send({ error: 'Error: Thread Creation.' });
+        }
+    });
+
+    server.put('/thread', { preHandler: auth }, async (req, res) => {
+        try {
+            const body = req.body as Record<string, any>;
+            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+
+            const thread = forumChannel.threads.cache.find(thread => thread.id == body.thread_id);
+
+            thread?.edit({
+                name: body.name,
+            });
+
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    server.delete('/thread', { preHandler: auth }, async (req, res) => {
+        try {
+            const body = req.body as Record<string, any>;
+            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+
+            const thread = forumChannel.threads.cache.find(thread => thread.id == body.id);
+
+            thread?.delete();
+
+        } catch (err) {
+            console.error(err);
         }
     });
 }
