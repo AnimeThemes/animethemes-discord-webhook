@@ -1,6 +1,6 @@
 export interface Anime {
     name: string;
-    season: 'Winter' | 'Spring' | 'Summer' | 'Fall';
+    season: 'Winter' | 'Spring' | 'Summer' | 'Fall' | 0 | 1 | 2 | 3;
     slug: string;
     synopsis: string;
     images: Array<{
@@ -15,6 +15,28 @@ export interface Anime {
         type: string;
     }>;
 };
+
+export interface AnimeServer {
+    anime_id: number;
+    created_at: Date;
+    updated_at: Date;
+    deleted_at: Date | null;
+    name: string;
+    season: number;
+    slug: string;
+    synopsis: string | null;
+    year: number;
+    media_format: number;
+    images: Array<{
+        image_id: number;
+        created_at: Date;
+        updated_at: Date;
+        deleted_at: Date | null;
+        path: string;
+        facet: number;
+        link: string;
+    }>;
+}
 
 export interface Video {
     basename: string;

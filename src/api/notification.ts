@@ -3,7 +3,7 @@ import { Channel, EmbedBuilder, ThreadChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
 
 export default () => {
-    server.post('/create-notification', (req, res) => {
+    server.post('/notification', (req, res) => {
         const body = req.body as any;
         const thread = client.channels.cache.find((channel: Channel) => channel.id === body.threadId) as ThreadChannel;
 

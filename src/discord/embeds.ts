@@ -1,6 +1,6 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
 import { artistsDescription, videoDescription } from 'animethemes/description';
-import { Anime, Video } from 'types/anime';
+import { Anime, AnimeServer, Video } from 'types/anime';
 import { TrelloEmbedConfig } from 'types/trello';
 
 import config from 'utils/config';
@@ -11,7 +11,7 @@ import config from 'utils/config';
  * @param  {Anime}  anime
  * @return {EmbedBuilder}
  */
-export function createAnimeEmbed(anime: Anime): EmbedBuilder {
+export function createAnimeEmbed(anime: Anime | AnimeServer): EmbedBuilder {
     const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
 
     return new EmbedBuilder()
