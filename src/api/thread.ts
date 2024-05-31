@@ -19,7 +19,7 @@ export default () => {
                 files: [new AttachmentBuilder(anime.images.find(image => image?.facet === 1 /* Large Cover */)?.link as string)]
             }
         })
-            .then(async () => res.code(201).send({ message: 'Thread Created.' }))
+            .then(async (thread) => res.code(201).send({ id: thread.id, name: thread.name }))
             .catch(async (err) => {
                 console.error(err);
                 res.code(500).send({ error: 'Error: Thread Creation.' });

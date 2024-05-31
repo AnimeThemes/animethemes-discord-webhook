@@ -1,28 +1,7 @@
-import { Anime, FeaturedTheme, Video } from 'types/anime';
+import { FeaturedTheme, Video } from 'types/anime';
 import { createVideoSlug } from 'animethemes/description';
 
 import axios from 'lib/axios';
-
-/**
- * Queries the AnimeThemes API by anime ID and returns the desired object.
- *
- * @param  {number}  animeID
- * @return {Promise<Anime | null>}
- */
-export async function getAnimeByID(animeID: number): Promise<Anime | null> {
-    try {
-        let response = await axios.get(`/anime?filter[anime][id]=${animeID}&include=images,animesynonyms&fields[anime]=name,slug,season,synopsis`);
-
-        if (response.data.anime.length === 0) return null;
-
-        let anime = response.data.anime[0];
-
-        return anime as Anime;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-}
 
 /**
  * Queries the AnimeThemes API by video ID and returns the desired object.
