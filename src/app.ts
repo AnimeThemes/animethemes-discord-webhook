@@ -1,15 +1,15 @@
 import { ExtendClient } from 'discord/ExtendClient';
 
+import routes from 'api/routes';
 import fastify from 'fastify';
-import trelloServer from 'trello/server';
 import config from 'utils/config';
 
 export const client = new ExtendClient();
 export const server = fastify({ logger: true });
 
 server.listen({
-    host: config.SERVER_HOST,
-    port: +config.SERVER_PORT ?? 3000
+    host: config.API_HOST,
+    port: +config.API_PORT ?? 3000
 }, (err, address) => {
     if (err) {
         server.log.error(err);
@@ -19,4 +19,4 @@ server.listen({
 });
 
 client.start();
-trelloServer();
+routes();

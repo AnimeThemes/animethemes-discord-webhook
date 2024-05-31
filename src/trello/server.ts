@@ -5,16 +5,19 @@ import { getEmbedConfigForAction } from 'trello/action';
 import { toTrelloImageUrl } from 'utils/trello';
 
 import config from 'utils/config';
+import trello from 'api/middleware/trello';
 
 export default () => {
     server.head('/', async () => {
         return null;
     });
 
-    server.post('/trello', async (request) => {
-        const { model, action } = request.body as any;
+    server.post('/trello', async (req) => {
+        if (!trello(req, config.TRELLO_SECRET, (config.API_HOST || 'localhost') + ':' + (config.API_PORT ?? 3000) + '/trello')) return null;
 
-        const embedConfigForAction = getEmbedConfigForAction(action.type, request.body);
+        const { model, action } = req.body as any;
+
+        const embedConfigForAction = getEmbedConfigForAction(action.type, req.body);
 
         if (!embedConfigForAction) {
             console.log(action.type);
