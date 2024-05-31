@@ -8,23 +8,26 @@ import config from 'utils/config';
 
 export default () => {
     server.post('/thread', { preHandler: auth}, async (req, res) => {
-        const anime = req.body as Anime;
+        try {
+            const anime = req.body as Anime;
 
-        const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
-
-        forumChannel.threads.create({
-            name: anime.name,
-            appliedTags: [seasonTags[anime.season as number]],
-            message: {
-                embeds: [createAnimeEmbed(anime)],
-                files: [new AttachmentBuilder(anime.images.find(image => image?.facet === 1 /* Large Cover */)?.link as string)]
-            }
-        })
-            .then(async (thread) => res.code(201).send({ id: thread.id, name: thread.name }))
-            .catch(async (err) => {
-                console.error(err);
-                res.code(500).send({ error: 'Error: Thread Creation.' });
+            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+    
+            const thread = await forumChannel.threads.create({
+                name: anime.name,
+                appliedTags: [seasonTags[anime.season as number]],
+                message: {
+                    embeds: [createAnimeEmbed(anime)],
+                    files: [new AttachmentBuilder(anime.images.find(image => image?.facet === 1 /* Large Cover */)?.link as string)]
+                }
             });
+
+            return res.code(201).send({ id: thread.id, name: thread.name });
+
+        } catch (err) {
+            console.error(err);
+            return res.code(500).send({ error: 'Error: Thread Creation.' });
+        }
     });
 }
 
