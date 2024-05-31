@@ -1,15 +1,14 @@
 import { client, server } from 'app';
 import { AttachmentBuilder, Channel, ForumChannel } from 'discord.js';
 import { createAnimeEmbed } from 'discord/embeds';
-import { AnimeServer } from 'types/anime';
+import { Anime } from 'types/anime';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
 
 export default () => {
     server.post('/thread', { preHandler: auth}, async (req, res) => {
-        console.log(req.body);
-        const anime = req.body as AnimeServer;
+        const anime = req.body as Anime;
 
         const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
 

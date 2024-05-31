@@ -1,22 +1,5 @@
-export interface Anime {
-    name: string;
-    season: 'Winter' | 'Spring' | 'Summer' | 'Fall' | 0 | 1 | 2 | 3;
-    slug: string;
-    synopsis: string;
-    images: Array<{
-        id: number;
-        facet: string;
-        path: string;
-        link: string;
-    }>;
-    animesynonyms: Array<{
-        id: number;
-        text: string;
-        type: string;
-    }>;
-};
 
-export interface AnimeServer {
+export interface Anime {
     anime_id: number;
     created_at: Date;
     updated_at: Date;

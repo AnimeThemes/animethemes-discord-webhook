@@ -1,6 +1,6 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
 import { artistsDescription, videoDescription } from 'animethemes/description';
-import { Anime, AnimeServer, Video } from 'types/anime';
+import { Anime, Video } from 'types/anime';
 import { TrelloEmbedConfig } from 'types/trello';
 
 import config from 'utils/config';
@@ -11,7 +11,7 @@ import config from 'utils/config';
  * @param  {Anime}  anime
  * @return {EmbedBuilder}
  */
-export function createAnimeEmbed(anime: Anime | AnimeServer): EmbedBuilder {
+export function createAnimeEmbed(anime: Anime): EmbedBuilder {
     const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
 
     return new EmbedBuilder()
@@ -48,7 +48,7 @@ export function createVideoEmbedByAnime(video: Video, type: 'added' | 'updated')
         .setColor(embedColor)
         .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${theme.song === null ? '*T.B.A.*' : ` - ${theme.song.title}`}`)
         .setDescription(initialDescription)
-        .setThumbnail(anime.images?.find(image => image.facet === 'Small Cover')?.link as string);
+        .setThumbnail(anime.images?.find(image => image.facet === 0 /* Small Cover */)?.link as string);
 }
 
 /**
