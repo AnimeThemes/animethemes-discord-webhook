@@ -13,7 +13,10 @@ export default () => {
     });
 
     server.post('/trello', async (req) => {
-        if (!trello(req, config.TRELLO_SECRET, (config.API_HOST || 'localhost') + ':' + (config.API_PORT ?? 3000) + '/trello')) return null;
+        const callbackURL = 'http://' + (config.API_HOST || 'localhost') + ':' + (config.API_PORT ?? 3000) + '/trello';
+        if (!trello(req, config.TRELLO_SECRET, callbackURL)) {
+            return null;
+        }
 
         const { model, action } = req.body as any;
 
