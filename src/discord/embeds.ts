@@ -46,9 +46,9 @@ export function createVideoEmbedByAnime(video: Video, type: 'added' | 'updated')
 
     return new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group.slug}`}${theme.song === null ? '*T.B.A.*' : ` - ${theme.song.title}`}`)
+        .setTitle(`${theme.type_name + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group_id === null ? '' : `-${theme.group?.slug}`}${theme.song_id === null ? '*T.B.A.*' : ` - ${theme.song?.title}`}`)
         .setDescription(initialDescription)
-        .setThumbnail(anime.images?.find(image => image.facet === 'Small Cover')?.link as string);
+        .setThumbnail(anime.images?.find(image => image.facet === 0 /* Small Cover */)?.link as string);
 }
 
 /**
