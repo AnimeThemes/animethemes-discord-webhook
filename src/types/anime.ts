@@ -25,10 +25,12 @@ export interface Video {
     basename: string;
     filename: string;
     link: string;
-    overlap: string | null;
+    overlap: number | null;
+    overlap_name: string | null;
     resolution: number | null;
-    source: string | null;
-    tags: string;
+    source: number | null;
+    source_name: string | null;
+    tags: string | Array<string>;
     animethemeentries: Array<{
         episodes: string | null;
         nsfw: boolean;
@@ -40,16 +42,19 @@ export interface Video {
 
 export interface AnimeTheme {
     sequence: number | null;
-    type: string;
+    type: number;
+    type_name: string;
     anime: Partial<Anime>;
-    group: {
+    group?: {
         name: string;
         slug: string;
-    } | null;
-    song: {
+    };
+    song?: {
         title: string;
         artists: Array<Artist>;
-    } | null;
+    };
+    group_id: number | null;
+    song_id: number | null;
 }
 
 export interface Artist {

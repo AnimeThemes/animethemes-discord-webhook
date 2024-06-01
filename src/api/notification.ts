@@ -1,24 +1,25 @@
 import { client, server } from 'app'
-import { Channel, EmbedBuilder, ThreadChannel } from 'discord.js';
+import { Channel, ThreadChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
 
 export default () => {
-    server.post('/notification', (req, res) => {
-        const body = req.body as any;
-        const thread = client.channels.cache.find((channel: Channel) => channel.id === body.threadId) as ThreadChannel;
+    server.post('/notification', async (req, res) => {
+        try {
+            const body = req.body as any;
 
-        let embeds: EmbedBuilder[] = [];
-        for (let video of body.videos) {
-            embeds.push(createVideoEmbedByAnime(video, body.type));
-        }
+            for (let video of body.videos) {
+                let threadId = video.animethemeentries[0].animetheme.anime.discordthread.thread_id;
+                let thread = client.channels.cache.find((channel: Channel) => channel.id == threadId) as ThreadChannel;
+    
+                thread.send({
+                    embeds: [createVideoEmbedByAnime(video, body.type)]
+                });
+            }
 
-        thread.send({
-            embeds: embeds
-        })
-        .then(async () => res.code(201).send({ message: 'New notification has been created.' }))
-        .catch(async (err) => {
+            return res.code(201).send({ message: 'New notification has been created.' });
+        } catch (err) {
             console.error(err);
-            res.code(500).send({ error: 'Error: Notification Creation.' });
-        });
+            return res.code(500).send({ error: 'Error: Notification Creation.' });
+        }
     });
 }

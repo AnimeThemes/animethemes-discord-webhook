@@ -27,9 +27,9 @@ export function artistsDescription(artists: Artist[]): string {
 export function videoDescription(video: Video): string {
     let anime = video.animethemeentries[0].animetheme.anime;
     let string = `**Resolution:** ${video.resolution}p\n`;
-        string += `**Source:** ${video.source}\n`;
-        string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${video.tags}`}\n`;
-        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`;
+        string += `**Source:** ${video.source_name}\n`;
+        string += `**Overlap:** ${video.overlap_name}${video.tags.length === 0 ? '' : `\n**Tags:** ${typeof video.tags == 'string' ? video.tags : video.tags.join('')}`}\n`;
+        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlugByServer(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`;
 
     return string;
 }
@@ -45,18 +45,46 @@ export function videoDescription(video: Video): string {
  * @returns {string}
  */
 export function createVideoSlug(theme: AnimeTheme, entry: Record<string, any>, video: Video): string {
-    let slug = theme.type + (theme.sequence || 1);
+    let slug = theme.type_name + (theme.sequence || 1);
 
     if (entry.version && entry.version !== 1) {
         slug += `v${entry.version}`;
     }
 
     if (theme.group) {
-        slug += `-${theme.group.slug}`;
+        slug += `-${theme.group?.slug}`;
     }
 
     if (video.tags) {
         slug += `-${video.tags}`;
+    }
+
+    return slug;
+}
+
+/**
+ * Slug format is:
+ *
+ * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
+ *
+ * @param  {AnimeTheme}  theme
+ * @param  {Record<string, any>}  entry
+ * @param  {Video}  video
+ * @returns {string}
+ */
+export function createVideoSlugByServer(theme: AnimeTheme, entry: Record<string, any>, video: Video): string {
+    let slug = theme.type_name + (theme.sequence || 1);
+
+    if (entry.version && entry.version !== 1) {
+        slug += `v${entry.version}`;
+    }
+
+    if (theme.group_id) {
+        slug += `-${theme.group?.slug}`;
+    }
+
+    if (typeof video.tags !== 'string' && video.tags.length !== 0) {
+        slug += `-${video.tags.join('')}`;
     }
 
     return slug;
