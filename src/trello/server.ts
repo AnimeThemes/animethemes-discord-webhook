@@ -8,7 +8,7 @@ import config from 'utils/config';
 import trello from 'api/middleware/trello';
 
 export default () => {
-    server.head('/', async () => {
+    server.head('/trello', async () => {
         return null;
     });
 
