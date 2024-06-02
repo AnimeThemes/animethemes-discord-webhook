@@ -8,12 +8,12 @@ import config from 'utils/config';
 
 export default () => {
     server.post('/thread', { preHandler: auth }, async (req, res) => {
+        let anime = req.body as Anime;
+        let thread;
         try {
-            const anime = req.body as Anime;
-
             const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
     
-            const thread = await forumChannel.threads.create({
+            thread = await forumChannel.threads.create({
                 name: anime.name,
                 appliedTags: [seasonTags[anime.season as number]],
                 message: {
@@ -25,6 +25,8 @@ export default () => {
             return res.code(201).send({ id: thread.id, name: thread.name });
 
         } catch (err) {
+            console.error(req.body);
+            console.error(thread);
             console.error(err);
             return res.code(500).send({ error: 'Error: Thread Creation.' });
         }
