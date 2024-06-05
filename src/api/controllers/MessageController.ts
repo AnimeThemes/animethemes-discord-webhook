@@ -1,5 +1,5 @@
 import { client, server } from "app";
-import { AttachmentBuilder, TextChannel, ThreadChannel } from "discord.js";
+import { AttachmentBuilder, NewsChannel, TextChannel, ThreadChannel } from "discord.js";
 
 import auth from "api/middleware/auth";
 
@@ -13,7 +13,7 @@ const MessageController = () => {
         try {
             let channel = await client.channels.fetch(channelId);
 
-            if (!(channel instanceof TextChannel || channel instanceof ThreadChannel)) {
+            if (!(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)) {
                 throw new Error('Channel not found.');
             }
 
