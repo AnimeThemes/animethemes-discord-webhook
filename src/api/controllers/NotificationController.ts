@@ -4,7 +4,7 @@ import { createVideoEmbedByAnime } from 'discord/embeds';
 
 import config from 'utils/config';
 
-const notification = () => {
+const NotificationController = () => {
     server.post('/notification', async (req, res) => {
         let body = req.body as any;
         let threadId: string = '';
@@ -17,6 +17,10 @@ const notification = () => {
                 threadId = video.animethemeentries[0].animetheme.anime.discordthread.thread_id;
                 thread = await forum.threads.fetch(threadId) as ThreadChannel;
 
+                if (thread === null) {
+                    throw new Error();
+                }
+
                 thread.send({
                     embeds: [createVideoEmbedByAnime(video, body.type)]
                 });
@@ -24,7 +28,7 @@ const notification = () => {
 
             return res.code(201).send({ message: 'New notification has been created.' });
         } catch (err) {
-            console.error(req.body);
+            console.error(body);
             console.error('ThreadId:', threadId);
             console.error('Thread:', thread);
             console.error(err);
@@ -33,4 +37,4 @@ const notification = () => {
     });
 };
 
-export default notification;
+export default NotificationController;
