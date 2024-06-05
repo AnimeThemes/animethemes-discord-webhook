@@ -3,9 +3,12 @@ import { AttachmentBuilder, TextChannel, ThreadChannel } from "discord.js";
 
 import auth from "api/middleware/auth";
 
+const discordMsgUrlReg = /https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)/;
+
 const MessageController = () => {
     server.get('/message', { preHandler: auth }, async (req, res) => {
-        const { channelId, messageId } = req.body as any;
+        const { url } = req.body as any;
+        const [fullMatch, guildId, channelId, messageId] = url.match(discordMsgUrlReg);
 
         try {
             let channel = await client.channels.fetch(channelId);
