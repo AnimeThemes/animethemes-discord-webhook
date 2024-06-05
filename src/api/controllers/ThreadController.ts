@@ -7,7 +7,7 @@ import auth from 'api/middleware/auth';
 import config from 'utils/config';
 
 const ThreadController = () => {
-    server.get('/thread', async (req, res) => {
+    server.get('/thread', { preHandler: auth }, async (req, res) => {
         const { id } = req.body as any;
         let thread;
 

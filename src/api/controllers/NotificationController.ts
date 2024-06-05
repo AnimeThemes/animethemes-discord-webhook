@@ -2,10 +2,11 @@ import { client, server } from 'app'
 import { Channel, ForumChannel, ThreadChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
 
+import auth from 'api/middleware/auth';
 import config from 'utils/config';
 
 const NotificationController = () => {
-    server.post('/notification', async (req, res) => {
+    server.post('/notification', { preHandler: auth }, async (req, res) => {
         let body = req.body as any;
         let threadId: string = '';
         let thread;
