@@ -20,6 +20,16 @@ To get started you need to define some environment variables. This can be done b
 root directory:
 
 ```ini
+; The AnimeThemes URLs.
+API_ANIMETHEMES = https://api.animethemes.moe
+ARTIST_URL = https://animethemes.moe/artist
+ANIME_URL = https://animethemes.moe/anime
+
+; The config used to run this API.
+API_HOST = animethemes.moe
+API_KEY =
+API_PORT = 3001
+
 ; The Bot Discord Token that you saved above.
 DISCORD_TOKEN = ...
 
@@ -29,14 +39,17 @@ DISCORD_FORUM_CHANNEL_ID = 1149167546906456124
 ; The ID of the Discord Trello Text Channel.
 DISCORD_TRELLO_CHANNEL_ID = 785620580384505867
 
-; The AnimeThemes URLs.
-API_ANIMETHEMES = https://api.animethemes.moe
-ARTIST_URL = https://animethemes.moe/artist
-ANIME_URL = https://animethemes.moe/anime
+; The IDs of the tags on Discord Forum Channel.
+DISCORD_WINTER_FORUM_TAG = 1149167724296151120
+DISCORD_SPRING_FORUM_TAG = 1149167909235589201
+DISCORD_SUMMER_FORUM_TAG = 1149167951950393434
+DISCORD_FALL_FORUM_TAG = 1149168000738529290
 
-; (Optional) The host and port to run the webhook on. If not set, localhost and 3000 will be used.
-SERVER_HOST = animethemes.moe
-SERVER_PORT = 3001
+; Set it to true if you are running it locally.
+NODE_ENV_DEV=true
+
+; Trello secret to validate trello webhooks.
+TRELLO_SECRET=
 ```
 
 ## Add Trello boards

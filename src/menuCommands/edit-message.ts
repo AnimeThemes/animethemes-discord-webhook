@@ -3,7 +3,7 @@ import { client } from 'app';
 import { deferReply, followUp, reply, showModal } from 'lib/discord';
 import { MenuCommand } from 'discord/commands';
 
-export default new MenuCommand({
+const editMessage = new MenuCommand({
     data: new ContextMenuCommandBuilder()
         .setName('Edit Message')
         .setDefaultMemberPermissions(8)
@@ -61,4 +61,6 @@ export default new MenuCommand({
             });
         });
     },
-})
+});
+
+export default editMessage;

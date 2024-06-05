@@ -5,7 +5,7 @@ import { ComponentsModal } from 'discord/commands';
 import Event from 'discord/event';
 import config from 'utils/config';
 
-export class ExtendClient extends Client {
+class ExtendClient extends Client {
 
     public commands: Collection<string, any> = new Collection();
     public menuCommands: Collection<string, any> = new Collection();
@@ -73,4 +73,6 @@ export class ExtendClient extends Client {
             }
         }
     }
-}
+};
+
+export default ExtendClient;

@@ -7,7 +7,7 @@ import { toTrelloImageUrl } from 'utils/trello';
 import config from 'utils/config';
 import trello from 'api/middleware/trello';
 
-export default () => {
+const TrelloController = () => {
     server.head('/trello', async () => {
         return null;
     });
@@ -44,4 +44,6 @@ export default () => {
 
         return null;
     });
-}
+};
+
+export default TrelloController;

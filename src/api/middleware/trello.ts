@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto';
 
-export default (request: any, secret: any, callbackURL: any) => {
+const trello = (request: any, secret: any, callbackURL: any) => {
     const base64Digest = function (s: any) {
         return createHmac("sha1", secret).update(s).digest("base64");
     };
@@ -10,4 +10,6 @@ export default (request: any, secret: any, callbackURL: any) => {
     const headerHash = request.headers["x-trello-webhook"];
 
     return doubleHash == headerHash;
-}
+};
+
+export default trello;
