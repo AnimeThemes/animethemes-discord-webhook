@@ -6,7 +6,7 @@ import { Anime } from 'types/anime';
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
 
-export default () => {
+const thread = () => {
     server.post('/thread', { preHandler: auth }, async (req, res) => {
         let anime = req.body as Anime;
         let thread;
@@ -61,7 +61,9 @@ export default () => {
             console.error(err);
         }
     });
-}
+};
+
+export default thread;
 
 const seasonTags: { [key: number]: string } = {
     0: config.DISCORD_WINTER_FORUM_TAG,

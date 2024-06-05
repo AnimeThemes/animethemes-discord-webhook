@@ -4,7 +4,7 @@ import { createVideoEmbedByAnime } from 'discord/embeds';
 
 import config from 'utils/config';
 
-export default () => {
+const notification = () => {
     server.post('/notification', async (req, res) => {
         let body = req.body as any;
         let threadId: string = '';
@@ -31,4 +31,6 @@ export default () => {
             return res.code(500).send({ error: 'Error: Notification Creation.' });
         }
     });
-}
+};
+
+export default notification;

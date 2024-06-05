@@ -1,6 +1,5 @@
-import { ExtendClient } from 'discord/ExtendClient';
-
 import routes from 'api/routes';
+import ExtendClient from 'discord/ExtendClient';
 import fastify from 'fastify';
 import config from 'utils/config';
 

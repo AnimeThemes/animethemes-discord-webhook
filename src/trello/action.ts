@@ -100,4 +100,4 @@ export function getEmbedConfigForAction(
     data: any,
 ): Partial<TrelloEmbedConfig> | null {
     return actions[action]?.(data) ?? null;
-}
+};

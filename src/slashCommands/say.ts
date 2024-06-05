@@ -3,7 +3,7 @@ import { client } from 'app';
 import { SlashCommand } from 'discord/commands';
 import { deferReply, followUp, showModal } from 'lib/discord';
 
-export default new SlashCommand({
+const say = new SlashCommand({
     data: new SlashCommandBuilder()
         .setName('say')
         .setDescription('Bot sends a message')
@@ -63,4 +63,6 @@ export default new SlashCommand({
             .catch((err) => console.error(err));
         });
     },
-})
+});
+
+export default say;

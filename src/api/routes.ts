@@ -1,9 +1,11 @@
-import notification from 'api/notification';
-import thread from 'api/thread';
-import trelloServer from 'trello/server';
+import notification from 'api/controllers/notification';
+import thread from 'api/controllers/thread';
+import trello from 'api/controllers/trello';
 
-export default () => {
-    thread();
+const routes = () => {
     notification();
-    trelloServer();
-}
+    thread();
+    trello();
+};
+
+export default routes;

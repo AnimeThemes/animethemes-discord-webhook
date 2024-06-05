@@ -8,7 +8,7 @@ import config from 'utils/config';
  * @param  {Artist[]}  artists  
  * @return {string}
  */
-export function artistsDescription(artists: Artist[]): string {
+export const artistsDescription = (artists: Artist[]): string => {
     let addArtists = '**Artists:** ';
 
     for (let artist of artists) {
@@ -24,7 +24,7 @@ export function artistsDescription(artists: Artist[]): string {
  * @param  {Video}  video
  * @return {string}
  */
-export function videoDescription(video: Video): string {
+export const videoDescription = (video: Video): string => {
     let anime = video.animethemeentries[0].animetheme.anime;
     let string = `**Resolution:** ${video.resolution}p\n`;
         string += `**Source:** ${video.source_name}\n`;
@@ -44,7 +44,7 @@ export function videoDescription(video: Video): string {
  * @param  {Video}  video
  * @returns {string}
  */
-export function createVideoSlug(theme: AnimeTheme, entry: Record<string, any>, video: Video): string {
+export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, video: Video): string => {
     let slug = theme.type_name + (theme.sequence || 1);
 
     if (entry.version && entry.version !== 1) {
@@ -72,7 +72,7 @@ export function createVideoSlug(theme: AnimeTheme, entry: Record<string, any>, v
  * @param  {Video}  video
  * @returns {string}
  */
-export function createVideoSlugByServer(theme: AnimeTheme, entry: Record<string, any>, video: Video): string {
+export const createVideoSlugByServer = (theme: AnimeTheme, entry: Record<string, any>, video: Video): string => {
     let slug = theme.type_name + (theme.sequence || 1);
 
     if (entry.version && entry.version !== 1) {

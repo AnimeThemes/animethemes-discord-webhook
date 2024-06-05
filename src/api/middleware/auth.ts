@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 
 import config from "utils/config";
 
-export default (req: FastifyRequest, res: FastifyReply, done: HookHandlerDoneFunction) => {
+const auth = (req: FastifyRequest, res: FastifyReply, done: HookHandlerDoneFunction) => {
     const apiKey = req.headers['x-api-key'];
 
     if (apiKey !== config.API_KEY) {
@@ -10,4 +10,6 @@ export default (req: FastifyRequest, res: FastifyReply, done: HookHandlerDoneFun
     }
 
     done();
-}
+};
+
+export default auth;

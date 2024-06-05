@@ -1,4 +1,4 @@
-export default class Event {
+class Event {
     name: string;
     once: boolean;
     execute: (...args: any) => Promise<void> | void;
@@ -19,4 +19,6 @@ export default class Event {
         this.once = object.once ?? false;
         this.execute = object.execute;
     }
-}
+};
+
+export default Event;

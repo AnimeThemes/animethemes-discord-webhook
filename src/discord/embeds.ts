@@ -11,7 +11,7 @@ import config from 'utils/config';
  * @param  {Anime}  anime
  * @return {EmbedBuilder}
  */
-export function createAnimeEmbed(anime: Anime): EmbedBuilder {
+export const createAnimeEmbed = (anime: Anime): EmbedBuilder => {
     const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
 
     return new EmbedBuilder()
@@ -27,7 +27,7 @@ export function createAnimeEmbed(anime: Anime): EmbedBuilder {
  * @param  {'added' | 'updated'}  type
  * @return {EmbedBuilder}
  */
-export function createVideoEmbedByAnime(video: Video, type: 'added' | 'updated'): EmbedBuilder {
+export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated'): EmbedBuilder => {
     const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
     let initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
 
@@ -57,7 +57,7 @@ export function createVideoEmbedByAnime(video: Video, type: 'added' | 'updated')
  * @param  {TrelloEmbedConfig} config
  * @returns {EmbedBuilder}
  */
-export function createTrelloEmbed(config: TrelloEmbedConfig): EmbedBuilder {
+export const createTrelloEmbed = (config: TrelloEmbedConfig): EmbedBuilder => {
     const embed = new EmbedBuilder()
         .setTitle(config.actionTitle)
         .setAuthor({
