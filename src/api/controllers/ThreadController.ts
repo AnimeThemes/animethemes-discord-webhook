@@ -8,7 +8,7 @@ import config from 'utils/config';
 
 const ThreadController = () => {
     server.get('/thread', { preHandler: auth }, async (req, res) => {
-        const { id } = req.body as any;
+        const { id } = req.query as any;
         let thread;
 
         try {

@@ -7,7 +7,7 @@ const discordMsgUrlReg = /https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)/
 
 const MessageController = () => {
     server.get('/message', { preHandler: auth }, async (req, res) => {
-        const { url } = req.body as any;
+        const { url } = req.query as any;
         const [fullMatch, guildId, channelId, messageId] = url.match(discordMsgUrlReg);
 
         try {
@@ -44,9 +44,22 @@ const MessageController = () => {
                 throw new Error('Channel not found.');
             }
 
+            let embeds = [];
+            for (let embed of message.embeds) {
+                if (embed.thumbnail.length === 0) {
+                    embed.thumbnail = {};
+                }
+
+                if (embed.image.length === 0) {
+                    embed.image = {};
+                }
+
+                embeds.push(embed);
+            }
+
             let files = [];
             for (let file of message.files) {
-                files.push(new AttachmentBuilder(file));
+                files.push(new AttachmentBuilder(file.url));
             }
 
             channel.send({
@@ -63,7 +76,8 @@ const MessageController = () => {
     });
 
     server.put('/message', { preHandler: auth }, async (req, res) => {
-        let newMessage = req.body as any;
+        let body = req.body as any;
+        let newMessage = body[0];
 
         try {
             let channel = await client.channels.fetch(newMessage.channelId);
@@ -82,14 +96,27 @@ const MessageController = () => {
                 channel.setArchived(false);
             }
 
+            let embeds = [];
+            for (let embed of newMessage.embeds) {
+                if (embed.thumbnail.length === 0) {
+                    embed.thumbnail = {};
+                }
+
+                if (embed.image.length === 0) {
+                    embed.image = {};
+                }
+
+                embeds.push(embed);
+            }
+
             let files = [];
             for (let file of newMessage.files) {
-                files.push(new AttachmentBuilder(file));
+                files.push(new AttachmentBuilder(file.url));
             }
 
             message.edit({
                 content: newMessage.content,
-                embeds: newMessage.embeds,
+                embeds: embeds,
                 files: files,
             });
 
