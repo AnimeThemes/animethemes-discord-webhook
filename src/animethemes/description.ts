@@ -45,7 +45,8 @@ export const videoDescription = (video: Video): string => {
  * @returns {string}
  */
 export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, video: Video): string => {
-    let slug = theme.type_name + (theme.sequence || 1);
+    let type = theme.type as string;
+    let slug = type + (theme.sequence || 1);
 
     if (entry.version && entry.version !== 1) {
         slug += `v${entry.version}`;

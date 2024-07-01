@@ -42,7 +42,7 @@ export interface Video {
 
 export interface AnimeTheme {
     sequence: number | null;
-    type: number;
+    type: number|string;
     type_name: string;
     anime: Partial<Anime>;
     group?: {
