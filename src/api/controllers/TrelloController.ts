@@ -8,14 +8,14 @@ import config from 'utils/config';
 import trello from 'api/middleware/trello';
 
 const TrelloController = () => {
-    server.head('/trello', async () => {
-        return null;
+    server.head('/trello', async (req, res) => {
+        return res.status(200).send('OK');
     });
 
-    server.post('/trello', async (req) => {
+    server.post('/trello', async (req, res) => {
         const callbackURL = 'http://' + (config.API_HOST || 'localhost') + ':' + (config.API_PORT ?? 3000) + '/trello';
         if (!trello(req, config.TRELLO_SECRET, callbackURL)) {
-            return null;
+            return res.status(200).send('OK');
         }
 
         const { model, action } = req.body as any;
@@ -24,7 +24,7 @@ const TrelloController = () => {
 
         if (!embedConfigForAction) {
             console.log(action.type);
-            return null;
+            return res.status(200).send('OK');
         }
 
         const embedConfig = {
@@ -42,7 +42,7 @@ const TrelloController = () => {
             embeds: [createTrelloEmbed(embedConfig)],
         });
 
-        return null;
+        return res.status(200).send('OK');;
     });
 };
 
