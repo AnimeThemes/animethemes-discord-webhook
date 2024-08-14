@@ -4,9 +4,7 @@ import { createVideoSlug } from 'animethemes/description';
 import axios from 'lib/axios';
 
 /**
- * Get the featured theme.
- *
- * @return {Promise<Record<string, string> | null>}
+ * Get the current featured theme.
  */
 export const getFeaturedTheme = async (): Promise<Record<string, string> | null> => {
     try {

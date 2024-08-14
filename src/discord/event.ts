@@ -3,13 +3,6 @@ class Event {
     once: boolean;
     execute: (...args: any) => Promise<void> | void;
 
-    /**
-     * @param {{
-     *      name: string;
-     *      once: boolean;
-     *      execute: (...args: any) => Promise<void> | void;
-     *  }} object
-     */
     constructor(object: {
         name: string;
         once?: boolean;
