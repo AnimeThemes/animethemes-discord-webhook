@@ -7,9 +7,6 @@ import config from 'utils/config';
 
 /**
  * Create the anime embed.
- *
- * @param  {Anime}  anime
- * @return {EmbedBuilder}
  */
 export const createAnimeEmbed = (anime: Anime): EmbedBuilder => {
     const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
@@ -22,10 +19,6 @@ export const createAnimeEmbed = (anime: Anime): EmbedBuilder => {
 
 /**
  * Create an embed of a video using anime information.
- *
- * @param  {Video}  video
- * @param  {'added' | 'updated'}  type
- * @return {EmbedBuilder}
  */
 export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated'): EmbedBuilder => {
     const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
@@ -53,9 +46,6 @@ export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated')
 
 /**
  * Create the trello embed.
- *
- * @param  {TrelloEmbedConfig} config
- * @returns {EmbedBuilder}
  */
 export const createTrelloEmbed = (config: TrelloEmbedConfig): EmbedBuilder => {
     const embed = new EmbedBuilder()

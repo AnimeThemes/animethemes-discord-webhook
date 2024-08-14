@@ -4,9 +4,6 @@ import config from 'utils/config';
 
 /**
  * Format Artists to a string.
- *
- * @param  {Artist[]}  artists  
- * @return {string}
  */
 export const artistsDescription = (artists: Artist[]): string => {
     let addArtists = '**Artists:** ';
@@ -20,9 +17,6 @@ export const artistsDescription = (artists: Artist[]): string => {
 
 /**
  * Format Video to a string.
- *
- * @param  {Video}  video
- * @return {string}
  */
 export const videoDescription = (video: Video): string => {
     let anime = video.animethemeentries[0].animetheme.anime;
@@ -38,11 +32,6 @@ export const videoDescription = (video: Video): string => {
  * Slug format is:
  *
  * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
- *
- * @param  {AnimeTheme}  theme
- * @param  {Record<string, any>}  entry
- * @param  {Video}  video
- * @returns {string}
  */
 export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, video: Video): string => {
     let type = theme.type as string;
@@ -67,11 +56,6 @@ export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, v
  * Slug format is:
  *
  * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
- *
- * @param  {AnimeTheme}  theme
- * @param  {Record<string, any>}  entry
- * @param  {Video}  video
- * @returns {string}
  */
 export const createVideoSlugByServer = (theme: AnimeTheme, entry: Record<string, any>, video: Video): string => {
     let slug = theme.type_name + (theme.sequence || 1);
