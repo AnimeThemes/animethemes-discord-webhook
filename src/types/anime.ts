@@ -61,6 +61,7 @@ export interface Artist {
     name: string;
     slug: string;
     artistsong: {
+        alias: string | null;
         as: string | null;
     };
 };
