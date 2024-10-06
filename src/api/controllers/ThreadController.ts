@@ -31,7 +31,7 @@ const ThreadController = () => {
 
     server.post('/thread', { preHandler: auth }, async (req, res) => {
         let anime = req.body as Anime;
-        let thread: AnyThreadChannel<boolean> | null = null;
+        let thread: AnyThreadChannel | null = null;
 
         try {
             const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
@@ -43,7 +43,7 @@ const ThreadController = () => {
                     embeds: [createAnimeEmbed(anime)],
                     files: [new AttachmentBuilder(anime.images.find(image => image?.facet === 1 /* Large Cover */)?.link as string)]
                 }
-            }) as AnyThreadChannel<boolean>;
+            }) as AnyThreadChannel;
 
             if (thread === null) {
                 throw new Error();
@@ -60,7 +60,7 @@ const ThreadController = () => {
 
     server.put('/thread', { preHandler: auth }, async (req, res) => {
         const body = req.body as any;
-        let thread: AnyThreadChannel<boolean> | null = null;
+        let thread: AnyThreadChannel | null = null;
 
         try {
             const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
@@ -84,7 +84,7 @@ const ThreadController = () => {
 
     server.delete('/thread', { preHandler: auth }, async (req, res) => {
         const body = req.body as Record<string, any>;
-        let thread: AnyThreadChannel<boolean> | null = null;
+        let thread: AnyThreadChannel | null = null;
 
         try {
             const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
