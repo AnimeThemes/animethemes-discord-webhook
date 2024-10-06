@@ -14,7 +14,7 @@ export const artistsDescription = (artists: Artist[]): string => {
         let alias = pivot.alias !== null && pivot.alias.length !== 0 ? pivot.alias : artist.name;
         let name = pivot.as !== null && pivot.as.length !== 0 ? `${pivot.as} (CV: ${alias})` : alias;
 
-        addArtists += `[${name}](${config.ARTIST_URL + '/' + artist.slug})`;
+        addArtists += `[${name}](${config.ARTIST_URL + '/' + artist.slug}), `;
     }
 
     return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');

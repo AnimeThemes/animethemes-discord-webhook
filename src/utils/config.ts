@@ -8,7 +8,7 @@ const config = {
     ANIME_URL: process.env.ANIME_URL,
     API_HOST: process.env.API_HOST,
     API_KEY: process.env.API_KEY,
-    API_PORT: process.env.API_PORT,
+    API_PORT: process.env.API_PORT ?? 3000,
     DISCORD_TOKEN: process.env.DISCORD_TOKEN,
     DISCORD_FORUM_CHANNEL_ID: process.env.DISCORD_FORUM_CHANNEL_ID,
     DISCORD_TRELLO_CHANNEL_ID: process.env.DISCORD_TRELLO_CHANNEL_ID,

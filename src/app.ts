@@ -8,7 +8,7 @@ export const server = fastify({ logger: true });
 
 server.listen({
     host: config.API_HOST,
-    port: +config.API_PORT ?? 3000
+    port: +config.API_PORT
 }, (err, address) => {
     if (err) {
         server.log.error(err);
