@@ -1,4 +1,4 @@
-import { FeaturedTheme, Video } from 'types/anime';
+import { AnimeTheme, AnimeThemeEntry, CurrentFeaturedTheme, Video } from 'types/animethemes';
 import { createVideoSlug } from 'animethemes/description';
 
 import axios from 'lib/axios';
@@ -11,14 +11,14 @@ export const getFeaturedTheme = async (): Promise<Record<string, string> | null>
         let response = (await axios.get(`/current/featuredtheme?include=animethemeentry.animetheme.anime,animethemeentry.animetheme.group,video`)).data;
 
         if (response.hasOwnProperty('featuredtheme')) {
-            let featuredTheme = response.featuredtheme as FeaturedTheme;
+            let featuredTheme = response.featuredtheme as CurrentFeaturedTheme;
             let video = featuredTheme.video;
             let entry = featuredTheme.animethemeentry;
-            let theme = entry.animetheme;
+            let theme = entry?.animetheme;
 
             return {
-                anime: theme.anime.name as string,
-                theme: createVideoSlug(theme, entry, video as Video),
+                anime: theme?.anime.name as string,
+                theme: createVideoSlug(theme as AnimeTheme, entry as AnimeThemeEntry, video as Video),
             };
         }
 

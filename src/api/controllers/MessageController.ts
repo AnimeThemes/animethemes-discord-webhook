@@ -8,7 +8,7 @@ const discordMsgUrlReg = /https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)/
 const MessageController = () => {
     server.get('/message', { preHandler: auth }, async (req, res) => {
         const { url } = req.query as any;
-        const [fullMatch, guildId, channelId, messageId] = url.match(discordMsgUrlReg);
+        const [, , channelId, messageId] = url.match(discordMsgUrlReg);
 
         try {
             let channel = await client.channels.fetch(channelId);

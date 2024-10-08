@@ -6,6 +6,7 @@ const config = {
     API_ANIMETHEMES: process.env.API_ANIMETHEMES,
     ARTIST_URL: process.env.ARTIST_URL,
     ANIME_URL: process.env.ANIME_URL,
+    API_HOST_NAME: process.env.API_HOST_NAME,
     API_HOST: process.env.API_HOST,
     API_KEY: process.env.API_KEY,
     API_PORT: process.env.API_PORT ?? 3000,

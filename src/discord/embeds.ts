@@ -1,6 +1,6 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
 import { artistsDescription, videoDescription } from 'animethemes/description';
-import { Anime, Video } from 'types/anime';
+import { Anime, ArtistWithArtistSong, Video } from 'types/animethemes';
 import { TrelloEmbedConfig } from 'types/trello';
 
 import config from 'utils/config';
@@ -24,14 +24,18 @@ export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated')
     const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
     let initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
 
+    if (!video.animethemeentries) {
+        return new EmbedBuilder();
+    }
+
     let entry = video.animethemeentries[0];
     let theme = entry.animetheme;
     let anime = theme.anime;
 
-    if (theme.song && theme.song.artists.length !== 0) {
-        initialDescription += artistsDescription(theme.song.artists) + '\n';
+    if (theme.song && theme.song.artists && theme.song.artists.length !== 0) {
+        initialDescription += artistsDescription(theme.song.artists as Array<ArtistWithArtistSong>) + '\n';
     }
-    
+
     initialDescription += entry.spoiler ? '⚠️ Spoiler\n' : '';
     initialDescription += entry.nsfw ? '🔞 NSFW\n' : '';
     initialDescription += `**Episodes:** ${entry.episodes === null || entry.episodes.length === 0 ? '-' : entry.episodes}\n`;
@@ -39,9 +43,9 @@ export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated')
 
     return new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(`${theme.type_name + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group_id === null ? '' : `-${theme.group?.slug}`}${theme.song_id === null ? '*T.B.A.*' : ` - ${theme.song?.title}`}`)
+        .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group?.slug}`}${theme.song?.title ?? '*T.B.A.*'}`)
         .setDescription(initialDescription)
-        .setThumbnail(anime.images?.find(image => image.facet === 0 /* Small Cover */)?.link as string);
+        .setThumbnail(anime.images?.find(image => image.facet === 'Small Cover')?.link as string);
 }
 
 /**

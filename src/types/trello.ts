@@ -1,4 +1,4 @@
-export interface TrelloEmbedConfig {
+export type TrelloEmbedConfig = {
     actionTitle: string;
     actionDescription?: string;
     imageUrl?: string;
@@ -9,13 +9,13 @@ export interface TrelloEmbedConfig {
     actionUserImageUrl: string;
 };
 
-export interface TrelloCard {
+export type TrelloCard = {
     name: string;
     shortLink: string;
     desc: string;
 };
 
-export interface TrelloCreateCardAction {
+export type TrelloCreateCardAction = {
     action: {
         data: {
             card: TrelloCard;
@@ -29,7 +29,7 @@ export interface TrelloCreateCardAction {
     };
 };
 
-export interface TrelloUpdateCardAction {
+export type TrelloUpdateCardAction = {
     action: {
         data: {
             card: TrelloCard;
@@ -51,7 +51,7 @@ export interface TrelloUpdateCardAction {
     };
 };
 
-export interface TrelloCommentCardAction {
+export type TrelloCommentCardAction = {
     action: {
         data: {
             card: TrelloCard;
@@ -63,7 +63,7 @@ export interface TrelloCommentCardAction {
     };
 };
 
-export interface TrelloMemberToCardAction {
+export type TrelloMemberToCardAction = {
     action: {
         data: {
             card: TrelloCard;
@@ -81,7 +81,10 @@ export interface TrelloMemberToCardAction {
     };
 };
 
-export interface TrelloUpdateCheckItemStateOnCardAction {
+export type TrelloUpdateCheckItemStateOnCardAction = {
+    model: {
+        id: string;
+    };
     action: {
         data: {
             card: TrelloCard;
