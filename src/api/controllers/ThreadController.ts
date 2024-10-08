@@ -1,7 +1,7 @@
 import { client, server } from 'app';
 import { AnyThreadChannel, AttachmentBuilder, Channel, ForumChannel, ThreadChannel } from 'discord.js';
 import { createAnimeEmbed } from 'discord/embeds';
-import { Anime } from 'types/anime';
+import { Anime } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
@@ -38,10 +38,10 @@ const ThreadController = () => {
 
             thread = await forumChannel.threads.create({
                 name: anime.name,
-                appliedTags: [seasonTags[anime.season as number]],
+                appliedTags: [seasonTags[anime.season]],
                 message: {
                     embeds: [createAnimeEmbed(anime)],
-                    files: [new AttachmentBuilder(anime.images.find(image => image?.facet === 1 /* Large Cover */)?.link as string)]
+                    files: [new AttachmentBuilder(anime.images?.find(image => image?.facet === 'Large Cover')?.link as string)]
                 }
             }) as AnyThreadChannel;
 
@@ -107,9 +107,9 @@ const ThreadController = () => {
 
 export default ThreadController;
 
-const seasonTags: { [key: number]: string } = {
-    0: config.DISCORD_WINTER_FORUM_TAG,
-    1: config.DISCORD_SPRING_FORUM_TAG,
-    2: config.DISCORD_SUMMER_FORUM_TAG,
-    3: config.DISCORD_FALL_FORUM_TAG,
+const seasonTags: { [key: string]: string } = {
+    'Winter': config.DISCORD_WINTER_FORUM_TAG,
+    'Spring': config.DISCORD_SPRING_FORUM_TAG,
+    'Summer': config.DISCORD_SUMMER_FORUM_TAG,
+    'Fall': config.DISCORD_FALL_FORUM_TAG,
 };
