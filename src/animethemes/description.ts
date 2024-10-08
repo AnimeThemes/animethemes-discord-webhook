@@ -1,4 +1,5 @@
 import { AnimeTheme, ArtistWithArtistSong, Video } from 'types/animethemes';
+import { joinWithLastSeparator } from 'utils/functions';
 
 import config from 'utils/config';
 
@@ -6,7 +7,7 @@ import config from 'utils/config';
  * Format Artists to a string.
  */
 export const artistsDescription = (artists: Array<ArtistWithArtistSong>): string => {
-    let addArtists = '**Artists:** ';
+    let artistsArray = [];
 
     for (let artist of artists) {
         let pivot = artist.artistsong;
@@ -14,27 +15,30 @@ export const artistsDescription = (artists: Array<ArtistWithArtistSong>): string
         let alias = pivot.alias !== null && pivot.alias.length !== 0 ? pivot.alias : artist.name;
         let name = pivot.as !== null && pivot.as.length !== 0 ? `${pivot.as} (CV: ${alias})` : alias;
 
-        addArtists += `[${name}](${config.ARTIST_URL + '/' + artist.slug}), `;
+        artistsArray.push(`[${name}](${config.ARTIST_URL + '/' + artist.slug})`);
     }
 
-    return addArtists.replace(/,\s$/, '\n').replace(/,\s*([^,]*)$/, ' & $1');
+    return `**Artist${artistsArray.length > 1 ? 's' : ''}:** ` + joinWithLastSeparator(artistsArray, ', ', ' & ');
 }
 
 /**
  * Format Video to a string.
  */
 export const videoDescription = (video: Video): string => {
+    let videoText: Array<string> = [];
+
     if (!video.animethemeentries) {
-        return '';
+        return videoText.toString();
     }
 
     let anime = video.animethemeentries[0].animetheme.anime;
-    let string = `**Resolution:** ${video.resolution}p\n`;
-        string += `**Source:** ${video.source}\n`;
-        string += `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${typeof video.tags == 'string' ? video.tags : video.tags.join('')}`}\n`;
-        string += `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`;
 
-    return string;
+    videoText.push(`**Resolution:** ${video.resolution}p`);
+    videoText.push(`**Source:** ${video.source}`);
+    videoText.push(`**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${typeof video.tags == 'string' ? video.tags : video.tags.join('')}`}`);
+    videoText.push(`**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`);
+
+    return videoText.join('\n');
 }
 
 /**
