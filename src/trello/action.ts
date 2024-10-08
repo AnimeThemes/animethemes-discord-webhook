@@ -81,14 +81,16 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
         };
     },
     updateCheckItemStateOnCard(data: TrelloUpdateCheckItemStateOnCardAction) {
-        const { action } = data;
+        const { model, action } = data;
         const { card, checkItem } = action.data;
         const isComplete = checkItem.state === 'complete';
 
+        const text = model.id === '67031bcecaf3affe6e151fb4' ? 'episode ' : 'item '; // Seasonal board
+
         return {
             actionTitle: isComplete
-                ? `✅ ${action.memberCreator.fullName} checked episode ${checkItem.name} of '${card.name}'`
-                : `❎ ${action.memberCreator.fullName} un-checked episode ${checkItem.name} of '${card.name}'`,
+                ? `✅ ${action.memberCreator.fullName} checked ${text}${checkItem.name} of '${card.name}'`
+                : `❎ ${action.memberCreator.fullName} un-checked ${text}${checkItem.name} of '${card.name}'`,
             actionDescription: toTrelloCardLink(card),
             color: isComplete ? colors.green : colors.red,
         };
