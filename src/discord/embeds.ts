@@ -43,7 +43,7 @@ export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated')
 
     return new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group?.slug}`}${theme.song?.title ?? '*T.B.A.*'}`)
+        .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group?.slug}`} - ${theme.song?.title ?? '*T.B.A.*'}`)
         .setDescription(initialDescription)
         .setThumbnail(anime.images?.find(image => image.facet === 'Small Cover')?.link as string);
 }

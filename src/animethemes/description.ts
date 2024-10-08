@@ -18,7 +18,7 @@ export const artistsDescription = (artists: Array<ArtistWithArtistSong>): string
         artistsArray.push(`[${name}](${config.ARTIST_URL + '/' + artist.slug})`);
     }
 
-    return `**Artist${artistsArray.length > 1 ? 's' : ''}:** ` + joinWithLastSeparator(artistsArray, ', ', ' & ');
+    return `**Artist${artistsArray.length > 1 ? 's' : ''}:** ` + joinWithLastSeparator(artistsArray, ', ', ' & ')  + '\n';
 }
 
 /**
@@ -58,7 +58,7 @@ export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, v
         slug += `-${theme.group?.slug}`;
     }
 
-    if (video.tags) {
+    if (video.tags.length > 0) {
         slug += `-${video.tags}`;
     }
 
