@@ -21,7 +21,7 @@ root directory:
 
 ```ini
 ; The AnimeThemes URLs.
-API_ANIMETHEMES = https://api.animethemes.moe
+ANIMETHEMES_GRAPHQL = https://graphql.animethemes.moe
 ARTIST_URL = https://animethemes.moe/artist
 ANIME_URL = https://animethemes.moe/anime
 

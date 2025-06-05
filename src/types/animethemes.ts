@@ -13,12 +13,12 @@ export type Anime = {
 export type AnimeTheme = {
     sequence: Maybe<number>;
     type: string;
-    group?: Maybe<AnimeThemeGroup>;
+    group?: Maybe<ThemeGroup>;
     song?: Maybe<Song>;
     anime: Anime;
 };
 
-export type AnimeThemeGroup = {
+export type ThemeGroup = {
     name: string;
     slug: string;
 };
@@ -46,12 +46,24 @@ export type ArtistSong = {
     as: Maybe<string>;
 };
 
-export type CurrentFeaturedTheme = {
-    start_at: string;
-    end_at: string;
-    animethemeentry?: Maybe<AnimeThemeEntry>;
-    video?: Maybe<Video>;
-};
+export type CurrentFeaturedTheme = Maybe<{
+    animethemeentry: {
+        animetheme: {
+            anime: {
+                name: string;
+            };
+            group: Maybe<{
+                slug: string;
+            }>;
+            sequence: Maybe<number>;
+            type: string;
+        };
+        version: Maybe<string>;
+    };
+    video: {
+        tags: string | Array<string>;
+    };
+}>;
 
 export type Image = {
     path: string;

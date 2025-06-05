@@ -1,4 +1,11 @@
-import { TrelloEmbedConfig, TrelloCreateCardAction, TrelloUpdateCardAction, TrelloCommentCardAction, TrelloMemberToCardAction, TrelloUpdateCheckItemStateOnCardAction } from 'types/trello';
+import {
+    TrelloEmbedConfig,
+    TrelloCreateCardAction,
+    TrelloUpdateCardAction,
+    TrelloCommentCardAction,
+    TrelloMemberToCardAction,
+    TrelloUpdateCheckItemStateOnCardAction
+} from 'types/trello';
 import { toTrelloCardLink, toTrelloImageUrl } from 'utils/trello';
 
 const colors = {

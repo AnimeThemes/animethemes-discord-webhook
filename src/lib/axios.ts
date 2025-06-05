@@ -4,7 +4,7 @@ import Axios from 'axios';
 import config from 'utils/config';
 
 const axios = Axios.create({
-    baseURL: config.API_ANIMETHEMES,
+    baseURL: config.ANIMETHEMES_GRAPHQL,
 });
 
 export default axios;

@@ -1,4 +1,16 @@
-import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, CommandInteraction, Events, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, TextChannel, TextInputBuilder } from 'discord.js';
+import {
+    ActionRowBuilder,
+    AttachmentBuilder,
+    BaseInteraction,
+    CommandInteraction,
+    Events,
+    ModalBuilder,
+    ModalSubmitInteraction,
+    SlashCommandBuilder,
+    TextChannel,
+    TextInputBuilder,
+    TextInputStyle
+} from 'discord.js';
 import { client } from 'app';
 import { SlashCommand } from 'discord/commands';
 import { deferReply, followUp, showModal } from 'lib/discord';
@@ -24,21 +36,21 @@ const say = new SlashCommand({
             .setCustomId('input-message')
             .setLabel('Message')
             .setRequired(true)
-            .setStyle(2);
+            .setStyle(TextInputStyle.Paragraph);
 
         const image = new TextInputBuilder()
             .setCustomId('input-image')
             .setLabel('Image Link')
             .setRequired(false)
             .setPlaceholder('Comma-separated Links')
-            .setStyle(2);
+            .setStyle(TextInputStyle.Paragraph);
 
-        const row = new ActionRowBuilder().addComponents(text);
-        const row2 = new ActionRowBuilder().addComponents(image);
+        const textRow = new ActionRowBuilder().addComponents(text);
+        const imageRow = new ActionRowBuilder().addComponents(image);
 
-        modal.setComponents([row, row2] as any[]);
+        modal.setComponents([textRow, imageRow] as any[]);
         await showModal(interaction, modal);
-        
+
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {
             if (!i.isModalSubmit()) return;
             if (i.user.id !== interaction.user.id) return;
