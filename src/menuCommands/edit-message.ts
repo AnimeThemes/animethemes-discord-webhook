@@ -1,4 +1,17 @@
-import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, ContextMenuCommandBuilder, ContextMenuCommandInteraction, Events, Message, ModalBuilder, ModalSubmitInteraction, TextChannel, TextInputBuilder } from 'discord.js';
+import {
+    ActionRowBuilder,
+    AttachmentBuilder,
+    BaseInteraction,
+    ContextMenuCommandBuilder,
+    ContextMenuCommandInteraction,
+    Events,
+    Message,
+    ModalBuilder,
+    ModalSubmitInteraction,
+    TextChannel,
+    TextInputBuilder,
+    TextInputStyle
+} from 'discord.js';
 import { client } from 'app';
 import { deferReply, followUp, reply, showModal } from 'lib/discord';
 import { MenuCommand } from 'discord/commands';
@@ -24,20 +37,20 @@ const editMessage = new MenuCommand({
             .setCustomId('input-edit-message')
             .setLabel('MESSAGE')
             .setRequired(true)
-            .setStyle(2)
+            .setStyle(TextInputStyle.Paragraph)
             .setValue(message.content as string);
 
         const imageInput = new TextInputBuilder()
             .setCustomId('input-edit-image')
             .setLabel('IMAGE LINK')
             .setRequired(false)
-            .setStyle(2)
+            .setStyle(TextInputStyle.Paragraph)
             .setValue(message.attachments.map(a => a.proxyURL).join(','));
 
-        const row = new ActionRowBuilder().addComponents(messageInput);
-        const row2 = new ActionRowBuilder().addComponents(imageInput);
+        const messageRow = new ActionRowBuilder().addComponents(messageInput);
+        const imageRow = new ActionRowBuilder().addComponents(imageInput);
 
-        modal.setComponents([row, row2] as any[]);
+        modal.setComponents([messageRow, imageRow] as any[]);
         await showModal(interaction, modal);
 
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {

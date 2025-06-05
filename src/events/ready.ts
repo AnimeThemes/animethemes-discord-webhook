@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { ActivityType, Events } from 'discord.js';
 import { client } from 'app';
 import { getFeaturedTheme } from 'animethemes/api';
 
@@ -14,7 +14,7 @@ export default new Event({
         if (featuredtheme !== null) {
             client.user?.setActivity({
                 name: `${featuredtheme.anime} ${featuredtheme.theme}`,
-                type: 2,
+                type: ActivityType.Listening,
             });
         }
 
@@ -24,7 +24,7 @@ export default new Event({
             if (featuredtheme !== null) {
                 client.user?.setActivity({
                     name: `${featuredtheme.anime} ${featuredtheme.theme}`,
-                    type: 2,
+                    type: ActivityType.Listening,
                 });
             }
         }, 3 * 60 * 60 * 1000);

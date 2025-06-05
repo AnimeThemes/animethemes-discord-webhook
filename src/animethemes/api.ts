@@ -1,4 +1,4 @@
-import { AnimeTheme, AnimeThemeEntry, CurrentFeaturedTheme, Video } from 'types/animethemes';
+import { CurrentFeaturedTheme } from 'types/animethemes';
 import { createVideoSlug } from 'animethemes/description';
 
 import axios from 'lib/axios';
@@ -8,17 +8,19 @@ import axios from 'lib/axios';
  */
 export const getFeaturedTheme = async (): Promise<Record<string, string> | null> => {
     try {
-        let response = (await axios.get(`/current/featuredtheme?include=animethemeentry.animetheme.anime,animethemeentry.animetheme.group,video`)).data;
+        let featuredtheme = (await axios.post('/', {
+            'query': currentFeaturedThemeQuery,
+        })).data.data.currentfeaturedtheme as CurrentFeaturedTheme;
 
-        if (response.hasOwnProperty('featuredtheme')) {
-            let featuredTheme = response.featuredtheme as CurrentFeaturedTheme;
-            let video = featuredTheme.video;
-            let entry = featuredTheme.animethemeentry;
-            let theme = entry?.animetheme;
+        if (featuredtheme !== null) {
+            let video = featuredtheme.video;
+            let entry = featuredtheme.animethemeentry;
+            let theme = entry.animetheme;
 
             return {
-                anime: theme?.anime.name as string,
-                theme: createVideoSlug(theme as AnimeTheme, entry as AnimeThemeEntry, video as Video),
+                anime: theme.anime.name,
+                // @ts-ignore
+                theme: createVideoSlug(theme, entry, video),
             };
         }
 
@@ -28,3 +30,25 @@ export const getFeaturedTheme = async (): Promise<Record<string, string> | null>
         return null;
     }
 }
+
+const currentFeaturedThemeQuery = `
+query {
+    currentfeaturedtheme {
+        animethemeentry {
+            animetheme {
+                anime {
+                    name
+                }
+                group {
+                    slug
+                }
+                type
+            }
+            version
+        }
+        video {
+            tags
+        }
+    }
+}
+`;

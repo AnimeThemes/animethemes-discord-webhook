@@ -1,6 +1,6 @@
 declare namespace NodeJS {
     interface ProcessEnv {
-        API_ANIMETHEMES: string;
+        ANIMETHEMES_GRAPHQL: string;
         ARTIST_URL: string;
         ANIME_URL: string;
         API_HOST_NAME: string;
