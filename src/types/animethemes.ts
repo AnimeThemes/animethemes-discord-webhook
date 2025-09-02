@@ -1,4 +1,4 @@
-import { Maybe } from "types/generics";
+import { Maybe } from 'types/generics';
 
 export type Anime = {
     name: string;

@@ -1,4 +1,4 @@
-import { TrelloCard } from "types/trello";
+import { TrelloCard } from 'types/trello';
 
 export function toTrelloImageUrl(imageUrl: string): string {
     return `${imageUrl}/170.png`;

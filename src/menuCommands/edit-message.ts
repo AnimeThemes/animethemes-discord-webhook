@@ -10,17 +10,14 @@ import {
     ModalSubmitInteraction,
     TextChannel,
     TextInputBuilder,
-    TextInputStyle
+    TextInputStyle,
 } from 'discord.js';
 import { client } from 'app';
 import { deferReply, followUp, reply, showModal } from 'lib/discord';
 import { MenuCommand } from 'discord/commands';
 
 const editMessage = new MenuCommand({
-    data: new ContextMenuCommandBuilder()
-        .setName('Edit Message')
-        .setDefaultMemberPermissions(8)
-        .setType(3),
+    data: new ContextMenuCommandBuilder().setName('Edit Message').setDefaultMemberPermissions(8).setType(3),
 
     async execute(interaction: ContextMenuCommandInteraction) {
         const { guild } = interaction;
@@ -29,9 +26,7 @@ const editMessage = new MenuCommand({
 
         if (message.author.id !== client.user?.id) return await reply(interaction, 'This message is not from the bot.');
 
-        const modal = new ModalBuilder()
-            .setCustomId('modal-edit-message')
-            .setTitle('EDIT MESSAGE');
+        const modal = new ModalBuilder().setCustomId('modal-edit-message').setTitle('EDIT MESSAGE');
 
         const messageInput = new TextInputBuilder()
             .setCustomId('input-edit-message')
@@ -45,7 +40,7 @@ const editMessage = new MenuCommand({
             .setLabel('IMAGE LINK')
             .setRequired(false)
             .setStyle(TextInputStyle.Paragraph)
-            .setValue(message.attachments.map(a => a.proxyURL).join(','));
+            .setValue(message.attachments.map((a) => a.proxyURL).join(','));
 
         const messageRow = new ActionRowBuilder().addComponents(messageInput);
         const imageRow = new ActionRowBuilder().addComponents(imageInput);
@@ -62,15 +57,19 @@ const editMessage = new MenuCommand({
 
             await deferReply(interactionModal);
 
-            const channel = guild?.channels.cache.find(c => c.id === interaction.channelId) as TextChannel;
+            const channel = guild?.channels.cache.find((c) => c.id === interaction.channelId) as TextChannel;
 
             channel.messages.fetch(message.id).then((msg: Message) => {
                 msg.edit({
                     content: interactionModal.fields.getTextInputValue('input-edit-message'),
-                    files: interactionModal.fields.getTextInputValue('input-edit-image').split(',').filter(Boolean).map(image => new AttachmentBuilder(image)),
+                    files: interactionModal.fields
+                        .getTextInputValue('input-edit-image')
+                        .split(',')
+                        .filter(Boolean)
+                        .map((image) => new AttachmentBuilder(image)),
                 })
-                .then(async () => await followUp(interactionModal, 'Done'))
-                .catch((err) => console.error(err));
+                    .then(async () => await followUp(interactionModal, 'Done'))
+                    .catch((err) => console.error(err));
             });
         });
     },

@@ -1,6 +1,9 @@
 import { CommandInteraction, ModalBuilder, ModalSubmitInteraction } from 'discord.js';
 
-export const deferReply = async (interaction: CommandInteraction | ModalSubmitInteraction, ephemeral: boolean | undefined = true): Promise<void> => {
+export const deferReply = async (
+    interaction: CommandInteraction | ModalSubmitInteraction,
+    ephemeral: boolean | undefined = true,
+): Promise<void> => {
     try {
         await interaction.deferReply({ ephemeral: ephemeral });
     } catch (err) {
@@ -16,7 +19,11 @@ export const editReply = async (interaction: CommandInteraction, msg: string): P
     }
 };
 
-export const followUp = async (interaction: CommandInteraction | ModalSubmitInteraction, msg: string, ephemeral: boolean | undefined = true): Promise<void> => {
+export const followUp = async (
+    interaction: CommandInteraction | ModalSubmitInteraction,
+    msg: string,
+    ephemeral: boolean | undefined = true,
+): Promise<void> => {
     try {
         await interaction.followUp({ content: msg, ephemeral: ephemeral });
     } catch (err) {
@@ -24,7 +31,11 @@ export const followUp = async (interaction: CommandInteraction | ModalSubmitInte
     }
 };
 
-export const reply = async (interaction: CommandInteraction, msg: string, ephemeral: boolean | undefined = true): Promise<void> => {
+export const reply = async (
+    interaction: CommandInteraction,
+    msg: string,
+    ephemeral: boolean | undefined = true,
+): Promise<void> => {
     try {
         await interaction.reply({ content: msg, ephemeral: ephemeral });
     } catch (err) {

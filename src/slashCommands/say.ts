@@ -9,7 +9,7 @@ import {
     SlashCommandBuilder,
     TextChannel,
     TextInputBuilder,
-    TextInputStyle
+    TextInputStyle,
 } from 'discord.js';
 import { client } from 'app';
 import { SlashCommand } from 'discord/commands';
@@ -20,17 +20,13 @@ const say = new SlashCommand({
         .setName('say')
         .setDescription('Bot sends a message')
         .setDefaultMemberPermissions(8)
-        .addChannelOption(option => option
-            .setName('channel')
-            .setDescription('Set a channel')
-            .addChannelTypes(0)
-            .setRequired(true)),
+        .addChannelOption((option) =>
+            option.setName('channel').setDescription('Set a channel').addChannelTypes(0).setRequired(true),
+        ),
 
     async execute(interaction: CommandInteraction) {
         const { guild } = interaction;
-        const modal = new ModalBuilder()
-            .setCustomId('modal-message')
-            .setTitle('Message');
+        const modal = new ModalBuilder().setCustomId('modal-message').setTitle('Message');
 
         const text = new TextInputBuilder()
             .setCustomId('input-message')
@@ -63,16 +59,23 @@ const say = new SlashCommand({
             const { fields } = interactionModal;
             const message = fields.getTextInputValue('input-message');
 
-            const channel = guild?.channels.cache.find(c => c.id === interaction.options.get('channel')?.value) as TextChannel;
+            const channel = guild?.channels.cache.find(
+                (c) => c.id === interaction.options.get('channel')?.value,
+            ) as TextChannel;
 
-            channel.send({
-                content: message,
-                files: fields.getTextInputValue('input-image').split(',').filter(Boolean).map(image => new AttachmentBuilder(image)),
-            })
-            .then(async () => {
-                await followUp(interactionModal, 'Done');
-            })
-            .catch((err) => console.error(err));
+            channel
+                .send({
+                    content: message,
+                    files: fields
+                        .getTextInputValue('input-image')
+                        .split(',')
+                        .filter(Boolean)
+                        .map((image) => new AttachmentBuilder(image)),
+                })
+                .then(async () => {
+                    await followUp(interactionModal, 'Done');
+                })
+                .catch((err) => console.error(err));
         });
     },
 });

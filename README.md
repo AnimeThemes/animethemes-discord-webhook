@@ -10,6 +10,7 @@
 - Go to the Bot tab and save the token (reset the token if needed).
 - Disable "Public Bot" option and enable the following options: Presence Intent, Server Members Intent and Message Content Intent.
 - Replace `<BOT_ID>` with the APPLICATION ID and run this in your browser:
+
 ```
 https://discord.com/oauth2/authorize?client_id=<BOT_ID>&permissions=8&scope=bot
 ```
@@ -45,8 +46,8 @@ DISCORD_SPRING_FORUM_TAG = 1149167909235589201
 DISCORD_SUMMER_FORUM_TAG = 1149167951950393434
 DISCORD_FALL_FORUM_TAG = 1149168000738529290
 
-; Set it to true if you are running it locally.
-NODE_ENV_DEV=true
+; The enviroment of the application [production, development, staging, testing]
+NODE_ENV=development
 
 ; Trello secret to validate trello webhooks.
 TRELLO_SECRET=

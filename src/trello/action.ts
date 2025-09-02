@@ -4,7 +4,7 @@ import {
     TrelloUpdateCardAction,
     TrelloCommentCardAction,
     TrelloMemberToCardAction,
-    TrelloUpdateCheckItemStateOnCardAction
+    TrelloUpdateCheckItemStateOnCardAction,
 } from 'types/trello';
 import { toTrelloCardLink, toTrelloImageUrl } from 'utils/trello';
 
@@ -13,7 +13,9 @@ const colors = {
     red: 0xff0000,
 } satisfies { [key: string]: number };
 
-const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null } = {
+const actions: {
+    [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null;
+} = {
     createCard(data: TrelloCreateCardAction) {
         const { action } = data;
         const { card, list } = action.data;
@@ -104,9 +106,6 @@ const actions: { [key: string]: (data: any) => Partial<TrelloEmbedConfig> | null
     },
 };
 
-export function getEmbedConfigForAction(
-    action: keyof typeof actions,
-    data: any,
-): Partial<TrelloEmbedConfig> | null {
+export function getEmbedConfigForAction(action: keyof typeof actions, data: any): Partial<TrelloEmbedConfig> | null {
     return actions[action]?.(data) ?? null;
-};
+}

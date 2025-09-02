@@ -14,7 +14,7 @@ declare namespace NodeJS {
         DISCORD_SPRING_FORUM_TAG: string;
         DISCORD_SUMMER_FORUM_TAG: string;
         DISCORD_FALL_FORUM_TAG: string;
-        NODE_ENV_DEV: boolean | null;
+        NODE_ENV: string | null;
         TRELLO_SECRET: string;
     }
 }

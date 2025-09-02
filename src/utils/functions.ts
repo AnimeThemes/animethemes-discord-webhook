@@ -6,4 +6,4 @@ export const joinWithLastSeparator = (array: Array<string>, separator: string, l
     const lastElement = array[array.length - 1];
 
     return allButLast + lastSeparator + lastElement;
-}
+};

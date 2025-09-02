@@ -10,7 +10,7 @@ export default new Event({
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
 
-        if (interaction.isAutocomplete() && command.autoComplete){
+        if (interaction.isAutocomplete() && command.autoComplete) {
             command.autoComplete(interaction);
             return;
         }
@@ -20,4 +20,4 @@ export default new Event({
             return;
         }
     },
-})
+});

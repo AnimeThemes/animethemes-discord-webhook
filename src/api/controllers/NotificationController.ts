@@ -1,4 +1,4 @@
-import { client, server } from 'app'
+import { client, server } from 'app';
 import { Channel, ForumChannel, ThreadChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
 
@@ -11,19 +11,21 @@ const NotificationController = () => {
         let threadId: string = '';
         let thread;
 
-        const forum = client.channels.cache.find((channel: Channel) => channel.id == config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+        const forum = client.channels.cache.find(
+            (channel: Channel) => channel.id == config.DISCORD_FORUM_CHANNEL_ID,
+        ) as ForumChannel;
 
         try {
             for (let video of body.videos) {
                 threadId = video.animethemeentries[0].animetheme.anime.discordthread.thread_id;
-                thread = await forum.threads.fetch(threadId) as ThreadChannel;
+                thread = (await forum.threads.fetch(threadId)) as ThreadChannel;
 
                 if (thread === null) {
                     throw new Error();
                 }
 
                 thread.send({
-                    embeds: [createVideoEmbedByAnime(video, body.type)]
+                    embeds: [createVideoEmbedByAnime(video, body.type)],
                 });
             }
 
