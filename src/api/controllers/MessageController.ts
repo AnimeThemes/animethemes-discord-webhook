@@ -1,7 +1,7 @@
-import { client, server } from "app";
-import { AttachmentBuilder, NewsChannel, TextChannel, ThreadChannel } from "discord.js";
+import { client, server } from 'app';
+import { AttachmentBuilder, NewsChannel, TextChannel, ThreadChannel } from 'discord.js';
 
-import auth from "api/middleware/auth";
+import auth from 'api/middleware/auth';
 
 const discordMsgUrlReg = /https:\/\/discord\.com\/channels\/(\d+)\/(\d+)\/(\d+)/;
 
@@ -13,11 +13,13 @@ const MessageController = () => {
         try {
             let channel = await client.channels.fetch(channelId);
 
-            if (!(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)) {
+            if (
+                !(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)
+            ) {
                 throw new Error('Channel not found.');
             }
 
-            let message = await channel.messages.fetch(messageId) as any;
+            let message = (await channel.messages.fetch(messageId)) as any;
 
             if (message === null) {
                 throw new Error('Message not found.');
@@ -26,7 +28,6 @@ const MessageController = () => {
             message.files = message.attachments.map((a: any) => a?.url) as string[];
 
             return res.code(200).send({ message: message });
-
         } catch (err: any) {
             console.error(req.body);
             console.error(err);
@@ -40,7 +41,9 @@ const MessageController = () => {
         try {
             let channel = await client.channels.fetch(message.channelId);
 
-            if (!(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)) {
+            if (
+                !(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)
+            ) {
                 throw new Error('Channel not found.');
             }
 
@@ -67,7 +70,6 @@ const MessageController = () => {
                 embeds: message.embeds,
                 files: files,
             });
-
         } catch (err: any) {
             console.error(req.body);
             console.error(err);
@@ -82,7 +84,9 @@ const MessageController = () => {
         try {
             let channel = await client.channels.fetch(newMessage.channelId);
 
-            if (!(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)) {
+            if (
+                !(channel instanceof TextChannel || channel instanceof ThreadChannel || channel instanceof NewsChannel)
+            ) {
                 throw new Error('Channel not found.');
             }
 
@@ -121,7 +125,6 @@ const MessageController = () => {
             });
 
             return res.code(200).send({ message: message });
-
         } catch (err: any) {
             console.error(err);
             return res.code(404).send({ error: err.message });

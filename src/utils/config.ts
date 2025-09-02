@@ -18,7 +18,7 @@ const config = {
     DISCORD_SPRING_FORUM_TAG: process.env.DISCORD_SPRING_FORUM_TAG,
     DISCORD_SUMMER_FORUM_TAG: process.env.DISCORD_SUMMER_FORUM_TAG,
     DISCORD_FALL_FORUM_TAG: process.env.DISCORD_FALL_FORUM_TAG,
-    NODE_ENV_DEV: process.env.NODE_ENV_DEV ?? false,
+    NODE_ENV: process.env.NODE_ENV ?? 'development',
     TRELLO_SECRET: process.env.TRELLO_SECRET,
 };
 

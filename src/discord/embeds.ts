@@ -11,11 +11,8 @@ import config from 'utils/config';
 export const createAnimeEmbed = (anime: Anime): EmbedBuilder => {
     const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
 
-    return new EmbedBuilder()
-        .setTitle(anime.name)
-        .setColor([154, 0, 255])
-        .setDescription(description);
-}
+    return new EmbedBuilder().setTitle(anime.name).setColor([154, 0, 255]).setDescription(description);
+};
 
 /**
  * Create an embed of a video using anime information.
@@ -43,10 +40,12 @@ export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated')
 
     return new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(`${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group?.slug}`} - ${theme.song?.title ?? '*T.B.A.*'}`)
+        .setTitle(
+            `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group?.slug}`} - ${theme.song?.title ?? '*T.B.A.*'}`,
+        )
         .setDescription(initialDescription)
-        .setThumbnail(anime.images?.find(image => image.facet === 'Small Cover')?.link as string);
-}
+        .setThumbnail(anime.images?.find((image) => image.facet === 'Small Cover')?.link as string);
+};
 
 /**
  * Create the trello embed.
@@ -77,4 +76,4 @@ export const createTrelloEmbed = (config: TrelloEmbedConfig): EmbedBuilder => {
     }
 
     return embed;
-}
+};

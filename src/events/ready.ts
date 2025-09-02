@@ -18,15 +18,18 @@ export default new Event({
             });
         }
 
-        setInterval(async () => {
-            let featuredtheme = await getFeaturedTheme();
+        setInterval(
+            async () => {
+                let featuredtheme = await getFeaturedTheme();
 
-            if (featuredtheme !== null) {
-                client.user?.setActivity({
-                    name: `${featuredtheme.anime} ${featuredtheme.theme}`,
-                    type: ActivityType.Listening,
-                });
-            }
-        }, 3 * 60 * 60 * 1000);
+                if (featuredtheme !== null) {
+                    client.user?.setActivity({
+                        name: `${featuredtheme.anime} ${featuredtheme.theme}`,
+                        type: ActivityType.Listening,
+                    });
+                }
+            },
+            3 * 60 * 60 * 1000,
+        );
     },
-})
+});

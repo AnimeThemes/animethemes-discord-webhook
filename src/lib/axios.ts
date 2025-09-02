@@ -17,4 +17,4 @@ export const handleAxiosError = (error: AxiosError<{ message?: string }>) => {
 
     // Something bad happened before we could reach the API
     return error.message;
-}
+};

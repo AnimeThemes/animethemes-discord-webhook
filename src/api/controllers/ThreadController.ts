@@ -12,9 +12,11 @@ const ThreadController = () => {
         let thread;
 
         try {
-            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+            const forumChannel = client.channels.cache.find(
+                (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
+            ) as ForumChannel;
 
-            thread = await forumChannel.threads.fetch(id) as ThreadChannel | null;
+            thread = (await forumChannel.threads.fetch(id)) as ThreadChannel | null;
 
             if (thread === null) {
                 throw new Error();
@@ -23,7 +25,7 @@ const ThreadController = () => {
             return res.code(200).send({ thread: thread });
         } catch (err) {
             console.error(id);
-            console.error(thread)
+            console.error(thread);
             console.error(err);
             return res.code(404).send({ error: 'Thread not found.' });
         }
@@ -34,16 +36,22 @@ const ThreadController = () => {
         let thread: AnyThreadChannel | null = null;
 
         try {
-            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+            const forumChannel = client.channels.cache.find(
+                (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
+            ) as ForumChannel;
 
-            thread = await forumChannel.threads.create({
+            thread = (await forumChannel.threads.create({
                 name: anime.name,
                 appliedTags: [seasonTags[anime.season]],
                 message: {
                     embeds: [createAnimeEmbed(anime)],
-                    files: [new AttachmentBuilder(anime.images?.find(image => image?.facet === 'Large Cover')?.link as string)]
-                }
-            }) as AnyThreadChannel;
+                    files: [
+                        new AttachmentBuilder(
+                            anime.images?.find((image) => image?.facet === 'Large Cover')?.link as string,
+                        ),
+                    ],
+                },
+            })) as AnyThreadChannel;
 
             if (thread === null) {
                 throw new Error();
@@ -63,7 +71,9 @@ const ThreadController = () => {
         let thread: AnyThreadChannel | null = null;
 
         try {
-            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+            const forumChannel = client.channels.cache.find(
+                (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
+            ) as ForumChannel;
 
             thread = await forumChannel.threads.fetch(body.thread_id);
 
@@ -74,7 +84,6 @@ const ThreadController = () => {
             thread?.edit({
                 name: body.name,
             });
-
         } catch (err) {
             console.error(body);
             console.error(thread);
@@ -87,7 +96,9 @@ const ThreadController = () => {
         let thread: AnyThreadChannel | null = null;
 
         try {
-            const forumChannel = client.channels.cache.find((channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID) as ForumChannel;
+            const forumChannel = client.channels.cache.find(
+                (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
+            ) as ForumChannel;
 
             thread = await forumChannel.threads.fetch(body.id);
 
@@ -96,7 +107,6 @@ const ThreadController = () => {
             }
 
             thread?.delete();
-
         } catch (err) {
             console.error(body);
             console.error(thread);
@@ -108,8 +118,8 @@ const ThreadController = () => {
 export default ThreadController;
 
 const seasonTags: { [key: string]: string } = {
-    'Winter': config.DISCORD_WINTER_FORUM_TAG,
-    'Spring': config.DISCORD_SPRING_FORUM_TAG,
-    'Summer': config.DISCORD_SUMMER_FORUM_TAG,
-    'Fall': config.DISCORD_FALL_FORUM_TAG,
+    Winter: config.DISCORD_WINTER_FORUM_TAG,
+    Spring: config.DISCORD_SPRING_FORUM_TAG,
+    Summer: config.DISCORD_SUMMER_FORUM_TAG,
+    Fall: config.DISCORD_FALL_FORUM_TAG,
 };

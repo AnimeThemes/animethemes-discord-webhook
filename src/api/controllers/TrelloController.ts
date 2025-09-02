@@ -38,13 +38,15 @@ const TrelloController = () => {
             ...embedConfigForAction,
         };
 
-        const channel = client.channels.cache.find(channel => channel.id === config.DISCORD_TRELLO_CHANNEL_ID) as TextChannel;
+        const channel = client.channels.cache.find(
+            (channel) => channel.id === config.DISCORD_TRELLO_CHANNEL_ID,
+        ) as TextChannel;
 
         await channel.send({
             embeds: [createTrelloEmbed(embedConfig)],
         });
 
-        return res.status(200).send('OK');;
+        return res.status(200).send('OK');
     });
 };
 

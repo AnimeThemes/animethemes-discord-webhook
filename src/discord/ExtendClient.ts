@@ -1,4 +1,13 @@
-import { ApplicationCommandDataResolvable, BitFieldResolvable, Client, Collection, GatewayIntentsString, IntentsBitField, Partials } from 'discord.js';
+import {
+    ApplicationCommandDataResolvable,
+    BitFieldResolvable,
+    Client,
+    Collection,
+    Events,
+    GatewayIntentsString,
+    IntentsBitField,
+    Partials,
+} from 'discord.js';
 import { readdirSync } from 'fs';
 import { ComponentsModal } from 'discord/commands';
 
@@ -6,7 +15,6 @@ import Event from 'discord/Event';
 import config from 'utils/config';
 
 class ExtendClient extends Client {
-
     public commands: Collection<string, any> = new Collection();
     public menuCommands: Collection<string, any> = new Collection();
     public modals: ComponentsModal = new Collection();
@@ -16,9 +24,13 @@ class ExtendClient extends Client {
         super({
             intents: Object.keys(IntentsBitField.Flags) as BitFieldResolvable<GatewayIntentsString, number>,
             partials: [
-                Partials.Channel, Partials.Message, Partials.GuildMember, Partials.GuildScheduledEvent, Partials.User
-            ]
-        })
+                Partials.Channel,
+                Partials.Message,
+                Partials.GuildMember,
+                Partials.GuildScheduledEvent,
+                Partials.User,
+            ],
+        });
     }
 
     public start() {
@@ -27,12 +39,13 @@ class ExtendClient extends Client {
         this.login(config.DISCORD_TOKEN);
     }
 
-    private registerCommands(commands: Array<ApplicationCommandDataResolvable>){
-        this.application?.commands.set(commands)
+    private registerCommands(commands: Array<ApplicationCommandDataResolvable>) {
+        this.application?.commands
+            .set(commands)
             .then(() => {
                 console.log('✅ Slash Commands (/) defined');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`❌ An error occurred while trying to set the Slash Commands (/): \n${error}`);
             });
     }
@@ -41,8 +54,12 @@ class ExtendClient extends Client {
         const slashCommands: Array<ApplicationCommandDataResolvable> = new Array();
         const menuCommands: Array<ApplicationCommandDataResolvable> = new Array();
 
-        const commandsSlash: string[] = readdirSync('./src/slashCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
-        const commandsMenu: string[] = readdirSync('./src/menuCommands').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
+        const commandsSlash: string[] = readdirSync('./src/slashCommands').filter(
+            (file) => file.endsWith('.js') || file.endsWith('.ts'),
+        );
+        const commandsMenu: string[] = readdirSync('./src/menuCommands').filter(
+            (file) => file.endsWith('.js') || file.endsWith('.ts'),
+        );
 
         for (let file of commandsSlash) {
             let command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
@@ -58,12 +75,14 @@ class ExtendClient extends Client {
 
         let commands = slashCommands.concat(menuCommands);
 
-        this.once('ready', () => this.registerCommands(commands));
+        this.once(Events.ClientReady, () => this.registerCommands(commands));
     }
 
     private async registerEvents() {
-        const eventFiles: string[] = readdirSync('./src/events').filter(file => file.endsWith('.js') || file.endsWith('.ts'));
-        
+        const eventFiles: string[] = readdirSync('./src/events').filter(
+            (file) => file.endsWith('.js') || file.endsWith('.ts'),
+        );
+
         for (const file of eventFiles) {
             const event: Event = (await import(`../events/${file.slice(0, -3)}`)).default as Event;
             if (event.once) {
@@ -73,6 +92,6 @@ class ExtendClient extends Client {
             }
         }
     }
-};
+}
 
 export default ExtendClient;

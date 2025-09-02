@@ -18,8 +18,10 @@ export const artistsDescription = (artists: Array<ArtistWithArtistSong>): string
         artistsArray.push(`[${name}](${config.ARTIST_URL + '/' + artist.slug})`);
     }
 
-    return `**Artist${artistsArray.length > 1 ? 's' : ''}:** ` + joinWithLastSeparator(artistsArray, ', ', ' & ')  + '\n';
-}
+    return (
+        `**Artist${artistsArray.length > 1 ? 's' : ''}:** ` + joinWithLastSeparator(artistsArray, ', ', ' & ') + '\n'
+    );
+};
 
 /**
  * Format Video to a string.
@@ -35,11 +37,15 @@ export const videoDescription = (video: Video): string => {
 
     videoText.push(`**Resolution:** ${video.resolution}p`);
     videoText.push(`**Source:** ${video.source}`);
-    videoText.push(`**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${typeof video.tags == 'string' ? video.tags : video.tags.join('')}`}`);
-    videoText.push(`**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`);
+    videoText.push(
+        `**Overlap:** ${video.overlap}${video.tags.length === 0 ? '' : `\n**Tags:** ${typeof video.tags == 'string' ? video.tags : video.tags.join('')}`}`,
+    );
+    videoText.push(
+        `**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(video.animethemeentries[0].animetheme, video.animethemeentries[0], video)}`,
+    );
 
     return videoText.join('\n');
-}
+};
 
 /**
  * Slug format is:
@@ -63,4 +69,4 @@ export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, v
     }
 
     return slug;
-}
+};
