@@ -1,7 +1,6 @@
 {
     "scripts": {
-        "start": "tsx src/app.ts",
-        "build": "tsc --project ./tsconfig.json"
+        "start": "bun run src/app.ts"
     },
     "dependencies": {
         "axios": "^1.9.0",
@@ -11,7 +10,6 @@
     },
     "devDependencies": {
         "@types/bun": "^1.2.21",
-        "prettier": "^3.5.3",
-        "tsx": "^4.19.4"
+        "prettier": "^3.5.3"
     }
 }
