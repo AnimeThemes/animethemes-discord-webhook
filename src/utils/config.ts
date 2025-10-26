@@ -7,7 +7,6 @@ const config = {
     API_ANIMETHEMES: process.env.API_ANIMETHEMES,
     ARTIST_URL: process.env.ARTIST_URL,
     ANIME_URL: process.env.ANIME_URL,
-    API_HOST_NAME: process.env.API_HOST_NAME,
     API_HOST: process.env.API_HOST,
     API_KEY: process.env.API_KEY,
     API_PORT: process.env.API_PORT ?? 3000,
@@ -20,6 +19,7 @@ const config = {
     DISCORD_FALL_FORUM_TAG: process.env.DISCORD_FALL_FORUM_TAG,
     NODE_ENV: process.env.NODE_ENV ?? 'development',
     TRELLO_SECRET: process.env.TRELLO_SECRET,
+    TRELLO_CALLBACK_URL: process.env.TRELLO_CALLBACK_URL,
 };
 
 export default config;

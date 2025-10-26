@@ -3,7 +3,6 @@ declare namespace NodeJS {
         ANIMETHEMES_GRAPHQL: string;
         ARTIST_URL: string;
         ANIME_URL: string;
-        API_HOST_NAME: string;
         API_HOST: string;
         API_KEY: string;
         API_PORT: string;
@@ -16,5 +15,6 @@ declare namespace NodeJS {
         DISCORD_FALL_FORUM_TAG: string;
         NODE_ENV: string | null;
         TRELLO_SECRET: string;
+        TRELLO_CALLBACK_URL: string;
     }
 }

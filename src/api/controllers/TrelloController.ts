@@ -13,10 +13,7 @@ const TrelloController = () => {
     });
 
     server.post('/trello', async (req, res) => {
-        const callbackURL = 'http://' + (config.API_HOST_NAME || 'localhost') + ':' + config.API_PORT + '/trello';
-        const callbackURLName = 'http://' + (config.API_HOST || 'localhost') + ':' + config.API_PORT + '/trello';
-
-        if (!trello(req, config.TRELLO_SECRET, callbackURL) && !trello(req, config.TRELLO_SECRET, callbackURLName)) {
+        if (!trello(req, config.TRELLO_SECRET, config.TRELLO_CALLBACK_URL)) {
             return res.status(401).send('Forbidden');
         }
 

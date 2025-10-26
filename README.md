@@ -51,6 +51,7 @@ NODE_ENV=development
 
 ; Trello secret to validate trello webhooks.
 TRELLO_SECRET=
+TRELLO_CALLBACK_URL=
 ```
 
 ## Add Trello boards
