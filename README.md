@@ -91,14 +91,11 @@ Notice how you need to send the Trello API key as a query parameter instead of i
 You can also remove boards from webhook, by using the same endpoint, but doing a `DELETE` request instead:
 
 ```http request
-DELETE https://api.trello.com/1/tokens/<YOUR_TRELLO_TOKEN>/webhooks
+DELETE https://api.trello.com/1/tokens/<YOUR_TRELLO_TOKEN>/webhooks/:id
 Content-Type: application/json
 
 {
-  "key": "<YOUR_TRELLO_KEY>",
-  "callbackURL": "<YOUR_WEBHOOK_URL>",
-  "idModel": "<BOARD_ID>",
-  "description": "My New Hook"
+  "key": "<YOUR_TRELLO_KEY>"
 }
 ```
 
