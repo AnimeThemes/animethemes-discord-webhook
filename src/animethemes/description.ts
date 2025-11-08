@@ -65,7 +65,7 @@ export const createVideoSlug = (theme: AnimeTheme, entry: Record<string, any>, v
     }
 
     if (video.tags.length > 0) {
-        slug += `-${video.tags}`;
+        slug += `-${typeof video.tags == 'string' ? video.tags : video.tags.join('')}`;
     }
 
     return slug;
