@@ -53,7 +53,7 @@ const ThreadController = () => {
 
             const thread = await forumChannel.threads.create({
                 name: anime.name,
-                //  appliedTags: [seasonTags[anime.season]],
+                appliedTags: [seasonTags[anime.season]],
                 message: {
                     embeds: [createAnimeEmbed(anime)],
                     files: [new AttachmentBuilder(anime.images.nodes[0].link)],
