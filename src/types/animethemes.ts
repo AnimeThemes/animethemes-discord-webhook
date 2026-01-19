@@ -1,35 +1,46 @@
-import { Maybe } from 'types/generics';
+import { Maybe, Nodes } from 'types/generics';
 
-export type Anime = {
+export type AnimeThread = {
     name: string;
-    season: string;
     slug: string;
-    synopsis: Maybe<string>;
-    year: number;
-    media_format: string;
-    images?: Maybe<Array<Image>>;
+    season: 'WINTER' | 'SPRING' | 'SUMMER' | 'FALL';
+    synopsis: string;
+    images: Nodes<{
+        link: string;
+    }>;
+};
+
+export type Video = {
+    link: string;
+    overlapLocalized: string;
+    resolution: number;
+    sourceLocalized: string;
+    tags: string;
+    animethemeentries: Nodes<AnimeThemeEntry>;
 };
 
 export type AnimeTheme = {
+    type: 'OP' | 'ED';
     sequence: Maybe<number>;
-    type: string;
-    group?: Maybe<ThemeGroup>;
-    song?: Maybe<Song>;
-    anime: Anime;
+    song: Maybe<{
+        title: Maybe<string>;
+        performances: Array<Performance>;
+    }>;
+    group: Maybe<{
+        slug: string;
+    }>;
+    anime: {
+        slug: string;
+        images: Nodes<{
+            link: string;
+        }>;
+    };
 };
 
-export type ThemeGroup = {
-    name: string;
-    slug: string;
-};
-
-export type AnimeThemeEntry = {
-    episodes: Maybe<string>;
-    notes: string;
-    nsfw: boolean;
-    spoiler: boolean;
-    version: Maybe<string>;
-    animetheme: AnimeTheme;
+export type Performance = {
+    alias: Maybe<string>;
+    as: Maybe<string>;
+    artist: Artist | Membership;
 };
 
 export type Artist = {
@@ -37,13 +48,16 @@ export type Artist = {
     slug: string;
 };
 
-export type ArtistWithArtistSong = Artist & {
-    artistsong: ArtistSong;
+export type Membership = {
+    group: Artist;
 };
 
-export type ArtistSong = {
-    alias: Maybe<string>;
-    as: Maybe<string>;
+export type AnimeThemeEntry = {
+    episodes: Maybe<string>;
+    nsfw: boolean;
+    spoiler: boolean;
+    version: Maybe<number>;
+    animetheme: AnimeTheme;
 };
 
 export type CurrentFeaturedTheme = Maybe<{
@@ -64,25 +78,3 @@ export type CurrentFeaturedTheme = Maybe<{
         tags: string | Array<string>;
     };
 }>;
-
-export type Image = {
-    path: string;
-    facet: string;
-    link: string;
-};
-
-export type Song = {
-    title: Maybe<string>;
-    artists?: Maybe<Array<Artist>>;
-};
-
-export type Video = {
-    basename: string;
-    filename: string;
-    link: string;
-    overlap: Maybe<string>;
-    resolution: Maybe<number>;
-    source: Maybe<string>;
-    tags: string | Array<string>;
-    animethemeentries?: Maybe<Array<AnimeThemeEntry>>;
-};

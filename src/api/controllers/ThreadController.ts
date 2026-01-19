@@ -1,10 +1,11 @@
 import { client, server } from 'app';
 import { AnyThreadChannel, AttachmentBuilder, Channel, ForumChannel, ThreadChannel } from 'discord.js';
 import { createAnimeEmbed } from 'discord/embeds';
-import { Anime } from 'types/animethemes';
+import { AnimeThread } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
+import axios from 'lib/axios';
 
 const ThreadController = () => {
     server.get('/thread', { preHandler: auth }, async (req, res) => {
@@ -32,35 +33,36 @@ const ThreadController = () => {
     });
 
     server.post('/thread', { preHandler: auth }, async (req, res) => {
-        let anime = req.body as Anime;
-        let thread: AnyThreadChannel | null = null;
+        const { name, slug } = req.body as any;
+
+        const anime = (
+            await axios.post('/', {
+                query: animeQuery,
+                variables: {
+                    slug: slug as string,
+                },
+            })
+        ).data.data.anime as AnimeThread;
+
+        anime.name = name || anime.name;
 
         try {
             const forumChannel = client.channels.cache.find(
                 (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
             ) as ForumChannel;
 
-            thread = (await forumChannel.threads.create({
+            const thread = await forumChannel.threads.create({
                 name: anime.name,
                 appliedTags: [seasonTags[anime.season]],
                 message: {
                     embeds: [createAnimeEmbed(anime)],
-                    files: [
-                        new AttachmentBuilder(
-                            anime.images?.find((image) => image?.facet === 'Large Cover')?.link as string,
-                        ),
-                    ],
+                    files: [new AttachmentBuilder(anime.images.nodes[0].link)],
                 },
-            })) as AnyThreadChannel;
-
-            if (thread === null) {
-                throw new Error();
-            }
+            });
 
             return res.code(201).send({ id: thread.id, name: thread.name });
         } catch (err) {
             console.error(req.body);
-            console.error(thread);
             console.error(err);
             return res.code(500).send({ error: 'Error: Thread Creation.' });
         }
@@ -68,17 +70,16 @@ const ThreadController = () => {
 
     server.put('/thread', { preHandler: auth }, async (req, res) => {
         const body = req.body as any;
-        let thread: AnyThreadChannel | null = null;
 
         try {
             const forumChannel = client.channels.cache.find(
                 (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
             ) as ForumChannel;
 
-            thread = await forumChannel.threads.fetch(body.thread_id);
+            const thread = await forumChannel.threads.fetch(body.thread_id);
 
             if (thread === null) {
-                throw new Error();
+                throw new Error(`Thread not found of id ${body.thread_id}`);
             }
 
             thread?.edit({
@@ -86,7 +87,6 @@ const ThreadController = () => {
             });
         } catch (err) {
             console.error(body);
-            console.error(thread);
             console.error(err);
         }
     });
@@ -117,9 +117,26 @@ const ThreadController = () => {
 
 export default ThreadController;
 
-const seasonTags: { [key: string]: string } = {
-    Winter: config.DISCORD_WINTER_FORUM_TAG,
-    Spring: config.DISCORD_SPRING_FORUM_TAG,
-    Summer: config.DISCORD_SUMMER_FORUM_TAG,
-    Fall: config.DISCORD_FALL_FORUM_TAG,
+const seasonTags: { [key in AnimeThread['season']]: string } = {
+    WINTER: config.DISCORD_WINTER_FORUM_TAG,
+    SPRING: config.DISCORD_SPRING_FORUM_TAG,
+    SUMMER: config.DISCORD_SUMMER_FORUM_TAG,
+    FALL: config.DISCORD_FALL_FORUM_TAG,
 };
+
+const animeQuery = `
+    query AnimeThread($slug: String!) {
+        anime(slug: $slug) {
+            name
+            slug
+            season
+            synopsis
+            images(facet: LARGE_COVER) {
+                nodes {
+                    facet
+                    link
+                }
+            }
+        }
+    }
+`;
