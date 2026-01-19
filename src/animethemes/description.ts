@@ -59,7 +59,7 @@ export const videoDescription = (video: Video): string => {
     videoText.push(video.tags.length === 0 ? '' : `**Tags:** ${video.tags}`);
     videoText.push(`**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(entry.animetheme, entry, video)}`);
 
-    return videoText.join('\n');
+    return videoText.filter(Boolean).join('\n');
 };
 
 /**
