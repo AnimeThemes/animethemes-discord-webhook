@@ -13,11 +13,11 @@ interface NotificationBody {
         videoId: number;
         threadId: string;
     }>;
-};
+}
 
 interface VideoNotificationQuery {
     video: Video;
-};
+}
 
 const NotificationController = () => {
     server.post('/notification', { preHandler: auth }, async (req, res) => {

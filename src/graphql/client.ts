@@ -8,10 +8,7 @@ const graphqlClient = Axios.create({
     },
 });
 
-export async function gql<T>(
-    query: string,
-    variables?: Record<string, unknown>
-): Promise<T> {
+export async function gql<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
     const { data } = await graphqlClient.post('', {
         query,
         variables,

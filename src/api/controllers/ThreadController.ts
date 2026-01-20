@@ -9,7 +9,7 @@ import config from 'utils/config';
 
 interface AnimeQuery {
     anime: AnimeThread;
-};
+}
 
 const ThreadController = () => {
     server.get('/thread', { preHandler: auth }, async (req, res) => {

@@ -8,7 +8,7 @@ import { createVideoSlug } from 'utils/description';
 
 interface FeaturedThemeQuery {
     currentfeaturedtheme: CurrentFeaturedTheme | null;
-};
+}
 
 export default new Event({
     name: Events.ClientReady,
