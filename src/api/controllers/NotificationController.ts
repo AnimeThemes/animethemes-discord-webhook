@@ -1,11 +1,11 @@
 import { client, server } from 'app';
 import { Channel, ForumChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
+import { gql } from 'graphql/client';
 import { Video } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
-import axios from 'lib/axios';
 
 interface NotificationBody {
     type: 'added' | 'updated';
@@ -13,7 +13,11 @@ interface NotificationBody {
         videoId: number;
         threadId: string;
     }>;
-}
+};
+
+interface VideoNotificationQuery {
+    video: Video;
+};
 
 const NotificationController = () => {
     server.post('/notification', { preHandler: auth }, async (req, res) => {
@@ -25,14 +29,7 @@ const NotificationController = () => {
 
         try {
             for (let videoInfo of body.videos) {
-                let video = (
-                    await axios.post('/', {
-                        query: videoQuery,
-                        variables: {
-                            id: videoInfo.videoId,
-                        },
-                    })
-                ).data.data.video as Video;
+                let { video } = await gql<VideoNotificationQuery>(videoQuery, { id: videoInfo.videoId });
 
                 let thread = await forum.threads.fetch(videoInfo.threadId);
 

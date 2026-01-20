@@ -1,48 +1,43 @@
 import { client, server } from 'app';
-import { AnyThreadChannel, AttachmentBuilder, Channel, ForumChannel, ThreadChannel } from 'discord.js';
+import { AttachmentBuilder, Channel, ForumChannel } from 'discord.js';
 import { createAnimeEmbed } from 'discord/embeds';
+import { gql } from 'graphql/client';
 import { AnimeThread } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
-import axios from 'lib/axios';
+
+interface AnimeQuery {
+    anime: AnimeThread;
+};
 
 const ThreadController = () => {
     server.get('/thread', { preHandler: auth }, async (req, res) => {
         const { id } = req.query as any;
-        let thread;
 
         try {
             const forumChannel = client.channels.cache.find(
                 (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
             ) as ForumChannel;
 
-            thread = (await forumChannel.threads.fetch(id)) as ThreadChannel | null;
+            const thread = await forumChannel.threads.fetch(id);
 
             if (thread === null) {
-                throw new Error();
+                return res.code(404).send({ error: 'Thread not found.' });
             }
 
             return res.code(200).send({ thread: thread });
         } catch (err) {
             console.error(id);
-            console.error(thread);
             console.error(err);
-            return res.code(404).send({ error: 'Thread not found.' });
+            return res.code(500).send({ error: err });
         }
     });
 
     server.post('/thread', { preHandler: auth }, async (req, res) => {
         const { name, slug } = req.body as any;
 
-        const anime = (
-            await axios.post('/', {
-                query: animeQuery,
-                variables: {
-                    slug: slug as string,
-                },
-            })
-        ).data.data.anime as AnimeThread;
+        const { anime } = await gql<AnimeQuery>(animeQuery, { slug: slug });
 
         anime.name = name || anime.name;
 
@@ -79,38 +74,41 @@ const ThreadController = () => {
             const thread = await forumChannel.threads.fetch(body.thread_id);
 
             if (thread === null) {
-                throw new Error(`Thread not found of id ${body.thread_id}`);
+                return res.code(404).send({ error: 'Thread not found.' });
             }
 
             thread?.edit({
                 name: body.name,
             });
+
+            return res.code(200);
         } catch (err) {
             console.error(body);
             console.error(err);
+            return res.code(500).send({ error: err });
         }
     });
 
     server.delete('/thread', { preHandler: auth }, async (req, res) => {
         const body = req.body as Record<string, any>;
-        let thread: AnyThreadChannel | null = null;
 
         try {
             const forumChannel = client.channels.cache.find(
                 (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
             ) as ForumChannel;
 
-            thread = await forumChannel.threads.fetch(body.id);
+            const thread = await forumChannel.threads.fetch(body.id);
 
             if (thread === null) {
-                throw new Error();
+                return res.code(404).send({ error: 'Thread not found.' });
             }
 
             thread?.delete();
+            return res.code(200);
         } catch (err) {
             console.error(body);
-            console.error(thread);
             console.error(err);
+            return res.code(500).send({ error: err });
         }
     });
 };

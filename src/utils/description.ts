@@ -41,28 +41,6 @@ export const artistsDescription = (performances: Performance[]): string => {
 };
 
 /**
- * Format Video to a string.
- */
-export const videoDescription = (video: Video): string => {
-    let videoText: Array<string> = [];
-
-    if (!video.animethemeentries) {
-        return videoText.toString();
-    }
-
-    let entry = video.animethemeentries.nodes[0];
-    let anime = entry.animetheme.anime;
-
-    videoText.push(`**Resolution:** ${video.resolution}p`);
-    videoText.push(`**Source:** ${video.sourceLocalized}`);
-    videoText.push(`**Overlap:** ${video.overlapLocalized}`);
-    videoText.push(video.tags.length === 0 ? '' : `**Tags:** ${video.tags}`);
-    videoText.push(`**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(entry.animetheme, entry, video)}`);
-
-    return videoText.filter(Boolean).join('\n');
-};
-
-/**
  * Slug format is:
  *
  * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
