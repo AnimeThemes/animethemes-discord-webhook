@@ -1,9 +1,9 @@
 import {
-    ActionRowBuilder,
     AttachmentBuilder,
     BaseInteraction,
     CommandInteraction,
     Events,
+    LabelBuilder,
     ModalBuilder,
     ModalSubmitInteraction,
     SlashCommandBuilder,
@@ -26,25 +26,29 @@ const say = new SlashCommand({
 
     async execute(interaction: CommandInteraction) {
         const { guild } = interaction;
+
         const modal = new ModalBuilder().setCustomId('modal-message').setTitle('Message');
 
-        const text = new TextInputBuilder()
-            .setCustomId('input-message')
+        const textLabel = new LabelBuilder()
             .setLabel('Message')
-            .setRequired(true)
-            .setStyle(TextInputStyle.Paragraph);
+            .setTextInputComponent(
+                new TextInputBuilder()
+                    .setCustomId('input-message')
+                    .setRequired(true)
+                    .setStyle(TextInputStyle.Paragraph),
+            );
 
-        const image = new TextInputBuilder()
-            .setCustomId('input-image')
+        const imageLabel = new LabelBuilder()
             .setLabel('Image Link')
-            .setRequired(false)
-            .setPlaceholder('Comma-separated Links')
-            .setStyle(TextInputStyle.Paragraph);
+            .setTextInputComponent(
+                new TextInputBuilder()
+                    .setCustomId('input-image')
+                    .setRequired(false)
+                    .setPlaceholder('Comma-separated Links')
+                    .setStyle(TextInputStyle.Paragraph),
+            );
 
-        const textRow = new ActionRowBuilder().addComponents(text);
-        const imageRow = new ActionRowBuilder().addComponents(image);
-
-        modal.setComponents([textRow, imageRow] as any[]);
+        modal.setLabelComponents([textLabel, imageLabel]);
         await showModal(interaction, modal);
 
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {

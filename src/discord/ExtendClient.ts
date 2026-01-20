@@ -51,8 +51,8 @@ class ExtendClient extends Client {
     }
 
     private async registerModules() {
-        const slashCommands: Array<ApplicationCommandDataResolvable> = new Array();
-        const menuCommands: Array<ApplicationCommandDataResolvable> = new Array();
+        const slashCommands: Array<ApplicationCommandDataResolvable> = [];
+        const menuCommands: Array<ApplicationCommandDataResolvable> = [];
 
         const commandsSlash: string[] = readdirSync('./src/slashCommands').filter(
             (file) => file.endsWith('.js') || file.endsWith('.ts'),
@@ -61,19 +61,19 @@ class ExtendClient extends Client {
             (file) => file.endsWith('.js') || file.endsWith('.ts'),
         );
 
-        for (let file of commandsSlash) {
-            let command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
+        for (const file of commandsSlash) {
+            const command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
             this.commands.set(command.data.name, command);
             slashCommands.push(command.data.toJSON());
         }
 
-        for (let file of commandsMenu) {
-            let command = (await import(`../menuCommands/${file.slice(0, -3)}`)).default.command;
+        for (const file of commandsMenu) {
+            const command = (await import(`../menuCommands/${file.slice(0, -3)}`)).default.command;
             this.commands.set(command.data.name, command);
             menuCommands.push(command.data);
         }
 
-        let commands = slashCommands.concat(menuCommands);
+        const commands = slashCommands.concat(menuCommands);
 
         this.once(Events.ClientReady, () => this.registerCommands(commands));
     }

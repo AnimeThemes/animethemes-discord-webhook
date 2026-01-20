@@ -1,10 +1,10 @@
 import {
-    ActionRowBuilder,
     AttachmentBuilder,
     BaseInteraction,
     ContextMenuCommandBuilder,
     ContextMenuCommandInteraction,
     Events,
+    LabelBuilder,
     Message,
     ModalBuilder,
     ModalSubmitInteraction,
@@ -28,24 +28,25 @@ const editMessage = new MenuCommand({
 
         const modal = new ModalBuilder().setCustomId('modal-edit-message').setTitle('EDIT MESSAGE');
 
-        const messageInput = new TextInputBuilder()
-            .setCustomId('input-edit-message')
+        const messageLabel = new LabelBuilder()
             .setLabel('MESSAGE')
-            .setRequired(true)
-            .setStyle(TextInputStyle.Paragraph)
-            .setValue(message.content as string);
+            .setTextInputComponent(
+                new TextInputBuilder()
+                    .setCustomId('input-edit-message')
+                    .setRequired(true)
+                    .setStyle(TextInputStyle.Paragraph)
+                    .setValue(message.content),
+            );
 
-        const imageInput = new TextInputBuilder()
-            .setCustomId('input-edit-image')
-            .setLabel('IMAGE LINK')
-            .setRequired(false)
-            .setStyle(TextInputStyle.Paragraph)
-            .setValue(message.attachments.map((a) => a.proxyURL).join(','));
+        const imageLabel = new LabelBuilder().setLabel('IMAGE LINK').setTextInputComponent(
+            new TextInputBuilder()
+                .setCustomId('input-edit-image')
+                .setRequired(false)
+                .setStyle(TextInputStyle.Paragraph)
+                .setValue(message.attachments.map((a) => a.proxyURL).join(',')),
+        );
 
-        const messageRow = new ActionRowBuilder().addComponents(messageInput);
-        const imageRow = new ActionRowBuilder().addComponents(imageInput);
-
-        modal.setComponents([messageRow, imageRow] as any[]);
+        modal.setLabelComponents([messageLabel, imageLabel]);
         await showModal(interaction, modal);
 
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {

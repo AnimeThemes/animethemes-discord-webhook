@@ -13,7 +13,7 @@ interface AnimeQuery {
 
 const ThreadController = () => {
     server.get('/thread', { preHandler: auth }, async (req, res) => {
-        const { id } = req.query as any;
+        const { id } = req.query as { id: string };
 
         try {
             const forumChannel = client.channels.cache.find(
@@ -35,7 +35,7 @@ const ThreadController = () => {
     });
 
     server.post('/thread', { preHandler: auth }, async (req, res) => {
-        const { name, slug } = req.body as any;
+        const { name, slug } = req.body as { name?: string; slug: string };
 
         const { anime } = await gql<AnimeQuery>(animeQuery, { slug: slug });
 
@@ -64,40 +64,40 @@ const ThreadController = () => {
     });
 
     server.put('/thread', { preHandler: auth }, async (req, res) => {
-        const body = req.body as any;
+        const { name, thread_id } = req.body as { name: string; thread_id: string };
 
         try {
             const forumChannel = client.channels.cache.find(
                 (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
             ) as ForumChannel;
 
-            const thread = await forumChannel.threads.fetch(body.thread_id);
+            const thread = await forumChannel.threads.fetch(thread_id);
 
             if (thread === null) {
                 return res.code(404).send({ error: 'Thread not found.' });
             }
 
             thread?.edit({
-                name: body.name,
+                name: name,
             });
 
             return res.code(200);
         } catch (err) {
-            console.error(body);
+            console.error(req.body);
             console.error(err);
             return res.code(500).send({ error: err });
         }
     });
 
     server.delete('/thread', { preHandler: auth }, async (req, res) => {
-        const body = req.body as Record<string, any>;
+        const { id } = req.body as { id: string };
 
         try {
             const forumChannel = client.channels.cache.find(
                 (channel: Channel) => channel.id === config.DISCORD_FORUM_CHANNEL_ID,
             ) as ForumChannel;
 
-            const thread = await forumChannel.threads.fetch(body.id);
+            const thread = await forumChannel.threads.fetch(id);
 
             if (thread === null) {
                 return res.code(404).send({ error: 'Thread not found.' });
@@ -106,7 +106,7 @@ const ThreadController = () => {
             thread?.delete();
             return res.code(200);
         } catch (err) {
-            console.error(body);
+            console.error(req.body);
             console.error(err);
             return res.code(500).send({ error: err });
         }

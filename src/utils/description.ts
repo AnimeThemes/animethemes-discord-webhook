@@ -13,9 +13,10 @@ const isMembership = (artist: Artist | Membership): artist is Membership => {
 export const artistsDescription = (performances: Performance[]): string => {
     const artistsArray: string[] = [];
 
-    let groups: string[] = [];
+    const groups: string[] = [];
     for (const performance of performances) {
-        let { artist, alias, as } = performance;
+        const { alias, as } = performance;
+        let { artist } = performance;
 
         // Resolve to Membership
         if (isMembership(artist)) {
@@ -46,7 +47,7 @@ export const artistsDescription = (performances: Performance[]): string => {
  * `<OP|ED><#>[v#][-<Group>][-<Tags>]`
  */
 export const createVideoSlug = (theme: AnimeTheme, entry: AnimeThemeEntry, video: Video): string => {
-    let type = theme.type as string;
+    const type = theme.type as string;
     let slug = type + (theme.sequence || 1);
 
     if (entry.version && entry.version !== 1) {

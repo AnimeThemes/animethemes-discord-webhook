@@ -17,7 +17,7 @@ const TrelloController = () => {
             return res.status(401).send('Forbidden');
         }
 
-        const { model, action } = req.body as any;
+        const { model, action } = req.body as Record<string, any>;
 
         const embedConfigForAction = getEmbedConfigForAction(action.type, req.body);
 

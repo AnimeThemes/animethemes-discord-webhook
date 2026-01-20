@@ -27,9 +27,9 @@ export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated')
         return new EmbedBuilder();
     }
 
-    let entry = video.animethemeentries.nodes[0];
-    let theme = entry.animetheme;
-    let anime = theme.anime;
+    const entry = video.animethemeentries.nodes[0];
+    const theme = entry.animetheme;
+    const anime = theme.anime;
 
     if (theme.song?.performances && theme.song.performances.length !== 0) {
         description.push(artistsDescription(theme.song.performances));

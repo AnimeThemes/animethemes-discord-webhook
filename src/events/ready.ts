@@ -23,7 +23,7 @@ export default new Event({
                 if (currentfeaturedtheme !== null) {
                     const entry = currentfeaturedtheme.animethemeentry;
 
-                    // @ts-ignore
+                    // @ts-expect-error Different context for featuredtheme.
                     const featuredThemeName = `${entry.animetheme.anime.name} ${createVideoSlug(entry.animetheme, entry, currentfeaturedtheme.video)}`;
                     client.user?.setActivity({
                         name: featuredThemeName,

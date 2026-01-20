@@ -21,17 +21,17 @@ interface VideoNotificationQuery {
 
 const NotificationController = () => {
     server.post('/notification', { preHandler: auth }, async (req, res) => {
-        let body = req.body as NotificationBody;
+        const body = req.body as NotificationBody;
 
         const forum = client.channels.cache.find(
             (channel: Channel) => channel.id == config.DISCORD_FORUM_CHANNEL_ID,
         ) as ForumChannel;
 
         try {
-            for (let videoInfo of body.videos) {
-                let { video } = await gql<VideoNotificationQuery>(videoQuery, { id: videoInfo.videoId });
+            for (const videoInfo of body.videos) {
+                const { video } = await gql<VideoNotificationQuery>(videoQuery, { id: videoInfo.videoId });
 
-                let thread = await forum.threads.fetch(videoInfo.threadId);
+                const thread = await forum.threads.fetch(videoInfo.threadId);
 
                 if (thread === null) {
                     throw new Error(`Thread not found for id ${videoInfo.threadId}`);
