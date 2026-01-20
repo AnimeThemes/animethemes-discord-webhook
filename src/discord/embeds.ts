@@ -1,5 +1,5 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
-import { artistsDescription, videoDescription } from 'animethemes/description';
+import { artistsDescription, createVideoSlug } from 'utils/description';
 import { AnimeThread, Video } from 'types/animethemes';
 import { TrelloEmbedConfig } from 'types/trello';
 
@@ -19,31 +19,35 @@ export const createAnimeEmbed = (anime: AnimeThread): EmbedBuilder => {
  */
 export const createVideoEmbedByAnime = (video: Video, type: 'added' | 'updated'): EmbedBuilder => {
     const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
-    let initialDescription = type === 'added' ? `New video has been added.\n\n` : `A video has been updated.\n\n`;
+    const description: string[] = [];
+
+    description.push(type === 'added' ? `New video has been added.\n` : `A video has been updated.\n`);
 
     if (!video.animethemeentries) {
         return new EmbedBuilder();
     }
 
-    let entry = video.animethemeentries.nodes[0];
-    let theme = entry.animetheme;
-    let anime = theme.anime;
+    const entry = video.animethemeentries.nodes[0];
+    const theme = entry.animetheme;
+    const anime = theme.anime;
 
-    if (theme.song && theme.song.performances && theme.song.performances.length !== 0) {
-        initialDescription += artistsDescription(theme.song.performances) + '\n';
+    if (theme.song?.performances && theme.song.performances.length !== 0) {
+        description.push(artistsDescription(theme.song.performances));
     }
 
-    initialDescription += entry.spoiler ? '⚠️ Spoiler\n' : '';
-    initialDescription += entry.nsfw ? '🔞 NSFW\n' : '';
-    initialDescription += `**Episodes:** ${entry.episodes ?? '-'}\n`;
-    initialDescription += videoDescription(video);
+    description.push(entry.spoiler ? '⚠️ Spoiler' : '');
+    description.push(entry.nsfw ? '🔞 NSFW' : '');
+    description.push(`**Episodes:** ${entry.episodes ?? '-'}`);
+    description.push(`**Resolution:** ${video.resolution}p`);
+    description.push(`**Source:** ${video.sourceLocalized}`);
+    description.push(`**Overlap:** ${video.overlapLocalized}`);
+    description.push(video.tags.length === 0 ? '' : `**Tags:** ${video.tags}`);
+    description.push(`**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(entry.animetheme, entry, video)}`);
 
     return new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(
-            `${theme.type + (theme.sequence || 1)}${entry.version === null ? '' : `v${entry.version}`}${theme.group === null ? '' : `-${theme.group?.slug}`} - ${theme.song?.title ?? '*T.B.A.*'}`,
-        )
-        .setDescription(initialDescription)
+        .setTitle(createVideoSlug(theme, entry, video) + ` - ${theme.song?.title ?? '*T.B.A.*'}`)
+        .setDescription(description.filter(Boolean).join('\n'))
         .setThumbnail(anime.images.nodes[0].link);
 };
 

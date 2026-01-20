@@ -1,11 +1,11 @@
 import { client, server } from 'app';
 import { Channel, ForumChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
+import { gql } from 'graphql/client';
 import { Video } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
-import axios from 'lib/axios';
 
 interface NotificationBody {
     type: 'added' | 'updated';
@@ -15,26 +15,23 @@ interface NotificationBody {
     }>;
 }
 
+interface VideoNotificationQuery {
+    video: Video;
+}
+
 const NotificationController = () => {
     server.post('/notification', { preHandler: auth }, async (req, res) => {
-        let body = req.body as NotificationBody;
+        const body = req.body as NotificationBody;
 
         const forum = client.channels.cache.find(
             (channel: Channel) => channel.id == config.DISCORD_FORUM_CHANNEL_ID,
         ) as ForumChannel;
 
         try {
-            for (let videoInfo of body.videos) {
-                let video = (
-                    await axios.post('/', {
-                        query: videoQuery,
-                        variables: {
-                            id: videoInfo.videoId,
-                        },
-                    })
-                ).data.data.video as Video;
+            for (const videoInfo of body.videos) {
+                const { video } = await gql<VideoNotificationQuery>(videoQuery, { id: videoInfo.videoId });
 
-                let thread = await forum.threads.fetch(videoInfo.threadId);
+                const thread = await forum.threads.fetch(videoInfo.threadId);
 
                 if (thread === null) {
                     throw new Error(`Thread not found for id ${videoInfo.threadId}`);

@@ -70,7 +70,7 @@ export type CurrentFeaturedTheme = Maybe<{
                 slug: string;
             }>;
             sequence: Maybe<number>;
-            type: string;
+            type: 'OP' | 'ED';
         };
         version: Maybe<string>;
     };
