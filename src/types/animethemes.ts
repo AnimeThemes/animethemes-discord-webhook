@@ -56,7 +56,7 @@ export type AnimeThemeEntry = {
     episodes: Maybe<string>;
     nsfw: boolean;
     spoiler: boolean;
-    version: Maybe<number>;
+    version: number;
     animetheme: AnimeTheme;
 };
 
@@ -72,7 +72,7 @@ export type CurrentFeaturedTheme = Maybe<{
             sequence: Maybe<number>;
             type: 'OP' | 'ED';
         };
-        version: Maybe<string>;
+        version: number;
     };
     video: {
         tags: string | Array<string>;
