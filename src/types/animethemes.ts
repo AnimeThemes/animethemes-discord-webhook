@@ -40,16 +40,13 @@ export type AnimeTheme = {
 export type Performance = {
     alias: Maybe<string>;
     as: Maybe<string>;
-    artist: Artist | Membership;
+    artist: Artist;
+    member: Maybe<Artist>;
 };
 
 export type Artist = {
     name: string;
     slug: string;
-};
-
-export type Membership = {
-    group: Artist;
 };
 
 export type AnimeThemeEntry = {

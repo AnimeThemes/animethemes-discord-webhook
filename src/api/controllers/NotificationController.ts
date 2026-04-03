@@ -76,16 +76,12 @@ query VideoNotification($id: Int!) {
                             alias
                             as
                             artist {
-                                ... on Artist {
-                                    name
-                                    slug
-                                }
-                                ... on Membership {
-                                    group {
-                                        name
-                                        slug
-                                    }
-                                }
+                                name
+                                slug
+                            }
+                            member {
+                                name
+                                slug
                             }
                         }
                     }
