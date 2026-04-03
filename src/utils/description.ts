@@ -1,11 +1,7 @@
-import { AnimeTheme, AnimeThemeEntry, Artist, Membership, Performance, Video } from 'types/animethemes';
+import { AnimeTheme, AnimeThemeEntry, Performance, Video } from 'types/animethemes';
 import { joinWithLastSeparator } from 'utils/functions';
 
 import config from 'utils/config';
-
-const isMembership = (artist: Artist | Membership): artist is Membership => {
-    return 'group' in artist;
-};
 
 /**
  * Format Artists to a string.
@@ -15,18 +11,14 @@ export const artistsDescription = (performances: Performance[]): string => {
 
     const groups: string[] = [];
     for (const performance of performances) {
-        const { alias, as } = performance;
-        let { artist } = performance;
+        const { alias, as, artist, member } = performance;
 
-        // Resolve to Membership
-        if (isMembership(artist)) {
-            if (groups.includes(artist.group.name)) {
+        if (member !== null) {
+            if (groups.includes(artist.slug)) {
                 continue;
             }
 
-            artist = artist.group;
-
-            groups.push(artist.name);
+            groups.push(artist.slug);
         }
 
         const resolvedAlias = alias && alias.length > 0 ? alias : artist.name;
