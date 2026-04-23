@@ -1,22 +1,23 @@
-import Axios from 'axios';
 import config from 'utils/config';
+import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { print } from 'graphql';
 
-const graphqlClient = Axios.create({
-    baseURL: config.ANIMETHEMES_GRAPHQL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-export async function gql<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
-    const { data } = await graphqlClient.post('', {
-        query,
-        variables,
+export async function gql<TData, TVariables>(
+    document: TypedDocumentNode<TData, TVariables>,
+    variables?: TVariables,
+): Promise<TData> {
+    const res = await fetch(config.ANIMETHEMES_GRAPHQL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: print(document),
+            variables,
+        }),
     });
 
-    if (data.errors) {
-        throw new Error(data.errors[0].message);
-    }
+    const json = await res.json();
 
-    return data.data;
+    return json.data;
 }

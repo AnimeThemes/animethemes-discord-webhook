@@ -1,7 +1,7 @@
 import {
     ButtonInteraction,
+    ChatInputCommandInteraction,
     Collection,
-    CommandInteraction,
     ContextMenuCommandBuilder,
     ContextMenuCommandInteraction,
     ModalSubmitInteraction,
@@ -14,7 +14,10 @@ export type ComponentsButton = Collection<string, (interaction: ButtonInteractio
 export class SlashCommand {
     public command: any;
 
-    constructor(options: { data: SlashCommandOptionsOnlyBuilder; execute: (interaction: CommandInteraction) => any }) {
+    constructor(options: {
+        data: SlashCommandOptionsOnlyBuilder;
+        execute: (interaction: ChatInputCommandInteraction) => any;
+    }) {
         this.command = {
             data: options.data,
             execute: options.execute,

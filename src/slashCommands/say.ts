@@ -1,7 +1,6 @@
 import {
     AttachmentBuilder,
     BaseInteraction,
-    CommandInteraction,
     Events,
     LabelBuilder,
     ModalBuilder,
@@ -10,6 +9,7 @@ import {
     TextChannel,
     TextInputBuilder,
     TextInputStyle,
+    ChatInputCommandInteraction,
 } from 'discord.js';
 import { client } from 'app';
 import { SlashCommand } from 'discord/commands';
@@ -24,7 +24,7 @@ const say = new SlashCommand({
             option.setName('channel').setDescription('Set a channel').addChannelTypes(0).setRequired(true),
         ),
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const { guild } = interaction;
 
         const modal = new ModalBuilder().setCustomId('modal-message').setTitle('Message');

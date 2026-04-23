@@ -2,10 +2,10 @@ import { client, server } from 'app';
 import { Channel, ForumChannel } from 'discord.js';
 import { createVideoEmbedByAnime } from 'discord/embeds';
 import { gql } from 'graphql/client';
-import { Video } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
+import { graphql } from 'graphql/generated';
 
 interface NotificationBody {
     type: 'added' | 'updated';
@@ -15,9 +15,14 @@ interface NotificationBody {
     }>;
 }
 
-interface VideoNotificationQuery {
-    video: Video;
-}
+export const VIDEO_NOTIFICATION_QUERY = graphql(`
+    query VideoNotification($id: Int!) {
+        video(id: $id) {
+            ...createVideoSlugVideo
+            ...VideoEmbed
+        }
+    }
+`);
 
 const NotificationController = () => {
     server.post('/notification', { preHandler: auth }, async (req, res) => {
@@ -29,7 +34,11 @@ const NotificationController = () => {
 
         try {
             for (const videoInfo of body.videos) {
-                const { video } = await gql<VideoNotificationQuery>(videoQuery, { id: videoInfo.videoId });
+                const { video } = await gql(VIDEO_NOTIFICATION_QUERY, { id: videoInfo.videoId });
+
+                if (!video) {
+                    return;
+                }
 
                 const thread = await forum.threads.fetch(videoInfo.threadId);
 
@@ -52,53 +61,3 @@ const NotificationController = () => {
 };
 
 export default NotificationController;
-
-const videoQuery = `
-query VideoNotification($id: Int!) {
-    video(id: $id) {
-        link
-        overlapLocalized
-        resolution
-        sourceLocalized
-        tags
-        animethemeentries {
-            nodes {
-                episodes
-                nsfw
-                spoiler
-                version
-                animetheme {
-                    type
-                    sequence
-                    song {
-                        title
-                        performances(sort: RELEVANCE) {
-                            alias
-                            as
-                            artist {
-                                name
-                                slug
-                            }
-                            member {
-                                name
-                                slug
-                            }
-                        }
-                    }
-                    group {
-                        slug
-                    }
-                    anime {
-                        slug
-                        images(facet: SMALL_COVER) {
-                            nodes {
-                                link
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-`;
