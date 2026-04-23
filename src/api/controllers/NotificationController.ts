@@ -19,52 +19,7 @@ export const VIDEO_NOTIFICATION_QUERY = graphql(`
     query VideoNotification($id: Int!) {
         video(id: $id) {
             ...createVideoSlugVideo
-            link
-            overlapLocalized
-            resolution
-            sourceLocalized
-            tags
-            animethemeentries {
-                nodes {
-                    ...createVideoSlugEntry
-                    episodes
-                    nsfw
-                    spoiler
-                    version
-                    animetheme {
-                        ...createVideoSlugTheme
-                        type
-                        sequence
-                        song {
-                            title
-                            performances(sort: RELEVANCE) {
-                                alias
-                                as
-                                artist {
-                                    name
-                                    slug
-                                }
-                                member {
-                                    id
-                                    name
-                                    slug
-                                }
-                            }
-                        }
-                        group {
-                            slug
-                        }
-                        anime {
-                            slug
-                            images(facet: SMALL_COVER) {
-                                nodes {
-                                    link
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            ...VideoEmbed
         }
     }
 `);
