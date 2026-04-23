@@ -2,14 +2,29 @@ import { client, server } from 'app';
 import { AttachmentBuilder, Channel, ForumChannel } from 'discord.js';
 import { createAnimeEmbed } from 'discord/embeds';
 import { gql } from 'graphql/client';
-import { AnimeThread } from 'types/animethemes';
 
 import auth from 'api/middleware/auth';
 import config from 'utils/config';
+import { graphql } from 'graphql/generated';
+import { AnimeThreadQuery } from 'graphql/generated/graphql';
 
-interface AnimeQuery {
-    anime: AnimeThread;
-}
+export const ANIME_THREAD_QUERY = graphql(`
+    query AnimeThread($slug: String!) {
+        anime(slug: $slug) {
+            ...AnimeThreadEmbed
+            name
+            slug
+            season
+            synopsis
+            images(facet: LARGE_COVER) {
+                nodes {
+                    facet
+                    link
+                }
+            }
+        }
+    }
+`);
 
 const ThreadController = () => {
     server.get('/thread', { preHandler: auth }, async (req, res) => {
@@ -37,7 +52,11 @@ const ThreadController = () => {
     server.post('/thread', { preHandler: auth }, async (req, res) => {
         const { name, slug } = req.body as { name?: string; slug: string };
 
-        const { anime } = await gql<AnimeQuery>(animeQuery, { slug: slug });
+        const { anime } = await gql(ANIME_THREAD_QUERY, { slug: slug });
+
+        if (!anime) {
+            return;
+        }
 
         anime.name = name || anime.name;
 
@@ -48,7 +67,7 @@ const ThreadController = () => {
 
             const thread = await forumChannel.threads.create({
                 name: anime.name,
-                appliedTags: [seasonTags[anime.season]],
+                appliedTags: [seasonTags[anime.season!]],
                 message: {
                     embeds: [createAnimeEmbed(anime)],
                     files: [new AttachmentBuilder(anime.images.nodes[0].link)],
@@ -115,26 +134,9 @@ const ThreadController = () => {
 
 export default ThreadController;
 
-const seasonTags: { [key in AnimeThread['season']]: string } = {
+const seasonTags: Record<NonNullable<NonNullable<AnimeThreadQuery['anime']>['season']>, string> = {
     WINTER: config.DISCORD_WINTER_FORUM_TAG,
     SPRING: config.DISCORD_SPRING_FORUM_TAG,
     SUMMER: config.DISCORD_SUMMER_FORUM_TAG,
     FALL: config.DISCORD_FALL_FORUM_TAG,
 };
-
-const animeQuery = `
-    query AnimeThread($slug: String!) {
-        anime(slug: $slug) {
-            name
-            slug
-            season
-            synopsis
-            images(facet: LARGE_COVER) {
-                nodes {
-                    facet
-                    link
-                }
-            }
-        }
-    }
-`;
