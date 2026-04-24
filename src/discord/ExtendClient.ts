@@ -9,16 +9,14 @@ import {
     Partials,
 } from 'discord.js';
 import { readdirSync } from 'fs';
-import { ComponentsModal } from 'discord/commands';
 
-import Event from 'discord/Event';
 import config from 'utils/config';
+import { MenuCommandCommand } from './MenuCommand';
+import { SlashCommandCommand } from './SlashCommand';
 
 class ExtendClient extends Client {
-    public commands: Collection<string, any> = new Collection();
-    public menuCommands: Collection<string, any> = new Collection();
-    public modals: ComponentsModal = new Collection();
-    public events: any = new Collection();
+    public slashCommands = new Collection<string, SlashCommandCommand>();
+    public menuCommands = new Collection<string, MenuCommandCommand>();
 
     constructor() {
         super({
@@ -39,7 +37,7 @@ class ExtendClient extends Client {
         this.login(config.DISCORD_TOKEN);
     }
 
-    private registerCommands(commands: Array<ApplicationCommandDataResolvable>) {
+    private registerCommands(...commands: Array<ApplicationCommandDataResolvable>) {
         this.application?.commands
             .set(commands)
             .then(() => {
@@ -62,20 +60,20 @@ class ExtendClient extends Client {
         );
 
         for (const file of commandsSlash) {
-            const command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default.command;
-            this.commands.set(command.data.name, command);
+            const command = (await import(`../slashCommands/${file.slice(0, -3)}`)).default
+                .command as SlashCommandCommand;
+            this.slashCommands.set(command.data.name, command);
             slashCommands.push(command.data.toJSON());
         }
 
         for (const file of commandsMenu) {
-            const command = (await import(`../menuCommands/${file.slice(0, -3)}`)).default.command;
-            this.commands.set(command.data.name, command);
+            const command = (await import(`../menuCommands/${file.slice(0, -3)}`)).default
+                .command as MenuCommandCommand;
+            this.menuCommands.set(command.data.name, command);
             menuCommands.push(command.data);
         }
 
-        const commands = slashCommands.concat(menuCommands);
-
-        this.once(Events.ClientReady, () => this.registerCommands(commands));
+        this.once(Events.ClientReady, () => this.registerCommands(...slashCommands, ...menuCommands));
     }
 
     private async registerEvents() {
@@ -84,7 +82,7 @@ class ExtendClient extends Client {
         );
 
         for (const file of eventFiles) {
-            const event: Event = (await import(`../events/${file.slice(0, -3)}`)).default as Event;
+            const event = (await import(`../events/${file.slice(0, -3)}`)).default;
             if (event.once) {
                 this.once(event.name, (...args) => event.execute(...args));
             } else {

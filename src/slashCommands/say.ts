@@ -4,16 +4,16 @@ import {
     Events,
     LabelBuilder,
     ModalBuilder,
-    ModalSubmitInteraction,
     SlashCommandBuilder,
     TextChannel,
     TextInputBuilder,
     TextInputStyle,
     ChatInputCommandInteraction,
+    MessageFlags,
+    ChannelType,
 } from 'discord.js';
 import { client } from 'app';
-import { SlashCommand } from 'discord/commands';
-import { deferReply, followUp, showModal } from 'lib/discord';
+import SlashCommand from 'discord/SlashCommand';
 
 const say = new SlashCommand({
     data: new SlashCommandBuilder()
@@ -21,12 +21,14 @@ const say = new SlashCommand({
         .setDescription('Bot sends a message')
         .setDefaultMemberPermissions(8)
         .addChannelOption((option) =>
-            option.setName('channel').setDescription('Set a channel').addChannelTypes(0).setRequired(true),
+            option
+                .setName('channel')
+                .setDescription('Set a channel')
+                .addChannelTypes(ChannelType.GuildText)
+                .setRequired(true),
         ),
 
     async execute(interaction: ChatInputCommandInteraction) {
-        const { guild } = interaction;
-
         const modal = new ModalBuilder().setCustomId('modal-message').setTitle('Message');
 
         const textLabel = new LabelBuilder()
@@ -49,23 +51,21 @@ const say = new SlashCommand({
             );
 
         modal.setLabelComponents([textLabel, imageLabel]);
-        await showModal(interaction, modal);
+        await interaction.showModal(modal);
 
         client.once(Events.InteractionCreate, async (i: BaseInteraction) => {
             if (!i.isModalSubmit()) return;
             if (i.user.id !== interaction.user.id) return;
             if (i.customId !== 'modal-message') return;
 
-            const interactionModal = i as ModalSubmitInteraction;
+            await i.deferReply({
+                flags: [MessageFlags.Ephemeral],
+            });
 
-            await deferReply(interactionModal);
-
-            const { fields } = interactionModal;
+            const { fields } = i;
             const message = fields.getTextInputValue('input-message');
 
-            const channel = guild?.channels.cache.find(
-                (c) => c.id === interaction.options.get('channel')?.value,
-            ) as TextChannel;
+            const channel = interaction.options.getChannel('channel') as TextChannel;
 
             channel
                 .send({
@@ -77,7 +77,10 @@ const say = new SlashCommand({
                         .map((image) => new AttachmentBuilder(image)),
                 })
                 .then(async () => {
-                    await followUp(interactionModal, 'Done');
+                    await i.followUp({
+                        content: 'Done',
+                        flags: [MessageFlags.Ephemeral],
+                    });
                 })
                 .catch((err) => console.error(err));
         });

@@ -1,9 +1,11 @@
-class Event {
-    name: string;
-    once: boolean;
-    execute: (...args: any) => Promise<void> | void;
+import { ClientEvents } from 'discord.js';
 
-    constructor(object: { name: string; once?: boolean; execute: (...args: any) => Promise<void> | void }) {
+class Event<K extends keyof ClientEvents> {
+    name: K;
+    once: boolean;
+    execute: (...args: ClientEvents[K]) => void;
+
+    constructor(object: { name: K; once?: boolean; execute: (...args: ClientEvents[K]) => void }) {
         this.name = object.name;
         this.once = object.once ?? false;
         this.execute = object.execute;

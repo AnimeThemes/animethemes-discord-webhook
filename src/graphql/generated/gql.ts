@@ -14,26 +14,37 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n": typeof types.VideoNotificationDocument,
-    "\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n": typeof types.AnimeThreadDocument,
-    "\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n": typeof types.AnimeThreadEmbedFragmentDoc,
-    "\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.VideoEmbedFragmentDoc,
-    "\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n": typeof types.CurrentFeaturedThemeDocument,
-    "\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n": typeof types.ArtistDescriptionFragmentPerformanceFragmentDoc,
-    "\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n": typeof types.CreateVideoSlugThemeFragmentDoc,
-    "\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n": typeof types.CreateVideoSlugEntryFragmentDoc,
-    "\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n": typeof types.CreateVideoSlugVideoFragmentDoc,
+    '\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n': typeof types.VideoNotificationDocument;
+    '\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n': typeof types.AnimeThreadDocument;
+    '\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n': typeof types.AnimeThreadEmbedFragmentDoc;
+    '\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n': typeof types.VideoEmbedFragmentDoc;
+    '\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n': typeof types.CurrentFeaturedThemeDocument;
+    '\n    query SearchAnime($search: String!) {\n        animePagination(search: $search, first: 5) {\n            paginatorInfo {\n                count\n            }\n            data {\n                formatLocalized\n                name\n                slug\n                seasonLocalized\n                synopsis\n                year\n                images(facet: SMALL_COVER) {\n                    nodes {\n                        link\n                    }\n                }\n            }\n        }\n    }\n': typeof types.SearchAnimeDocument;
+    '\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n': typeof types.ArtistDescriptionFragmentPerformanceFragmentDoc;
+    '\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n': typeof types.CreateVideoSlugThemeFragmentDoc;
+    '\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n': typeof types.CreateVideoSlugEntryFragmentDoc;
+    '\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n': typeof types.CreateVideoSlugVideoFragmentDoc;
 };
 const documents: Documents = {
-    "\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n": types.VideoNotificationDocument,
-    "\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n": types.AnimeThreadDocument,
-    "\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n": types.AnimeThreadEmbedFragmentDoc,
-    "\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n": types.VideoEmbedFragmentDoc,
-    "\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n": types.CurrentFeaturedThemeDocument,
-    "\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n": types.ArtistDescriptionFragmentPerformanceFragmentDoc,
-    "\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n": types.CreateVideoSlugThemeFragmentDoc,
-    "\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n": types.CreateVideoSlugEntryFragmentDoc,
-    "\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n": types.CreateVideoSlugVideoFragmentDoc,
+    '\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n':
+        types.VideoNotificationDocument,
+    '\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n':
+        types.AnimeThreadDocument,
+    '\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n':
+        types.AnimeThreadEmbedFragmentDoc,
+    '\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n':
+        types.VideoEmbedFragmentDoc,
+    '\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n':
+        types.CurrentFeaturedThemeDocument,
+    '\n    query SearchAnime($search: String!) {\n        animePagination(search: $search, first: 5) {\n            paginatorInfo {\n                count\n            }\n            data {\n                formatLocalized\n                name\n                slug\n                seasonLocalized\n                synopsis\n                year\n                images(facet: SMALL_COVER) {\n                    nodes {\n                        link\n                    }\n                }\n            }\n        }\n    }\n':
+        types.SearchAnimeDocument,
+    '\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n':
+        types.ArtistDescriptionFragmentPerformanceFragmentDoc,
+    '\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n':
+        types.CreateVideoSlugThemeFragmentDoc,
+    '\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n':
+        types.CreateVideoSlugEntryFragmentDoc,
+    '\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n': types.CreateVideoSlugVideoFragmentDoc,
 };
 
 /**
@@ -53,42 +64,67 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n"): (typeof documents)["\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n"];
+export function graphql(
+    source: '\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n',
+): (typeof documents)['\n    query VideoNotification($id: Int!) {\n        video(id: $id) {\n            ...createVideoSlugVideo\n            ...VideoEmbed\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n"];
+export function graphql(
+    source: '\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query AnimeThread($slug: String!) {\n        anime(slug: $slug) {\n            ...AnimeThreadEmbed\n            name\n            slug\n            season\n            synopsis\n            images(facet: LARGE_COVER) {\n                nodes {\n                    facet\n                    link\n                }\n            }\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n"): (typeof documents)["\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n"];
+export function graphql(
+    source: '\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n',
+): (typeof documents)['\n    fragment AnimeThreadEmbed on Anime {\n        name\n        slug\n        synopsis\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n"];
+export function graphql(
+    source: '\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    fragment VideoEmbed on Video {\n        ...createVideoSlugVideo\n        overlapLocalized\n        resolution\n        sourceLocalized\n        tags\n        animethemeentries {\n            nodes {\n                ...createVideoSlugEntry\n                episodes\n                nsfw\n                spoiler\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        slug\n                        images {\n                            nodes {\n                                link\n                            }\n                        }\n                    }\n                    song {\n                        title\n                        performances {\n                            ...ArtistDescriptionFragmentPerformance\n                        }\n                    }\n                }\n            }\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n"): (typeof documents)["\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n"];
+export function graphql(
+    source: '\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query CurrentFeaturedTheme {\n        currentfeaturedtheme {\n            animethemeentry {\n                ...createVideoSlugEntry\n                animetheme {\n                    ...createVideoSlugTheme\n                    anime {\n                        name\n                    }\n                }\n            }\n            video {\n                ...createVideoSlugVideo\n            }\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n"): (typeof documents)["\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n"];
+export function graphql(
+    source: '\n    query SearchAnime($search: String!) {\n        animePagination(search: $search, first: 5) {\n            paginatorInfo {\n                count\n            }\n            data {\n                formatLocalized\n                name\n                slug\n                seasonLocalized\n                synopsis\n                year\n                images(facet: SMALL_COVER) {\n                    nodes {\n                        link\n                    }\n                }\n            }\n        }\n    }\n',
+): (typeof documents)['\n    query SearchAnime($search: String!) {\n        animePagination(search: $search, first: 5) {\n            paginatorInfo {\n                count\n            }\n            data {\n                formatLocalized\n                name\n                slug\n                seasonLocalized\n                synopsis\n                year\n                images(facet: SMALL_COVER) {\n                    nodes {\n                        link\n                    }\n                }\n            }\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n"): (typeof documents)["\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n"];
+export function graphql(
+    source: '\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n',
+): (typeof documents)['\n    fragment ArtistDescriptionFragmentPerformance on Performance {\n        alias\n        as\n        artist {\n            name\n            slug\n        }\n        member {\n            id\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n"): (typeof documents)["\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n"];
+export function graphql(
+    source: '\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n',
+): (typeof documents)['\n    fragment createVideoSlugTheme on AnimeTheme {\n        typeLocalized\n        sequence\n        group {\n            slug\n        }\n    }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n"): (typeof documents)["\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n"];
+export function graphql(
+    source: '\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n',
+): (typeof documents)['\n    fragment createVideoSlugEntry on AnimeThemeEntry {\n        version\n    }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: '\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n',
+): (typeof documents)['\n    fragment createVideoSlugVideo on Video {\n        tags\n    }\n'];
 
 export function graphql(source: string) {
-  return (documents as any)[source] ?? {};
+    return (documents as any)[source] ?? {};
 }
 
-export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;
+export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
+    TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;

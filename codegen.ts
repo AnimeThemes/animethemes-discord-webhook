@@ -1,9 +1,8 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
-import configEnv from './src/utils/config';
 
 const config: CodegenConfig = {
     overwrite: true,
-    schema: configEnv.ANIMETHEMES_GRAPHQL,
+    schema: 'http://graphql.animethemes.test',
     documents: ['src/**/*.{ts,tsx,graphql}'],
     generates: {
         'src/graphql/generated/': {

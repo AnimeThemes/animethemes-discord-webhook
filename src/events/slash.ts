@@ -1,23 +1,28 @@
-import { CommandInteraction, Events } from 'discord.js';
+import { BaseInteraction, Events } from 'discord.js';
 import { client } from 'app';
 
 import Event from 'discord/Event';
 
 export default new Event({
     name: Events.InteractionCreate,
-    execute(interaction: CommandInteraction) {
+    execute(interaction: BaseInteraction) {
         if (!interaction.isCommand()) return;
-        const command = client.commands.get(interaction.commandName);
-        if (!command) return;
 
-        if (interaction.isAutocomplete() && command.autoComplete) {
-            command.autoComplete(interaction);
-            return;
+        if (interaction.isChatInputCommand()) {
+            const command = client.slashCommands.get(interaction.commandName);
+            if (!command) return;
+
+            if (!interaction.isAutocomplete()) {
+                command.execute(interaction);
+            }
         }
 
-        if (interaction.isChatInputCommand() || interaction.isContextMenuCommand()) {
+        if (interaction.isContextMenuCommand()) {
+            const command = client.menuCommands.get(interaction.commandName);
+
+            if (!command) return;
+
             command.execute(interaction);
-            return;
         }
     },
 });

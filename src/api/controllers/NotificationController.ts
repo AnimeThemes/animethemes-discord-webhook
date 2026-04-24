@@ -1,6 +1,6 @@
 import { client, server } from 'app';
 import { Channel, ForumChannel } from 'discord.js';
-import { createVideoEmbedByAnime } from 'discord/embeds';
+import { createVideoThreadEmbed } from 'discord/embeds';
 import { gql } from 'graphql/client';
 
 import auth from 'api/middleware/auth';
@@ -47,7 +47,7 @@ const NotificationController = () => {
                 }
 
                 thread.send({
-                    embeds: [createVideoEmbedByAnime(video, body.type)],
+                    embeds: [createVideoThreadEmbed(video, body.type)],
                 });
             }
 
