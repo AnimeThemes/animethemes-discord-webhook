@@ -17,13 +17,13 @@ export const ANIME_THREAD_EMBED = graphql(`
 /**
  * Create the anime embed.
  */
-export const createAnimeEmbed = (anime: ResultOf<typeof ANIME_THREAD_EMBED>): EmbedBuilder => {
+export const createAnimeThreadEmbed = (anime: ResultOf<typeof ANIME_THREAD_EMBED>): EmbedBuilder => {
     const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
 
     return new EmbedBuilder().setTitle(anime.name).setColor([154, 0, 255]).setDescription(description);
 };
 
-export const VIDEO_EMBED = graphql(`
+export const VIDEO_THREAD_EMBED = graphql(`
     fragment VideoEmbed on Video {
         ...createVideoSlugVideo
         overlapLocalized
@@ -61,8 +61,8 @@ export const VIDEO_EMBED = graphql(`
 /**
  * Create an embed of a video using anime information.
  */
-export const createVideoEmbedByAnime = (
-    video: ResultOf<typeof VIDEO_EMBED>,
+export const createVideoThreadEmbed = (
+    video: ResultOf<typeof VIDEO_THREAD_EMBED>,
     type: 'added' | 'updated',
 ): EmbedBuilder => {
     if (!video) {

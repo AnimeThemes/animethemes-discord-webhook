@@ -1,6 +1,6 @@
 import { client, server } from 'app';
 import { AttachmentBuilder, Channel, ForumChannel } from 'discord.js';
-import { createAnimeEmbed } from 'discord/embeds';
+import { createAnimeThreadEmbed } from 'discord/embeds';
 import { gql } from 'graphql/client';
 
 import auth from 'api/middleware/auth';
@@ -69,7 +69,7 @@ const ThreadController = () => {
                 name: anime.name,
                 appliedTags: [seasonTags[anime.season!]],
                 message: {
-                    embeds: [createAnimeEmbed(anime)],
+                    embeds: [createAnimeThreadEmbed(anime)],
                     files: [new AttachmentBuilder(anime.images.nodes[0].link)],
                 },
             });
