@@ -1,4 +1,5 @@
 import {
+    ApplicationCommandType,
     AttachmentBuilder,
     BaseInteraction,
     ContextMenuCommandBuilder,
@@ -8,6 +9,7 @@ import {
     Message,
     MessageFlags,
     ModalBuilder,
+    PermissionFlagsBits,
     TextInputBuilder,
     TextInputStyle,
 } from 'discord.js';
@@ -15,7 +17,10 @@ import { client } from 'app';
 import MenuCommand from 'discord/MenuCommand';
 
 const editMessage = new MenuCommand({
-    data: new ContextMenuCommandBuilder().setName('Edit Message').setDefaultMemberPermissions(8).setType(3),
+    data: new ContextMenuCommandBuilder()
+        .setName('Edit Message')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .setType(ApplicationCommandType.Message),
 
     async execute(interaction: ContextMenuCommandInteraction) {
         if (!interaction.isMessageContextMenuCommand()) return;

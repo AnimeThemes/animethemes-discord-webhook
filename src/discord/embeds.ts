@@ -1,31 +1,16 @@
-import { ColorResolvable, EmbedBuilder } from 'discord.js';
-import { artistsDescription, createVideoSlug } from 'utils/description';
+import { EmbedBuilder } from 'discord.js';
+import { artistsDescription, createThemeSlug, createVideoSlug } from 'utils/description';
 import { TrelloEmbedConfig } from 'types/trello';
 
 import config from 'utils/config';
 import { graphql } from 'graphql/generated';
 import { ResultOf } from '@graphql-typed-document-node/core';
+import { VideoOverlap } from 'graphql/generated/graphql';
 
-export const ANIME_THREAD_EMBED = graphql(`
-    fragment AnimeThreadEmbed on Anime {
-        name
-        slug
-        synopsis
-    }
-`);
-
-/**
- * Create the anime embed.
- */
-export const createAnimeThreadEmbed = (anime: ResultOf<typeof ANIME_THREAD_EMBED>): EmbedBuilder => {
-    const description = `**Synopsis:** ${anime.synopsis?.replace(/<br>/g, '')}\n\n**Link:** ${config.ANIME_URL + '/' + anime.slug}`;
-
-    return new EmbedBuilder().setTitle(anime.name).setColor([154, 0, 255]).setDescription(description);
-};
-
-export const VIDEO_THREAD_EMBED = graphql(`
+export const VIDEO_NOTIFICATION_EMBED = graphql(`
     fragment VideoEmbed on Video {
         ...createVideoSlugVideo
+        overlap
         overlapLocalized
         resolution
         sourceLocalized
@@ -34,16 +19,21 @@ export const VIDEO_THREAD_EMBED = graphql(`
             nodes {
                 ...createVideoSlugEntry
                 episodes
+                notes
                 nsfw
                 spoiler
                 animetheme {
                     ...createVideoSlugTheme
                     anime {
+                        name
                         slug
                         images {
                             nodes {
                                 link
                             }
+                        }
+                        synonyms {
+                            text
                         }
                     }
                     song {
@@ -61,41 +51,69 @@ export const VIDEO_THREAD_EMBED = graphql(`
 /**
  * Create an embed of a video using anime information.
  */
-export const createVideoThreadEmbed = (
-    video: ResultOf<typeof VIDEO_THREAD_EMBED>,
+export const createVideoNotificationEmbed = (
+    video: ResultOf<typeof VIDEO_NOTIFICATION_EMBED>,
     type: 'added' | 'updated',
 ): EmbedBuilder => {
+    const embed = new EmbedBuilder();
+
     if (!video) {
-        return new EmbedBuilder();
+        return embed;
     }
 
-    const embedColor: ColorResolvable | null = type === 'added' ? [46, 204, 113] : [255, 255, 0];
     const description: string[] = [];
-
-    description.push(type === 'added' ? `New video has been added.\n` : `A video has been updated.\n`);
 
     const entry = video.animethemeentries.nodes[0];
     const theme = entry.animetheme;
     const anime = theme.anime;
 
-    if (theme.song?.performances && theme.song.performances.length !== 0) {
-        description.push(artistsDescription(theme.song.performances));
-    }
+    const themeSlug = createThemeSlug(theme, entry);
+    const videoSlug = createVideoSlug(theme, entry, video);
+    const videoSlugLink = `[${themeSlug}](${config.ANIME_URL}/${anime.slug}/${videoSlug})`;
 
+    const performances =
+        theme.song?.performances && theme.song.performances.length !== 0
+            ? ' by ' + artistsDescription(theme.song.performances)
+            : '';
+
+    description.push(type === 'added' ? `${videoSlugLink} has been added.\n` : `${videoSlugLink} has been updated.\n`);
     description.push(entry.spoiler ? '⚠️ Spoiler' : '');
     description.push(entry.nsfw ? '🔞 NSFW' : '');
-    description.push(`**Episodes:** ${entry.episodes ?? '-'}`);
-    description.push(`**Resolution:** ${video.resolution}p`);
-    description.push(`**Source:** ${video.sourceLocalized}`);
-    description.push(`**Overlap:** ${video.overlapLocalized}`);
-    description.push(video.tags ? '' : `**Tags:** ${video.tags}`);
-    description.push(`**Link**: ${config.ANIME_URL}/${anime.slug}/${createVideoSlug(entry.animetheme, entry, video)}`);
+    description.push(`**Song:** ${theme.song?.title ?? '*T.B.A.*'}${performances}\n`);
 
-    return new EmbedBuilder()
-        .setColor(embedColor)
-        .setTitle(createVideoSlug(theme, entry, video) + ` - ${theme.song?.title ?? '*T.B.A.*'}`)
+    if (entry.episodes) {
+        description.push(`**Episodes:** ${entry.episodes}`);
+    }
+
+    description.push(`**Resolution:** ${video.resolution}p`);
+
+    if (video.overlap !== VideoOverlap.None) {
+        description.push(`**Overlap:** ${video.overlapLocalized}`);
+    }
+
+    if (entry.notes) {
+        description.push(`\n**Notes:** ${entry.notes}`);
+    }
+
+    const animeName =
+        anime.name.length >= 90
+            ? (anime.synonyms.find((synonym) => synonym.text.length < 90)?.text ?? anime.name.slice(0, 89))
+            : anime.name;
+
+    embed
+        .setColor(type === 'added' ? [46, 204, 113] : [255, 255, 0])
+        .setTitle(`${animeName}`)
         .setDescription(description.filter(Boolean).join('\n'))
+        .setURL(`${config.ANIME_URL}/${anime.slug}`)
         .setThumbnail(anime.images.nodes[0].link);
+
+    if (video.tags && video.tags.length > 0) {
+        embed.setFooter({
+            text: video.tags,
+        });
+    }
+
+    return embed;
 };
 
 /**

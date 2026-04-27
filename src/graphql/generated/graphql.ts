@@ -5426,6 +5426,7 @@ export type VideoNotificationQuery = {
     video?: {
         __typename?: 'Video';
         tags?: string | null;
+        overlap: VideoOverlap;
         overlapLocalized: string;
         resolution?: number | null;
         sourceLocalized?: string | null;
@@ -5434,6 +5435,7 @@ export type VideoNotificationQuery = {
             nodes: Array<{
                 __typename?: 'AnimeThemeEntry';
                 episodes?: string | null;
+                notes?: string | null;
                 nsfw: boolean;
                 spoiler: boolean;
                 version: number;
@@ -5443,11 +5445,13 @@ export type VideoNotificationQuery = {
                     sequence?: number | null;
                     anime: {
                         __typename?: 'Anime';
+                        name: string;
                         slug: string;
                         images: {
                             __typename?: 'ImageConnection';
                             nodes: Array<{ __typename?: 'Image'; link: string }>;
                         };
+                        synonyms: Array<{ __typename?: 'Synonym'; text: string }>;
                     };
                     song?: {
                         __typename?: 'Song';
@@ -5467,29 +5471,9 @@ export type VideoNotificationQuery = {
     } | null;
 };
 
-export type AnimeThreadQueryVariables = Exact<{
-    slug: Scalars['String']['input'];
-}>;
-
-export type AnimeThreadQuery = {
-    __typename?: 'Query';
-    anime?: {
-        __typename?: 'Anime';
-        name: string;
-        slug: string;
-        season?: AnimeSeason | null;
-        synopsis?: string | null;
-        images: {
-            __typename?: 'ImageConnection';
-            nodes: Array<{ __typename?: 'Image'; facet: ImageFacet; link: string }>;
-        };
-    } | null;
-};
-
-export type AnimeThreadEmbedFragment = { __typename?: 'Anime'; name: string; slug: string; synopsis?: string | null };
-
 export type VideoEmbedFragment = {
     __typename?: 'Video';
+    overlap: VideoOverlap;
     overlapLocalized: string;
     resolution?: number | null;
     sourceLocalized?: string | null;
@@ -5499,6 +5483,7 @@ export type VideoEmbedFragment = {
         nodes: Array<{
             __typename?: 'AnimeThemeEntry';
             episodes?: string | null;
+            notes?: string | null;
             nsfw: boolean;
             spoiler: boolean;
             version: number;
@@ -5508,8 +5493,10 @@ export type VideoEmbedFragment = {
                 sequence?: number | null;
                 anime: {
                     __typename?: 'Anime';
+                    name: string;
                     slug: string;
                     images: { __typename?: 'ImageConnection'; nodes: Array<{ __typename?: 'Image'; link: string }> };
+                    synonyms: Array<{ __typename?: 'Synonym'; text: string }>;
                 };
                 song?: {
                     __typename?: 'Song';
@@ -5590,24 +5577,6 @@ export type CreateVideoSlugEntryFragment = { __typename?: 'AnimeThemeEntry'; ver
 
 export type CreateVideoSlugVideoFragment = { __typename?: 'Video'; tags?: string | null };
 
-export const AnimeThreadEmbedFragmentDoc = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'FragmentDefinition',
-            name: { kind: 'Name', value: 'AnimeThreadEmbed' },
-            typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Anime' } },
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-                    { kind: 'Field', name: { kind: 'Name', value: 'synopsis' } },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<AnimeThreadEmbedFragment, unknown>;
 export const CreateVideoSlugVideoFragmentDoc = {
     kind: 'Document',
     definitions: [
@@ -5708,6 +5677,7 @@ export const VideoEmbedFragmentDoc = {
                 kind: 'SelectionSet',
                 selections: [
                     { kind: 'FragmentSpread', name: { kind: 'Name', value: 'createVideoSlugVideo' } },
+                    { kind: 'Field', name: { kind: 'Name', value: 'overlap' } },
                     { kind: 'Field', name: { kind: 'Name', value: 'overlapLocalized' } },
                     { kind: 'Field', name: { kind: 'Name', value: 'resolution' } },
                     { kind: 'Field', name: { kind: 'Name', value: 'sourceLocalized' } },
@@ -5729,6 +5699,7 @@ export const VideoEmbedFragmentDoc = {
                                                 name: { kind: 'Name', value: 'createVideoSlugEntry' },
                                             },
                                             { kind: 'Field', name: { kind: 'Name', value: 'episodes' } },
+                                            { kind: 'Field', name: { kind: 'Name', value: 'notes' } },
                                             { kind: 'Field', name: { kind: 'Name', value: 'nsfw' } },
                                             { kind: 'Field', name: { kind: 'Name', value: 'spoiler' } },
                                             {
@@ -5747,6 +5718,10 @@ export const VideoEmbedFragmentDoc = {
                                                             selectionSet: {
                                                                 kind: 'SelectionSet',
                                                                 selections: [
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: { kind: 'Name', value: 'name' },
+                                                                    },
                                                                     {
                                                                         kind: 'Field',
                                                                         name: { kind: 'Name', value: 'slug' },
@@ -5774,6 +5749,22 @@ export const VideoEmbedFragmentDoc = {
                                                                                                 },
                                                                                             },
                                                                                         ],
+                                                                                    },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: { kind: 'Name', value: 'synonyms' },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'text',
                                                                                     },
                                                                                 },
                                                                             ],
@@ -6009,6 +6000,7 @@ export const VideoNotificationDocument = {
                 kind: 'SelectionSet',
                 selections: [
                     { kind: 'FragmentSpread', name: { kind: 'Name', value: 'createVideoSlugVideo' } },
+                    { kind: 'Field', name: { kind: 'Name', value: 'overlap' } },
                     { kind: 'Field', name: { kind: 'Name', value: 'overlapLocalized' } },
                     { kind: 'Field', name: { kind: 'Name', value: 'resolution' } },
                     { kind: 'Field', name: { kind: 'Name', value: 'sourceLocalized' } },
@@ -6030,6 +6022,7 @@ export const VideoNotificationDocument = {
                                                 name: { kind: 'Name', value: 'createVideoSlugEntry' },
                                             },
                                             { kind: 'Field', name: { kind: 'Name', value: 'episodes' } },
+                                            { kind: 'Field', name: { kind: 'Name', value: 'notes' } },
                                             { kind: 'Field', name: { kind: 'Name', value: 'nsfw' } },
                                             { kind: 'Field', name: { kind: 'Name', value: 'spoiler' } },
                                             {
@@ -6048,6 +6041,10 @@ export const VideoNotificationDocument = {
                                                             selectionSet: {
                                                                 kind: 'SelectionSet',
                                                                 selections: [
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: { kind: 'Name', value: 'name' },
+                                                                    },
                                                                     {
                                                                         kind: 'Field',
                                                                         name: { kind: 'Name', value: 'slug' },
@@ -6075,6 +6072,22 @@ export const VideoNotificationDocument = {
                                                                                                 },
                                                                                             },
                                                                                         ],
+                                                                                    },
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        kind: 'Field',
+                                                                        name: { kind: 'Name', value: 'synonyms' },
+                                                                        selectionSet: {
+                                                                            kind: 'SelectionSet',
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: 'Field',
+                                                                                    name: {
+                                                                                        kind: 'Name',
+                                                                                        value: 'text',
                                                                                     },
                                                                                 },
                                                                             ],
@@ -6126,89 +6139,6 @@ export const VideoNotificationDocument = {
         },
     ],
 } as unknown as DocumentNode<VideoNotificationQuery, VideoNotificationQueryVariables>;
-export const AnimeThreadDocument = {
-    kind: 'Document',
-    definitions: [
-        {
-            kind: 'OperationDefinition',
-            operation: 'query',
-            name: { kind: 'Name', value: 'AnimeThread' },
-            variableDefinitions: [
-                {
-                    kind: 'VariableDefinition',
-                    variable: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
-                    type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-                },
-            ],
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'anime' },
-                        arguments: [
-                            {
-                                kind: 'Argument',
-                                name: { kind: 'Name', value: 'slug' },
-                                value: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
-                            },
-                        ],
-                        selectionSet: {
-                            kind: 'SelectionSet',
-                            selections: [
-                                { kind: 'FragmentSpread', name: { kind: 'Name', value: 'AnimeThreadEmbed' } },
-                                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                                { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-                                { kind: 'Field', name: { kind: 'Name', value: 'season' } },
-                                { kind: 'Field', name: { kind: 'Name', value: 'synopsis' } },
-                                {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'images' },
-                                    arguments: [
-                                        {
-                                            kind: 'Argument',
-                                            name: { kind: 'Name', value: 'facet' },
-                                            value: { kind: 'EnumValue', value: 'LARGE_COVER' },
-                                        },
-                                    ],
-                                    selectionSet: {
-                                        kind: 'SelectionSet',
-                                        selections: [
-                                            {
-                                                kind: 'Field',
-                                                name: { kind: 'Name', value: 'nodes' },
-                                                selectionSet: {
-                                                    kind: 'SelectionSet',
-                                                    selections: [
-                                                        { kind: 'Field', name: { kind: 'Name', value: 'facet' } },
-                                                        { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-                                                    ],
-                                                },
-                                            },
-                                        ],
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            kind: 'FragmentDefinition',
-            name: { kind: 'Name', value: 'AnimeThreadEmbed' },
-            typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'Anime' } },
-            selectionSet: {
-                kind: 'SelectionSet',
-                selections: [
-                    { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
-                    { kind: 'Field', name: { kind: 'Name', value: 'synopsis' } },
-                ],
-            },
-        },
-    ],
-} as unknown as DocumentNode<AnimeThreadQuery, AnimeThreadQueryVariables>;
 export const CurrentFeaturedThemeDocument = {
     kind: 'Document',
     definitions: [
