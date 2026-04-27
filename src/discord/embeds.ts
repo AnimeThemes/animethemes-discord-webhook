@@ -32,9 +32,6 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
                                 link
                             }
                         }
-                        synonyms {
-                            text
-                        }
                     }
                     song {
                         title
@@ -95,14 +92,9 @@ export const createVideoNotificationEmbed = (
         description.push(`\n**Notes:** ${entry.notes}`);
     }
 
-    const animeName =
-        anime.name.length >= 90
-            ? (anime.synonyms.find((synonym) => synonym.text.length < 90)?.text ?? anime.name.slice(0, 89))
-            : anime.name;
-
     embed
         .setColor(type === 'added' ? [46, 204, 113] : [255, 255, 0])
-        .setTitle(`${animeName}`)
+        .setTitle(anime.name)
         .setDescription(description.filter(Boolean).join('\n'))
         .setURL(`${config.ANIME_URL}/${anime.slug}`)
         .setThumbnail(anime.images.nodes[0].link);
