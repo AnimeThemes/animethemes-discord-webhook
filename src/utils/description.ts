@@ -43,9 +43,7 @@ export const artistsDescription = (performances: ResultOf<typeof ARTIST_DESCRIPT
         artistsArray.push(`[${finalName}](${config.ARTIST_URL}/${artist.slug})`);
     }
 
-    return (
-        `**Artist${artistsArray.length > 1 ? 's' : ''}:** ` + joinWithLastSeparator(artistsArray, ', ', ' & ') + '\n'
-    );
+    return joinWithLastSeparator(artistsArray, ', ', ' & ');
 };
 
 export const CREATE_VIDEO_SLUG_THEME = graphql(`
@@ -94,6 +92,25 @@ export const createVideoSlug = (
 
     if (video.tags) {
         slug += `-${video.tags}`;
+    }
+
+    return slug;
+};
+
+export const createThemeSlug = (
+    theme: ResultOf<typeof CREATE_VIDEO_SLUG_THEME>,
+    entry: ResultOf<typeof CREATE_VIDEO_SLUG_ENTRY>,
+): string => {
+    const type = theme.typeLocalized;
+
+    let slug = type + (theme.sequence || 1);
+
+    if (entry.version && entry.version !== 1) {
+        slug += `v${entry.version}`;
+    }
+
+    if (theme.group) {
+        slug += `-${theme.group.slug}`;
     }
 
     return slug;

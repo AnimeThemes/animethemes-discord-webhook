@@ -7,12 +7,8 @@ declare namespace NodeJS {
         API_KEY: string;
         API_PORT: string;
         DISCORD_TOKEN: string;
-        DISCORD_FORUM_CHANNEL_ID: string;
         DISCORD_TRELLO_CHANNEL_ID: string;
-        DISCORD_WINTER_FORUM_TAG: string;
-        DISCORD_SPRING_FORUM_TAG: string;
-        DISCORD_SUMMER_FORUM_TAG: string;
-        DISCORD_FALL_FORUM_TAG: string;
+        DISCORD_UPLOADS_CHANNEL_ID: string;
         NODE_ENV: string | null;
         TRELLO_SECRET: string;
         TRELLO_CALLBACK_URL: string;
