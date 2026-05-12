@@ -22,36 +22,31 @@ root directory:
 
 ```ini
 ; The AnimeThemes URLs.
-ANIMETHEMES_GRAPHQL = https://graphql.animethemes.moe
-ARTIST_URL = https://animethemes.moe/artist
-ANIME_URL = https://animethemes.moe/anime
+ANIMETHEMES_GRAPHQL=https://graphql.animethemes.moe
+ARTIST_URL=https://animethemes.moe/artist
+ANIME_URL=https://animethemes.moe/anime
 
 ; The config used to run this API.
-API_HOST = animethemes.moe
-API_KEY =
+API_HOST_NAME=http://api.animethemes.test/discord
+API_HOST=localhost
+API_KEY=
 API_PORT = 3001
 
 ; The Bot Discord Token that you saved above.
-DISCORD_TOKEN = ...
+DISCORD_TOKEN= ...
 
-; The ID of the Discord Forum Channel.
-DISCORD_FORUM_CHANNEL_ID = 1149167546906456124
+; The ID of the Discord Uploads Channel.
+DISCORD_UPLOADS_CHANNEL_ID=1498006983935004682
 
 ; The ID of the Discord Trello Text Channel.
-DISCORD_TRELLO_CHANNEL_ID = 785620580384505867
-
-; The IDs of the tags on Discord Forum Channel.
-DISCORD_WINTER_FORUM_TAG = 1149167724296151120
-DISCORD_SPRING_FORUM_TAG = 1149167909235589201
-DISCORD_SUMMER_FORUM_TAG = 1149167951950393434
-DISCORD_FALL_FORUM_TAG = 1149168000738529290
+DISCORD_TRELLO_CHANNEL_ID=785620580384505867
 
 ; The enviroment of the application [production, development, staging, testing]
 NODE_ENV=development
 
 ; Trello secret to validate trello webhooks.
 TRELLO_SECRET=
-TRELLO_CALLBACK_URL=
+TRELLO_CALLBACK_URL=http://api.animethemes.test/discord/trello
 ```
 
 ## Add Trello boards
