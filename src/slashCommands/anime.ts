@@ -4,7 +4,6 @@ import { previousNextRow } from 'discord/buttons';
 import SlashCommand from 'discord/SlashCommand';
 import { gql } from 'graphql/client';
 import { graphql } from 'graphql/generated';
-import config from 'utils/config';
 
 export const SEARCH_ANIME_QUERY = graphql(`
     query SearchAnime($search: String!) {
@@ -15,7 +14,7 @@ export const SEARCH_ANIME_QUERY = graphql(`
             data {
                 formatLocalized
                 name
-                slug
+                siteUrl
                 seasonLocalized
                 synopsis
                 year
@@ -44,7 +43,7 @@ const makeEmbed = (
         )
         .setThumbnail(anime.images.nodes[0].link)
         .setColor('Blue')
-        .setURL(config.ANIME_URL + '/' + anime.slug)
+        .setURL(anime.siteUrl)
         .setFooter({
             text: `${anime.formatLocalized} • ${anime.seasonLocalized} ${anime.year} • ${index + 1}/${count}`,
         });

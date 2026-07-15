@@ -2,7 +2,6 @@ import { EmbedBuilder } from 'discord.js';
 import { artistsDescription, createThemeSlug, createVideoSlug } from 'utils/description';
 import { TrelloEmbedConfig } from 'types/trello';
 
-import config from 'utils/config';
 import { graphql } from 'graphql/generated';
 import { ResultOf } from '@graphql-typed-document-node/core';
 import { VideoOverlap } from 'graphql/generated/graphql';
@@ -26,7 +25,7 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
                     ...createVideoSlugTheme
                     anime {
                         name
-                        slug
+                        siteUrl
                         images {
                             nodes {
                                 link
@@ -66,7 +65,7 @@ export const createVideoNotificationEmbed = (
 
     const themeSlug = createThemeSlug(theme, entry);
     const videoSlug = createVideoSlug(theme, entry, video);
-    const videoSlugLink = `[${themeSlug}](${config.ANIME_URL}/${anime.slug}/${videoSlug})`;
+    const videoSlugLink = `[${themeSlug}](${anime.siteUrl}/${videoSlug})`;
 
     const performances =
         theme.song?.performances && theme.song.performances.length !== 0
@@ -96,7 +95,7 @@ export const createVideoNotificationEmbed = (
         .setColor(type === 'added' ? [46, 204, 113] : [255, 255, 0])
         .setTitle(anime.name)
         .setDescription(description.filter(Boolean).join('\n'))
-        .setURL(`${config.ANIME_URL}/${anime.slug}`)
+        .setURL(anime.siteUrl)
         .setThumbnail(anime.images.nodes[0].link);
 
     if (video.tags && video.tags.length > 0) {
