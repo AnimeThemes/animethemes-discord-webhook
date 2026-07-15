@@ -1,6 +1,5 @@
 import { joinWithLastSeparator } from 'utils/functions';
 
-import config from 'utils/config';
 import { graphql } from 'graphql/generated';
 import { ResultOf } from '@graphql-typed-document-node/core';
 
@@ -9,8 +8,9 @@ export const ARTIST_DESCRIPTION_PERFORMANCE = graphql(`
         alias
         as
         artist {
+            id
             name
-            slug
+            siteUrl
         }
         member {
             id
@@ -24,23 +24,23 @@ export const ARTIST_DESCRIPTION_PERFORMANCE = graphql(`
 export const artistsDescription = (performances: ResultOf<typeof ARTIST_DESCRIPTION_PERFORMANCE>[]): string => {
     const artistsArray: string[] = [];
 
-    const groups: string[] = [];
+    const groups: number[] = [];
     for (const performance of performances) {
         const { alias, as, artist, member } = performance;
 
         if (member !== null) {
-            if (groups.includes(artist.slug)) {
+            if (groups.includes(artist.id)) {
                 continue;
             }
 
-            groups.push(artist.slug);
+            groups.push(artist.id);
         }
 
         const resolvedAlias = alias && alias.length > 0 ? alias : artist.name;
 
         const finalName = as && as.length > 0 ? `${as} (CV: ${resolvedAlias})` : resolvedAlias;
 
-        artistsArray.push(`[${finalName}](${config.ARTIST_URL}/${artist.slug})`);
+        artistsArray.push(`[${finalName}](${artist.siteUrl})`);
     }
 
     return joinWithLastSeparator(artistsArray, ', ', ' & ');

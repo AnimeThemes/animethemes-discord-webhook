@@ -23,19 +23,17 @@ root directory:
 ```ini
 ; The AnimeThemes URLs.
 ANIMETHEMES_GRAPHQL=https://graphql.animethemes.moe
-ARTIST_URL=https://animethemes.moe/artist
-ANIME_URL=https://animethemes.moe/anime
 
 ; The config used to run this API.
-API_HOST_NAME=http://api.animethemes.test/discord
-API_HOST=localhost
+API_HOST_NAME= 
+API_HOST=animethemes.moe
 API_KEY=
-API_PORT = 3001
+API_PORT=3001
 
 ; The Bot Discord Token that you saved above.
 DISCORD_TOKEN= ...
 
-; The ID of the Discord Uploads Channel.
+; The ID of the Discord "uploads" Channel.
 DISCORD_UPLOADS_CHANNEL_ID=1498006983935004682
 
 ; The ID of the Discord Trello Text Channel.
