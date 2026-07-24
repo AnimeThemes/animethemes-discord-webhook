@@ -8,7 +8,7 @@ import { graphql } from 'graphql/generated';
 
 const CURRENT_FEATURED_THEME_QUERY = graphql(`
     query CurrentFeaturedTheme {
-        currentfeaturedtheme {
+        currentFeaturedTheme {
             animethemeentry {
                 ...createVideoSlugEntry
                 animetheme {
@@ -35,13 +35,13 @@ export default new Event({
 
         setInterval(
             async () => {
-                const { currentfeaturedtheme } = await gql(CURRENT_FEATURED_THEME_QUERY);
+                const { currentFeaturedTheme } = await gql(CURRENT_FEATURED_THEME_QUERY);
 
-                if (!currentfeaturedtheme) {
+                if (!currentFeaturedTheme) {
                     return;
                 }
 
-                const entry = currentfeaturedtheme.animethemeentry;
+                const entry = currentFeaturedTheme.animethemeentry;
 
                 // @ts-expect-error Different context for featuredtheme.
                 const featuredThemeName = `${entry.animetheme.anime.title.romaji} ${createVideoSlug(entry.animetheme, entry, currentfeaturedtheme.video)}`;
