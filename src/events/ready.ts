@@ -51,7 +51,7 @@ export default new Event({
                 });
                 console.log(`Set featured theme activity: ${featuredThemeName}`);
             },
-            3 * 60 * 60 * 1000,
+            1 * 60 * 60 * 1000,
         );
     },
 });
