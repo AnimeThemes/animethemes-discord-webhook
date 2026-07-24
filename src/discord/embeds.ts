@@ -24,7 +24,9 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
                 animetheme {
                     ...createVideoSlugTheme
                     anime {
-                        name
+                        title {
+                            romaji
+                        }
                         siteUrl
                         images {
                             nodes {
@@ -33,7 +35,9 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
                         }
                     }
                     song {
-                        title
+                        title {
+                            romaji
+                        }
                         performances {
                             ...ArtistDescriptionFragmentPerformance
                         }
@@ -75,7 +79,7 @@ export const createVideoNotificationEmbed = (
     description.push(type === 'added' ? `${videoSlugLink} has been added.\n` : `${videoSlugLink} has been updated.\n`);
     description.push(entry.spoiler ? '⚠️ Spoiler' : '');
     description.push(entry.nsfw ? '🔞 NSFW' : '');
-    description.push(`**Song:** ${theme.song?.title ?? '*T.B.A.*'}${performances}\n`);
+    description.push(`**Song:** ${theme.song?.title.romaji ?? '*T.B.A.*'}${performances}\n`);
 
     if (entry.episodes) {
         description.push(`**Episodes:** ${entry.episodes}`);
@@ -93,7 +97,7 @@ export const createVideoNotificationEmbed = (
 
     embed
         .setColor(type === 'added' ? [46, 204, 113] : [255, 255, 0])
-        .setTitle(anime.name)
+        .setTitle(anime.title.romaji)
         .setDescription(description.filter(Boolean).join('\n'))
         .setURL(anime.siteUrl)
         .setThumbnail(anime.images.nodes[0].link);
