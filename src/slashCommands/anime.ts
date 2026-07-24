@@ -13,7 +13,9 @@ export const SEARCH_ANIME_QUERY = graphql(`
             }
             data {
                 formatLocalized
-                name
+                title {
+                    romaji
+                }
                 siteUrl
                 seasonLocalized
                 synopsis
@@ -34,7 +36,7 @@ const makeEmbed = (
     count: number,
 ) => {
     return new EmbedBuilder()
-        .setTitle(anime.name)
+        .setTitle(anime.title.romaji)
         .setDescription(
             `${anime.synopsis
                 ?.replace(/\r\n/g, '\n')

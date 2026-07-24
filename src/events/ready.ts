@@ -14,7 +14,9 @@ const CURRENT_FEATURED_THEME_QUERY = graphql(`
                 animetheme {
                     ...createVideoSlugTheme
                     anime {
-                        name
+                        title {
+                            romaji
+                        }
                     }
                 }
             }
@@ -42,7 +44,7 @@ export default new Event({
                 const entry = currentfeaturedtheme.animethemeentry;
 
                 // @ts-expect-error Different context for featuredtheme.
-                const featuredThemeName = `${entry.animetheme.anime.name} ${createVideoSlug(entry.animetheme, entry, currentfeaturedtheme.video)}`;
+                const featuredThemeName = `${entry.animetheme.anime.title.romaji} ${createVideoSlug(entry.animetheme, entry, currentfeaturedtheme.video)}`;
                 client.user?.setActivity({
                     name: featuredThemeName,
                     type: ActivityType.Listening,

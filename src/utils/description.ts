@@ -9,7 +9,9 @@ export const ARTIST_DESCRIPTION_PERFORMANCE = graphql(`
         as
         artist {
             id
-            name
+            name {
+                main
+            }
             siteUrl
         }
         member {
@@ -36,7 +38,7 @@ export const artistsDescription = (performances: ResultOf<typeof ARTIST_DESCRIPT
             groups.push(artist.id);
         }
 
-        const resolvedAlias = alias && alias.length > 0 ? alias : artist.name;
+        const resolvedAlias = alias && alias.length > 0 ? alias : artist.name.main;
 
         const finalName = as && as.length > 0 ? `${as} (CV: ${resolvedAlias})` : resolvedAlias;
 
