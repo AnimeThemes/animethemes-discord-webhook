@@ -44,7 +44,7 @@ export default new Event({
                 const entry = currentFeaturedTheme.animethemeentry;
 
                 // @ts-expect-error Different context for featuredtheme.
-                const featuredThemeName = `${entry.animetheme.anime.title.romaji} ${createVideoSlug(entry.animetheme, entry, currentfeaturedtheme.video)}`;
+                const featuredThemeName = `${entry.animetheme.anime.title.romaji} ${createVideoSlug(entry.animetheme, entry, currentFeaturedTheme.video)}`;
                 client.user?.setActivity({
                     name: featuredThemeName,
                     type: ActivityType.Listening,
