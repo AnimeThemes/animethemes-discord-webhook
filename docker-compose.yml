@@ -7,4 +7,4 @@ services:
     restart: on-failure:10
     env_file: .env
     ports:
-      - "${API_PORT:-3000}:${API_PORT:-3000}"
+      - "127.0.0.1:${API_PORT:-3000}:${API_PORT:-3000}"
