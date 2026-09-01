@@ -1,18 +1,26 @@
-FROM oven/bun:1 AS base
+FROM node:24-slim AS base
+
+ENV NODE_ENV=production
 
 WORKDIR /app
 
 FROM base AS install
 
-RUN mkdir -p /temp/prod
-COPY package.json bun.lock /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
+COPY package.json package-lock.json ./
+
+RUN --mount=type=cache,target=/root/.npm \
+  if [ -f package-lock.json ]; then \
+    npm ci --no-audit --no-fund; \
+  else \
+    echo "No lockfile found." && exit 1; \
+  fi
 
 FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
+
+COPY --from=install /app/node_modules ./node_modules
+
 COPY . .
 
-ENV NODE_ENV=production
+USER node
 
-USER bun
-ENTRYPOINT [ "bun", "run", "start" ]
+ENTRYPOINT [ "npm", "run", "start" ]
