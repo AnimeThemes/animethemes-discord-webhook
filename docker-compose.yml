@@ -1,0 +1,10 @@
+services:
+  discord-bot:
+    build:
+      context: .
+    container_name: discord-bot
+    working_dir: /app
+    restart: on-failure:10
+    env_file: .env
+    ports:
+      - "${API_PORT:-3000}:${API_PORT:-3000}"
