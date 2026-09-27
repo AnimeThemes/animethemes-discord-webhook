@@ -1,12 +1,14 @@
 services:
   discord-bot:
-    build:
-      context: .
+    image: '${APP_IMAGE:-animethemes-discord:local}'
     container_name: discord-bot
     working_dir: /app
     restart: on-failure:10
     env_file: .env
     ports:
       - "127.0.0.1:${API_PORT:-3000}:${API_PORT:-3000}"
-    extra_hosts:
-      - "rs.animethemes.moe:host-gateway"
+    networks:
+      - shared-network
+networks:
+  shared-network:
+    external: true
