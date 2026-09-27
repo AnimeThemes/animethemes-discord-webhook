@@ -9,4 +9,4 @@ services:
     ports:
       - "127.0.0.1:${API_PORT:-3000}:${API_PORT:-3000}"
     extra_hosts:
-      - "graphql.animethemes.moe:host-gateway"
+      - "rs.animethemes.moe:host-gateway"

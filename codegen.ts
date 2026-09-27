@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
     overwrite: true,
-    schema: 'http://graphql.animethemes.test',
+    schema: 'http://animethemes-rust.test/graphql',
     documents: ['src/**/*.{ts,tsx,graphql}'],
     generates: {
         'src/graphql/generated/': {

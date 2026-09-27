@@ -14,25 +14,12 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** A datetime and timezone string in ISO 8601 format `Y-m-dTH:i:sP`, e.g. `2020-04-20T13:53:12+02:00`. */
-  DateTimeTz: { input: any; output: any; }
   /**
-   * A partial date encoded as an integer in YYYYMMDD format.
+   * Implement the DateTime<Utc> scalar
    *
-   * Unknown parts are represented with 00:
-   * - 20260709 = July 9, 2026
-   * - 20260700 = July 2026
-   * - 20260000 = 2026
-   *
-   * Null means the date is unknown.
+   * The input/output is a string in RFC3339 format.
    */
-  FuzzyDateInt: { input: any; output: any; }
-  /**
-   * Loose type that allows any value. Be careful when passing in large `Int` or `Float` literals,
-   * as they may not be parsed correctly on the server side. Use `String` literals if you are
-   * dealing with really large numbers to be on the safe side.
-   */
-  Mixed: { input: any; output: any; }
+  DateTime: { input: any; output: any; }
 };
 
 /**
@@ -42,25 +29,17 @@ export type Scalars = {
  */
 export type Anime = {
   __typename?: 'Anime';
-  animethemes: Array<AnimeTheme>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The format of the anime */
   format?: Maybe<AnimeFormat>;
-  /** The formatted string value of the format field */
+  /** The localized string value of the format field */
   formatLocalized?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  images: ImageConnection;
-  /**
-   * The primary title of the anime
-   * @deprecated Use the title.romaji field instead
-   */
-  name: Scalars['String']['output'];
-  resources: ExternalResourceConnection;
+  images: ImageableConnection;
+  resources: ResourceableConnection;
   /** The premiere season of the anime */
   season?: Maybe<AnimeSeason>;
-  /** The formatted string value of the season field */
+  /** The localized string value of the season field */
   seasonLocalized?: Maybe<Scalars['String']['output']>;
   series: AnimeSeriesConnection;
   /** The URL for the anime page on the website */
@@ -71,181 +50,38 @@ export type Anime = {
   synonyms: Array<Synonym>;
   /** The brief summary of the anime */
   synopsis?: Maybe<Scalars['String']['output']>;
+  themes: Array<Theme>;
   /** The primary title of the anime */
   title: AnimeTitle;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  /** The premiere season year of the anime. */
+  /** The premiere season year of the anime */
   year?: Maybe<Scalars['Int']['output']>;
 };
 
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeAnimethemesArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sequence?: InputMaybe<Scalars['Int']['input']>;
-  sequence_greater?: InputMaybe<Scalars['Int']['input']>;
-  sequence_lesser?: InputMaybe<Scalars['Int']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<AnimeThemeSort>>;
-  type?: InputMaybe<ThemeType>;
-  type_in?: InputMaybe<Array<ThemeType>>;
-  where?: InputMaybe<AnimeAnimethemesWhereWhereConditions>;
+export type AnimeConnection = {
+  __typename?: 'AnimeConnection';
+  /** A list of edges. */
+  edges: Array<AnimeEdge>;
+  /** A list of nodes. */
+  nodes: Array<Anime>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
+/** An edge in a connection. */
+export type AnimeEdge = {
+  __typename?: 'AnimeEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Anime;
 };
 
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeImagesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  facet?: InputMaybe<ImageFacet>;
-  first?: Scalars['Int']['input'];
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ImageSort>>;
-  where?: InputMaybe<AnimeImagesWhereWhereConditions>;
+export type AnimeFilterInput = {
+  format?: InputMaybe<AnimeFormat>;
+  season?: InputMaybe<AnimeSeason>;
+  titleLike?: InputMaybe<Scalars['String']['input']>;
+  year?: InputMaybe<Scalars['Int']['input']>;
 };
-
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeResourcesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  externalId?: InputMaybe<Scalars['Int']['input']>;
-  first?: Scalars['Int']['input'];
-  site?: InputMaybe<ResourceSite>;
-  sort?: InputMaybe<Array<ExternalResourceSort>>;
-  where?: InputMaybe<AnimeResourcesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeSeriesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  sort?: InputMaybe<Array<SeriesSort>>;
-  titleRomaji_like?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<AnimeSeriesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeStudiosArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  name_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<StudioSort>>;
-  where?: InputMaybe<AnimeStudiosWhereWhereConditions>;
-};
-
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeSynonymsArgs = {
-  language?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<SynonymSort>>;
-  where?: InputMaybe<AnimeSynonymsWhereWhereConditions>;
-};
-
-
-/**
- * Represents a production with at least one opening or ending sequence.
- *
- * For example, Bakemonogatari is an anime production with five opening sequences and one ending sequence.
- */
-export type AnimeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `animethemes`. */
-export type AnimeAnimethemesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeAnimethemesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeAnimethemesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeAnimethemesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeThemeFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `animethemes`. */
-export type AnimeAnimethemesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeAnimethemesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeAnimethemesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeAnimethemesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `animethemes`. */
-export type AnimeAnimethemesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeAnimethemesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-export enum AnimeFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Format = 'FORMAT',
-  Id = 'ID',
-  /** @deprecated Use TITLE_ROMAJI instead */
-  Name = 'NAME',
-  Season = 'SEASON',
-  Synopsis = 'SYNOPSIS',
-  TitleEnglish = 'TITLE_ENGLISH',
-  TitleNative = 'TITLE_NATIVE',
-  TitleRomaji = 'TITLE_ROMAJI',
-  UpdatedAt = 'UPDATED_AT',
-  Year = 'YEAR'
-}
 
 export enum AnimeFormat {
   Movie = 'MOVIE',
@@ -256,101 +92,12 @@ export enum AnimeFormat {
   TvShort = 'TV_SHORT'
 }
 
-/** Dynamic WHERE conditions for the `where` argument of the query `images`. */
-export type AnimeImagesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeImagesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeImagesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ImageFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `images`. */
-export type AnimeImagesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeImagesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeImagesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `images`. */
-export type AnimeImagesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeImagesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** A paginated list of Anime items. */
-export type AnimePaginator = {
-  __typename?: 'AnimePaginator';
-  /** A list of Anime items. */
+export type AnimePagination = {
+  __typename?: 'AnimePagination';
+  /** The data for the current page. */
   data: Array<Anime>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `resources`. */
-export type AnimeResourcesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeResourcesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeResourcesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ExternalResourceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `resources`. */
-export type AnimeResourcesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeResourcesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeResourcesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `resources`. */
-export type AnimeResourcesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeResourcesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
 export enum AnimeSeason {
@@ -360,79 +107,37 @@ export enum AnimeSeason {
   Winter = 'WINTER'
 }
 
-/** A paginated list of Series edges. */
 export type AnimeSeriesConnection = {
   __typename?: 'AnimeSeriesConnection';
-  /** A list of Series edges. */
+  /** A list of edges. */
   edges: Array<AnimeSeriesEdge>;
-  /** A list of Series resources. Use this if you don't care about pivot fields. */
+  /** A list of nodes. */
   nodes: Array<Series>;
-  /** Pagination information about the list of edges. */
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
+/** An edge in a connection. */
 export type AnimeSeriesEdge = {
   __typename?: 'AnimeSeriesEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Series node. */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
   node: Series;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
 };
 
 
+/** An edge in a connection. */
 export type AnimeSeriesEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
+/** An edge in a connection. */
 export type AnimeSeriesEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `series`. */
-export type AnimeSeriesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeSeriesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeSeriesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeSeriesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<SeriesFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `series`. */
-export type AnimeSeriesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeSeriesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeSeriesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeSeriesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `series`. */
-export type AnimeSeriesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeSeriesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
 };
 
 export enum AnimeSort {
@@ -440,10 +145,6 @@ export enum AnimeSort {
   CreatedAtDesc = 'CREATED_AT_DESC',
   Id = 'ID',
   IdDesc = 'ID_DESC',
-  /** @deprecated Use 'TITLE' instead */
-  Name = 'NAME',
-  /** @deprecated Use 'TITLE_DESC' instead */
-  NameDesc = 'NAME_DESC',
   Random = 'RANDOM',
   TitleEnglish = 'TITLE_ENGLISH',
   TitleEnglishDesc = 'TITLE_ENGLISH_DESC',
@@ -457,649 +158,77 @@ export enum AnimeSort {
   YearDesc = 'YEAR_DESC'
 }
 
-/** A paginated list of Studio edges. */
 export type AnimeStudioConnection = {
   __typename?: 'AnimeStudioConnection';
-  /** A list of Studio edges. */
+  /** A list of edges. */
   edges: Array<AnimeStudioEdge>;
-  /** A list of Studio resources. Use this if you don't care about pivot fields. */
+  /** A list of nodes. */
   nodes: Array<Studio>;
-  /** Pagination information about the list of edges. */
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
+/** An edge in a connection. */
 export type AnimeStudioEdge = {
   __typename?: 'AnimeStudioEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Studio node. */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
   node: Studio;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
 };
 
 
+/** An edge in a connection. */
 export type AnimeStudioEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
+/** An edge in a connection. */
 export type AnimeStudioEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
-/** Dynamic WHERE conditions for the `where` argument of the query `studios`. */
-export type AnimeStudiosWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeStudiosWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeStudiosWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeStudiosWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<StudioFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `studios`. */
-export type AnimeStudiosWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeStudiosWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeStudiosWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeStudiosWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `studios`. */
-export type AnimeStudiosWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeStudiosWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `synonyms`. */
-export type AnimeSynonymsWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeSynonymsWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeSynonymsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeSynonymsWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<SynonymFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `synonyms`. */
-export type AnimeSynonymsWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeSynonymsWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeSynonymsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeSynonymsWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `synonyms`. */
-export type AnimeSynonymsWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeSynonymsWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/**
- * Represents an OP or ED sequence for an anime.
- *
- * For example, the anime Bakemonogatari has five OP anime themes and one ED anime theme.
- */
-export type AnimeTheme = {
-  __typename?: 'AnimeTheme';
-  anime: Anime;
-  animethemeentries: Array<AnimeThemeEntry>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  group?: Maybe<ThemeGroup>;
-  /** The primary key of the resource */
-  id: Scalars['Int']['output'];
-  /** The numeric ordering of the theme */
-  sequence?: Maybe<Scalars['Int']['output']>;
-  /** The slug that represents the anime theme. */
-  slug: Scalars['String']['output'];
-  song?: Maybe<Song>;
-  /** The type of the sequence */
-  type: ThemeType;
-  /** The formatted string value of the type field */
-  typeLocalized: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-/**
- * Represents an OP or ED sequence for an anime.
- *
- * For example, the anime Bakemonogatari has five OP anime themes and one ED anime theme.
- */
-export type AnimeThemeAnimethemeentriesArgs = {
-  episodes?: InputMaybe<Scalars['String']['input']>;
-  episodes_like?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  nsfw?: InputMaybe<Scalars['Boolean']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<AnimeThemeEntrySort>>;
-  spoiler?: InputMaybe<Scalars['Boolean']['input']>;
-  version?: InputMaybe<Scalars['Int']['input']>;
-  version_greater?: InputMaybe<Scalars['Int']['input']>;
-  version_lesser?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<AnimeThemeAnimethemeentriesWhereWhereConditions>;
-};
-
-
-/**
- * Represents an OP or ED sequence for an anime.
- *
- * For example, the anime Bakemonogatari has five OP anime themes and one ED anime theme.
- */
-export type AnimeThemeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents an OP or ED sequence for an anime.
- *
- * For example, the anime Bakemonogatari has five OP anime themes and one ED anime theme.
- */
-export type AnimeThemeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `animethemeentries`. */
-export type AnimeThemeAnimethemeentriesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeThemeAnimethemeentriesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeThemeAnimethemeentriesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeThemeAnimethemeentriesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeThemeEntryFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `animethemeentries`. */
-export type AnimeThemeAnimethemeentriesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeThemeAnimethemeentriesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeThemeAnimethemeentriesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeThemeAnimethemeentriesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `animethemeentries`. */
-export type AnimeThemeAnimethemeentriesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeThemeAnimethemeentriesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/**
- * Represents a version of an anime theme.
- *
- * For example, the ED theme of the Bakemonogatari anime has three anime theme entries to represent three versions.
- */
-export type AnimeThemeEntry = {
-  __typename?: 'AnimeThemeEntry';
-  animetheme: AnimeTheme;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The episodes that the theme is used for */
-  episodes?: Maybe<Scalars['String']['output']>;
-  /** The primary key of the resource */
-  id: Scalars['Int']['output'];
-  /** The number of likes recorded for the resource */
-  likesCount: Scalars['Int']['output'];
-  /** Any additional information for this sequence */
-  notes?: Maybe<Scalars['String']['output']>;
-  /** Is not safe for work content included? */
-  nsfw: Scalars['Boolean']['output'];
-  resources: ExternalResourceConnection;
-  /** Is content included that may spoil the viewer? */
-  spoiler: Scalars['Boolean']['output'];
-  /** The number of tracks belonging to the resource */
-  tracksCount: Scalars['Int']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  /** The version number of the theme */
-  version: Scalars['Int']['output'];
-  videos: AnimeThemeEntryVideoConnection;
-};
-
-
-/**
- * Represents a version of an anime theme.
- *
- * For example, the ED theme of the Bakemonogatari anime has three anime theme entries to represent three versions.
- */
-export type AnimeThemeEntryCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a version of an anime theme.
- *
- * For example, the ED theme of the Bakemonogatari anime has three anime theme entries to represent three versions.
- */
-export type AnimeThemeEntryResourcesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  externalId?: InputMaybe<Scalars['Int']['input']>;
-  first?: Scalars['Int']['input'];
-  site?: InputMaybe<ResourceSite>;
-  sort?: InputMaybe<Array<ExternalResourceSort>>;
-  where?: InputMaybe<AnimeThemeEntryResourcesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a version of an anime theme.
- *
- * For example, the ED theme of the Bakemonogatari anime has three anime theme entries to represent three versions.
- */
-export type AnimeThemeEntryUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a version of an anime theme.
- *
- * For example, the ED theme of the Bakemonogatari anime has three anime theme entries to represent three versions.
- */
-export type AnimeThemeEntryVideosArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  basename?: InputMaybe<Scalars['String']['input']>;
-  filename?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  lyrics?: InputMaybe<Scalars['Boolean']['input']>;
-  mimetype?: InputMaybe<Scalars['String']['input']>;
-  nc?: InputMaybe<Scalars['Boolean']['input']>;
-  overlap?: InputMaybe<VideoOverlap>;
-  path?: InputMaybe<Scalars['String']['input']>;
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  resolution?: InputMaybe<Scalars['Int']['input']>;
-  resolution_greater?: InputMaybe<Scalars['Int']['input']>;
-  resolution_lesser?: InputMaybe<Scalars['Int']['input']>;
-  size_greater?: InputMaybe<Scalars['Int']['input']>;
-  size_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<VideoSort>>;
-  source?: InputMaybe<VideoSource>;
-  subbed?: InputMaybe<Scalars['Boolean']['input']>;
-  uncen?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<AnimeThemeEntryVideosWhereWhereConditions>;
-};
-
-export enum AnimeThemeEntryFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Episodes = 'EPISODES',
-  Id = 'ID',
-  LikesCount = 'LIKES_COUNT',
-  Notes = 'NOTES',
-  Nsfw = 'NSFW',
-  Spoiler = 'SPOILER',
-  TracksCount = 'TRACKS_COUNT',
-  UpdatedAt = 'UPDATED_AT',
-  Version = 'VERSION'
-}
-
-/** A paginated list of AnimeThemeEntry items. */
-export type AnimeThemeEntryPaginator = {
-  __typename?: 'AnimeThemeEntryPaginator';
-  /** A list of AnimeThemeEntry items. */
-  data: Array<AnimeThemeEntry>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `resources`. */
-export type AnimeThemeEntryResourcesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeThemeEntryResourcesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeThemeEntryResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeThemeEntryResourcesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ExternalResourceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `resources`. */
-export type AnimeThemeEntryResourcesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeThemeEntryResourcesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeThemeEntryResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeThemeEntryResourcesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `resources`. */
-export type AnimeThemeEntryResourcesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeThemeEntryResourcesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-export enum AnimeThemeEntrySort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Episodes = 'EPISODES',
-  EpisodesDesc = 'EPISODES_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  LikesCount = 'LIKES_COUNT',
-  LikesCountDesc = 'LIKES_COUNT_DESC',
-  Random = 'RANDOM',
-  TracksCount = 'TRACKS_COUNT',
-  TracksCountDesc = 'TRACKS_COUNT_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  Version = 'VERSION',
-  VersionDesc = 'VERSION_DESC'
-}
-
-/** A paginated list of Video edges. */
-export type AnimeThemeEntryVideoConnection = {
-  __typename?: 'AnimeThemeEntryVideoConnection';
-  /** A list of Video edges. */
-  edges: Array<AnimeThemeEntryVideoEdge>;
-  /** A list of Video resources. Use this if you don't care about pivot fields. */
-  nodes: Array<Video>;
-  /** Pagination information about the list of edges. */
-  pageInfo: PageInfo;
-};
-
-export type AnimeThemeEntryVideoEdge = {
-  __typename?: 'AnimeThemeEntryVideoEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Video node. */
-  node: Video;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type AnimeThemeEntryVideoEdgeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-export type AnimeThemeEntryVideoEdgeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `videos`. */
-export type AnimeThemeEntryVideosWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeThemeEntryVideosWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeThemeEntryVideosWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeThemeEntryVideosWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<VideoFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `videos`. */
-export type AnimeThemeEntryVideosWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeThemeEntryVideosWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeThemeEntryVideosWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeThemeEntryVideosWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `videos`. */
-export type AnimeThemeEntryVideosWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeThemeEntryVideosWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-export enum AnimeThemeFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Sequence = 'SEQUENCE',
-  Slug = 'SLUG',
-  Type = 'TYPE',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of AnimeTheme items. */
-export type AnimeThemePaginator = {
-  __typename?: 'AnimeThemePaginator';
-  /** A list of AnimeTheme items. */
-  data: Array<AnimeTheme>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-export enum AnimeThemeSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Random = 'RANDOM',
-  Sequence = 'SEQUENCE',
-  SequenceDesc = 'SEQUENCE_DESC',
-  SongTitleNative = 'SONG_TITLE_NATIVE',
-  SongTitleNativeDesc = 'SONG_TITLE_NATIVE_DESC',
-  SongTitleRomaji = 'SONG_TITLE_ROMAJI',
-  SongTitleRomajiDesc = 'SONG_TITLE_ROMAJI_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
 export type AnimeTitle = {
   __typename?: 'AnimeTitle';
-  /** The licensed title of the anime */
   english?: Maybe<Scalars['String']['output']>;
-  /** The original title of the anime */
   native?: Maybe<Scalars['String']['output']>;
-  /** The romaji title of the anime */
   romaji: Scalars['String']['output'];
 };
 
-/** The anime year response type, grouped by season. */
+/** The anime year response type, grouped by season */
 export type AnimeYear = {
   __typename?: 'AnimeYear';
-  /** Object that references the season year queried */
-  season?: Maybe<AnimeYearSeason>;
-  /** The available seasons of the year */
-  seasons?: Maybe<Array<AnimeYearSeasons>>;
+  /** The available seasons of the year and its anime */
+  season: Array<AnimeYearSeason>;
   /** The year of the AnimeYear type */
   year: Scalars['Int']['output'];
 };
 
 
-/** The anime year response type, grouped by season. */
+/** The anime year response type, grouped by season */
 export type AnimeYearSeasonArgs = {
-  season: AnimeSeason;
+  season?: InputMaybe<AnimeSeason>;
 };
 
 /** The anime year season type. */
 export type AnimeYearSeason = {
   __typename?: 'AnimeYearSeason';
-  /** The animes of the season year filtered */
-  anime?: Maybe<AnimePaginator>;
-  /** The season of the anime year */
+  anime: AnimeConnection;
+  /** The season of the anime year. */
   season: AnimeSeason;
-  /** The formatted string value of the season field */
+  /** The formatted string value of the season field. */
   seasonLocalized: Scalars['String']['output'];
 };
 
 
 /** The anime year season type. */
 export type AnimeYearSeasonAnimeArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  format?: InputMaybe<AnimeFormat>;
-  format_in?: InputMaybe<Array<AnimeFormat>>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  season?: InputMaybe<AnimeSeason>;
-  season_in?: InputMaybe<Array<AnimeSeason>>;
+  filter?: InputMaybe<AnimeFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<AnimeSort>>;
-  titleRomaji_like?: InputMaybe<Scalars['String']['input']>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-  year_greater?: InputMaybe<Scalars['Int']['input']>;
-  year_lesser?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** The anime year season type. */
-export type AnimeYearSeasons = {
-  __typename?: 'AnimeYearSeasons';
-  /** The animes of the season year filtered */
-  anime?: Maybe<AnimePaginator>;
-  /** The season of the anime year */
-  season: AnimeSeason;
-  /** The formatted string value of the season field */
-  seasonLocalized: Scalars['String']['output'];
-};
-
-
-/** The anime year season type. */
-export type AnimeYearSeasonsAnimeArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  format?: InputMaybe<AnimeFormat>;
-  format_in?: InputMaybe<Array<AnimeFormat>>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  season?: InputMaybe<AnimeSeason>;
-  season_in?: InputMaybe<Array<AnimeSeason>>;
-  sort?: InputMaybe<Array<AnimeSort>>;
-  titleRomaji_like?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<AnimeYearSeasonsAnimeWhereWhereConditions>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-  year_greater?: InputMaybe<Scalars['Int']['input']>;
-  year_lesser?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `anime`. */
-export type AnimeYearSeasonsAnimeWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeYearSeasonsAnimeWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeYearSeasonsAnimeWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeYearSeasonsAnimeWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `anime`. */
-export type AnimeYearSeasonsAnimeWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<AnimeYearSeasonsAnimeWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<AnimeYearSeasonsAnimeWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<AnimeYearSeasonsAnimeWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `anime`. */
-export type AnimeYearSeasonsAnimeWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<AnimeYearSeasonsAnimeWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
 };
 
 /** Represents a site-wide message to be broadcasted on the homepage. */
@@ -1107,51 +236,9 @@ export type Announcement = {
   __typename?: 'Announcement';
   /** The announcement text */
   content: Scalars['String']['output'];
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
-
-
-/** Represents a site-wide message to be broadcasted on the homepage. */
-export type AnnouncementCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents a site-wide message to be broadcasted on the homepage. */
-export type AnnouncementUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum AnnouncementFilterableColumns {
-  Content = 'CONTENT',
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of Announcement items. */
-export type AnnouncementPaginator = {
-  __typename?: 'AnnouncementPaginator';
-  /** A list of Announcement items. */
-  data: Array<Announcement>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-export enum AnnouncementSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Random = 'RANDOM',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
 
 /**
  * Represents a musical performer of anime sequences.
@@ -1160,271 +247,64 @@ export enum AnnouncementSort {
  */
 export type Artist = {
   __typename?: 'Artist';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   groups: ArtistMemberConnection;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  images: ImageConnection;
+  images: ImageableConnection;
   /** The brief information of the resource */
   information?: Maybe<Scalars['String']['output']>;
-  memberPerformances: Array<Performance>;
+  /** @deprecated Use `memberSongStaff` instead */
+  memberPerformances: Array<SongStaff>;
+  memberSongStaff: Array<SongStaff>;
   members: ArtistMemberConnection;
   /** The primary title of the artist */
   name: ArtistName;
-  performances: Array<Performance>;
-  resources: ExternalResourceConnection;
+  /** @deprecated Use `songStaff` instead */
+  performances: Array<SongStaff>;
+  resources: ResourceableConnection;
   /** The URL for the artist page on the website */
   siteUrl: Scalars['String']['output'];
   /** The URL slug & route key of the resource */
   slug: Scalars['String']['output'];
+  songStaff: Array<SongStaff>;
   synonyms: Array<Synonym>;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  themeStaff: Array<ThemeStaff>;
 };
 
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistGroupsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  nameMain?: InputMaybe<Scalars['String']['input']>;
-  nameMain_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ArtistMemberSort>>;
-  where?: InputMaybe<ArtistGroupsWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistImagesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  facet?: InputMaybe<ImageFacet>;
-  first?: Scalars['Int']['input'];
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ImageSort>>;
-  where?: InputMaybe<ArtistImagesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistMemberPerformancesArgs = {
-  alias?: InputMaybe<Scalars['String']['input']>;
-  as?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  memberAlias?: InputMaybe<Scalars['String']['input']>;
-  memberAs?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  relevance?: InputMaybe<Scalars['Int']['input']>;
-  relevance_greater?: InputMaybe<Scalars['Int']['input']>;
-  relevance_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PerformanceSort>>;
-  where?: InputMaybe<ArtistMemberPerformancesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistMembersArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  nameMain?: InputMaybe<Scalars['String']['input']>;
-  nameMain_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ArtistMemberSort>>;
-  where?: InputMaybe<ArtistMembersWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistPerformancesArgs = {
-  alias?: InputMaybe<Scalars['String']['input']>;
-  as?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  memberAlias?: InputMaybe<Scalars['String']['input']>;
-  memberAs?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  relevance?: InputMaybe<Scalars['Int']['input']>;
-  relevance_greater?: InputMaybe<Scalars['Int']['input']>;
-  relevance_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PerformanceSort>>;
-  where?: InputMaybe<ArtistPerformancesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistResourcesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  externalId?: InputMaybe<Scalars['Int']['input']>;
-  first?: Scalars['Int']['input'];
-  site?: InputMaybe<ResourceSite>;
-  sort?: InputMaybe<Array<ExternalResourceSort>>;
-  where?: InputMaybe<ArtistResourcesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistSynonymsArgs = {
-  sort?: InputMaybe<Array<SynonymSort>>;
-  where?: InputMaybe<ArtistSynonymsWhereWhereConditions>;
-};
-
-
-/**
- * Represents a musical performer of anime sequences.
- *
- * For example, Chiwa Saitou is the musical performer of the Bakemonogatari OP1 theme, among many others.
- */
-export type ArtistUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum ArtistFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Information = 'INFORMATION',
-  /** @deprecated Use NAME_MAIN instead */
-  Name = 'NAME',
-  NameMain = 'NAME_MAIN',
-  NameNative = 'NAME_NATIVE',
-  Slug = 'SLUG',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** Dynamic WHERE conditions for the `where` argument of the query `groups`. */
-export type ArtistGroupsWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistGroupsWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistGroupsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistGroupsWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ArtistFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `groups`. */
-export type ArtistGroupsWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistGroupsWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistGroupsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistGroupsWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `groups`. */
-export type ArtistGroupsWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistGroupsWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `images`. */
-export type ArtistImagesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistImagesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistImagesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ImageFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `images`. */
-export type ArtistImagesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistImagesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistImagesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `images`. */
-export type ArtistImagesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistImagesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** A paginated list of Artist edges. */
-export type ArtistMemberConnection = {
-  __typename?: 'ArtistMemberConnection';
-  /** A list of Artist edges. */
-  edges: Array<ArtistMemberEdge>;
-  /** A list of Artist resources. Use this if you don't care about pivot fields. */
+export type ArtistConnection = {
+  __typename?: 'ArtistConnection';
+  /** A list of edges. */
+  edges: Array<ArtistEdge>;
+  /** A list of nodes. */
   nodes: Array<Artist>;
-  /** Pagination information about the list of edges. */
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
+/** An edge in a connection. */
+export type ArtistEdge = {
+  __typename?: 'ArtistEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Artist;
+};
+
+export type ArtistFilterInput = {
+  nameMainLike?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ArtistMemberConnection = {
+  __typename?: 'ArtistMemberConnection';
+  /** A list of edges. */
+  edges: Array<ArtistMemberEdge>;
+  /** A list of nodes. */
+  nodes: Array<Artist>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
 export type ArtistMemberEdge = {
   __typename?: 'ArtistMemberEdge';
   /** Used to distinguish member by alias */
@@ -1432,131 +312,29 @@ export type ArtistMemberEdge = {
   /** Used to distinguish member by character */
   as?: Maybe<Scalars['String']['output']>;
   /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Artist node. */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
   node: Artist;
   /** Used to extra annotation, like member role */
   notes?: Maybe<Scalars['String']['output']>;
   /** Used to determine the relevance order of members in group */
   relevance: Scalars['Int']['output'];
   /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
 };
 
 
+/** An edge in a connection. */
 export type ArtistMemberEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
+/** An edge in a connection. */
 export type ArtistMemberEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `memberPerformances`. */
-export type ArtistMemberPerformancesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistMemberPerformancesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistMemberPerformancesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistMemberPerformancesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PerformanceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `memberPerformances`. */
-export type ArtistMemberPerformancesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistMemberPerformancesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistMemberPerformancesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistMemberPerformancesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `memberPerformances`. */
-export type ArtistMemberPerformancesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistMemberPerformancesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-export enum ArtistMemberSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MemberAlias = 'MEMBER_ALIAS',
-  MemberAliasDesc = 'MEMBER_ALIAS_DESC',
-  MemberAs = 'MEMBER_AS',
-  MemberAsDesc = 'MEMBER_AS_DESC',
-  MemberRelevance = 'MEMBER_RELEVANCE',
-  MemberRelevanceDesc = 'MEMBER_RELEVANCE_DESC',
-  Name = 'NAME',
-  NameDesc = 'NAME_DESC',
-  Random = 'RANDOM',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/** Dynamic WHERE conditions for the `where` argument of the query `members`. */
-export type ArtistMembersWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistMembersWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistMembersWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistMembersWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ArtistFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `members`. */
-export type ArtistMembersWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistMembersWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistMembersWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistMembersWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `members`. */
-export type ArtistMembersWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistMembersWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
 };
 
 export type ArtistName = {
@@ -1567,101 +345,12 @@ export type ArtistName = {
   native?: Maybe<Scalars['String']['output']>;
 };
 
-/** A paginated list of Artist items. */
-export type ArtistPaginator = {
-  __typename?: 'ArtistPaginator';
-  /** A list of Artist items. */
+export type ArtistPagination = {
+  __typename?: 'ArtistPagination';
+  /** The data for the current page. */
   data: Array<Artist>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `performances`. */
-export type ArtistPerformancesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistPerformancesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistPerformancesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistPerformancesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PerformanceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `performances`. */
-export type ArtistPerformancesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistPerformancesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistPerformancesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistPerformancesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `performances`. */
-export type ArtistPerformancesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistPerformancesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `resources`. */
-export type ArtistResourcesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistResourcesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistResourcesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ExternalResourceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `resources`. */
-export type ArtistResourcesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistResourcesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistResourcesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `resources`. */
-export type ArtistResourcesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistResourcesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
 export enum ArtistSort {
@@ -1669,10 +358,6 @@ export enum ArtistSort {
   CreatedAtDesc = 'CREATED_AT_DESC',
   Id = 'ID',
   IdDesc = 'ID_DESC',
-  /** @deprecated Use NAME_MAIN instead */
-  Name = 'NAME',
-  /** @deprecated Use NAME_MAIN_DESC instead */
-  NameDesc = 'NAME_DESC',
   NameMain = 'NAME_MAIN',
   NameMainDesc = 'NAME_MAIN_DESC',
   NameNative = 'NAME_NATIVE',
@@ -1681,50 +366,6 @@ export enum ArtistSort {
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
-
-/** Dynamic WHERE conditions for the `where` argument of the query `synonyms`. */
-export type ArtistSynonymsWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistSynonymsWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistSynonymsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistSynonymsWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<SynonymFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `synonyms`. */
-export type ArtistSynonymsWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<ArtistSynonymsWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<ArtistSynonymsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<ArtistSynonymsWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `synonyms`. */
-export type ArtistSynonymsWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<ArtistSynonymsWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
 
 /**
  * Represents the audio track of a video.
@@ -1735,8 +376,6 @@ export type Audio = {
   __typename?: 'Audio';
   /** The basename of the file in storage */
   basename: Scalars['String']['output'];
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The filename of the file in storage */
   filename: Scalars['String']['output'];
   /** The primary key of the resource */
@@ -1749,221 +388,128 @@ export type Audio = {
   path: Scalars['String']['output'];
   /** The size of the file in storage in Bytes */
   size: Scalars['Int']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  videos: Array<Video>;
 };
 
-
-/**
- * Represents the audio track of a video.
- *
- * For example, the audio Bakemonogatari-OP1.ogg represents the audio track of the Bakemonogatari-OP1.webm video.
- */
-export type AudioCreatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type CreatePlaylistInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  visibility: PlaylistVisibility;
 };
 
-
-/**
- * Represents the audio track of a video.
- *
- * For example, the audio Bakemonogatari-OP1.ogg represents the audio track of the Bakemonogatari-OP1.webm video.
- */
-export type AudioUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type CreatePlaylistTrackInput = {
+  entryId: Scalars['Int']['input'];
+  position?: InputMaybe<Scalars['Int']['input']>;
+  videoId: Scalars['Int']['input'];
 };
 
-
-/**
- * Represents the audio track of a video.
- *
- * For example, the audio Bakemonogatari-OP1.ogg represents the audio track of the Bakemonogatari-OP1.webm video.
- */
-export type AudioVideosArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export enum AudioFilterableColumns {
-  Basename = 'BASENAME',
-  CreatedAt = 'CREATED_AT',
-  Filename = 'FILENAME',
-  Id = 'ID',
-  Mimetype = 'MIMETYPE',
-  Path = 'PATH',
-  Size = 'SIZE',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of Audio items. */
-export type AudioPaginator = {
-  __typename?: 'AudioPaginator';
-  /** A list of Audio items. */
-  data: Array<Audio>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-export enum AudioSort {
-  Basename = 'BASENAME',
-  BasenameDesc = 'BASENAME_DESC',
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Filename = 'FILENAME',
-  FilenameDesc = 'FILENAME_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Random = 'RANDOM',
-  Size = 'SIZE',
-  SizeDesc = 'SIZE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/**
- * Represents an anime entry on the external profile.
- *
- * For example, Hibike Euphonium! is marked as completed on the profile AnimeThemes.
- */
-export type ExternalEntry = {
-  __typename?: 'ExternalEntry';
-  anime: Anime;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  externalprofile?: Maybe<ExternalProfile>;
+/** Represents the current featured theme on the homepage of the site. */
+export type CurrentFeaturedTheme = {
+  __typename?: 'CurrentFeaturedTheme';
+  /** The end date of the resource */
+  endAt?: Maybe<Scalars['String']['output']>;
+  entry: Entry;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  /** The favorite state of the entry on the external site */
-  isFavorite?: Maybe<Scalars['Boolean']['output']>;
-  /** The score of the entry on the external site */
-  score?: Maybe<Scalars['Float']['output']>;
-  /** The status of the entry on the external site */
-  status: ExternalEntryStatus;
-  /** The formatted string value of the status field */
-  statusLocalized: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  /** The start date of the resource */
+  startAt?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+  video: Video;
 };
 
 
-/**
- * Represents an anime entry on the external profile.
- *
- * For example, Hibike Euphonium! is marked as completed on the profile AnimeThemes.
- */
-export type ExternalEntryCreatedAtArgs = {
+/** Represents the current featured theme on the homepage of the site. */
+export type CurrentFeaturedThemeEndAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
-/**
- * Represents an anime entry on the external profile.
- *
- * For example, Hibike Euphonium! is marked as completed on the profile AnimeThemes.
- */
-export type ExternalEntryUpdatedAtArgs = {
+/** Represents the current featured theme on the homepage of the site. */
+export type CurrentFeaturedThemeStartAtArgs = {
   format?: Scalars['String']['input'];
 };
 
-export enum ExternalEntryStatus {
-  Completed = 'COMPLETED',
-  Dropped = 'DROPPED',
-  Paused = 'PAUSED',
-  PlanToWatch = 'PLAN_TO_WATCH',
-  Rewatching = 'REWATCHING',
-  Watching = 'WATCHING'
-}
-
-/** Represents a user profile on the external site like MAL. */
-export type ExternalProfile = {
-  __typename?: 'ExternalProfile';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
+/**
+ * Represents a version of a theme.
+ *
+ * For example, the ED theme of the Bakemonogatari anime has three theme entries to represent three versions.
+ */
+export type Entry = {
+  __typename?: 'Entry';
+  /** The episodes that the theme is used for */
+  episodes?: Maybe<Scalars['String']['output']>;
+  /** The number of favorites recorded for the resource */
+  favoritesCount: Scalars['Int']['output'];
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  /** The title of the profile */
-  name: Scalars['String']['output'];
-  /** The site the profile belongs to */
-  site: ExternalProfileSite;
-  /** The formatted string value of the site field */
-  siteLocalized: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  /** The state of who can see the profile */
-  visibility: ExternalProfileVisibility;
-  /** The formatted string value of the visibility field */
-  visibilityLocalized: Scalars['String']['output'];
+  /** Any additional information for this sequence */
+  notes?: Maybe<Scalars['String']['output']>;
+  /** Is not safe for work content included? */
+  nsfw: Scalars['Boolean']['output'];
+  /** Is content included that may spoil the viewer? */
+  spoiler: Scalars['Boolean']['output'];
+  theme: Theme;
+  /** The number of tracks belonging to the resource */
+  tracksCount: Scalars['Int']['output'];
+  /** The version number of the theme */
+  version: Scalars['Int']['output'];
+  videos: EntryVideoConnection;
+};
+
+export type EntryConnection = {
+  __typename?: 'EntryConnection';
+  /** A list of edges. */
+  edges: Array<EntryEdge>;
+  /** A list of nodes. */
+  nodes: Array<Entry>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type EntryEdge = {
+  __typename?: 'EntryEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Entry;
+};
+
+export type EntryFilterInput = {
+  spoiler?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type EntryVideoConnection = {
+  __typename?: 'EntryVideoConnection';
+  /** A list of edges. */
+  edges: Array<EntryVideoEdge>;
+  /** A list of nodes. */
+  nodes: Array<Video>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type EntryVideoEdge = {
+  __typename?: 'EntryVideoEdge';
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Video;
+  updatedAt: Scalars['String']['output'];
 };
 
 
-/** Represents a user profile on the external site like MAL. */
-export type ExternalProfileCreatedAtArgs = {
+/** An edge in a connection. */
+export type EntryVideoEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
-/** Represents a user profile on the external site like MAL. */
-export type ExternalProfileUpdatedAtArgs = {
+/** An edge in a connection. */
+export type EntryVideoEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
 };
-
-export enum ExternalProfileFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Name = 'NAME',
-  Site = 'SITE',
-  UpdatedAt = 'UPDATED_AT',
-  Visibility = 'VISIBILITY'
-}
-
-/** A paginated list of ExternalProfile items. */
-export type ExternalProfilePaginator = {
-  __typename?: 'ExternalProfilePaginator';
-  /** A list of ExternalProfile items. */
-  data: Array<ExternalProfile>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-export enum ExternalProfileSite {
-  Anilist = 'ANILIST',
-  Kitsu = 'KITSU',
-  Mal = 'MAL'
-}
-
-/** Represents a notification that is sent to the user when a profile is synced. */
-export type ExternalProfileSyncedNotification = {
-  __typename?: 'ExternalProfileSyncedNotification';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  profile: ExternalProfile;
-  /** The id of the profile */
-  profileId: Scalars['Int']['output'];
-  /** The name of the profile */
-  profileName: Scalars['String']['output'];
-  /** The date that the user read the notification */
-  readAt?: Maybe<Scalars['String']['output']>;
-  /** The type of the notification */
-  type: NotificationType;
-};
-
-
-/** Represents a notification that is sent to the user when a profile is synced. */
-export type ExternalProfileSyncedNotificationCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents a notification that is sent to the user when a profile is synced. */
-export type ExternalProfileSyncedNotificationReadAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum ExternalProfileVisibility {
-  Private = 'PRIVATE',
-  Public = 'PUBLIC'
-}
 
 /**
  * Represents a site with supplementary information for another resource such as an anime or artist.
@@ -1972,8 +518,6 @@ export enum ExternalProfileVisibility {
  */
 export type ExternalResource = {
   __typename?: 'ExternalResource';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource in the external site */
   externalId?: Maybe<Scalars['Int']['output']>;
   /** The primary key of the resource */
@@ -1982,138 +526,20 @@ export type ExternalResource = {
   link: Scalars['String']['output'];
   /** The external site that the resource belongs to */
   site: ResourceSite;
-  /** The formatted string value of the site field */
+  /** The localized string value of the site field */
   siteLocalized: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-
-/**
- * Represents a site with supplementary information for another resource such as an anime or artist.
- *
- * For example, the Bakemonogatari anime has MyAnimeList, AniList and AniDB resources.
- */
-export type ExternalResourceCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a site with supplementary information for another resource such as an anime or artist.
- *
- * For example, the Bakemonogatari anime has MyAnimeList, AniList and AniDB resources.
- */
-export type ExternalResourceUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of ExternalResource edges. */
-export type ExternalResourceConnection = {
-  __typename?: 'ExternalResourceConnection';
-  /** A list of ExternalResource edges. */
-  edges: Array<ExternalResourceEdge>;
-  /** A list of ExternalResource resources. Use this if you don't care about pivot fields. */
-  nodes: Array<ExternalResource>;
-  /** Pagination information about the list of edges. */
-  pageInfo: PageInfo;
-};
-
-export type ExternalResourceEdge = {
-  __typename?: 'ExternalResourceEdge';
-  /** Used to distinguish resources that map to the same resourceable */
-  as?: Maybe<Scalars['String']['output']>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The External Resource node. */
-  node: ExternalResource;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type ExternalResourceEdgeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-export type ExternalResourceEdgeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum ExternalResourceFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  ExternalId = 'EXTERNAL_ID',
-  Id = 'ID',
-  Link = 'LINK',
-  Site = 'SITE',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-export enum ExternalResourceSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  ExternalId = 'EXTERNAL_ID',
-  ExternalIdDesc = 'EXTERNAL_ID_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Link = 'LINK',
-  LinkDesc = 'LINK_DESC',
-  Random = 'RANDOM',
-  Site = 'SITE',
-  SiteDesc = 'SITE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/** Represents a video to be featured on the homepage of the site for a specified amount of time. */
-export type FeaturedTheme = {
-  __typename?: 'FeaturedTheme';
-  animethemeentry?: Maybe<AnimeThemeEntry>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The end date of the resource */
-  endAt: Scalars['String']['output'];
-  /** The primary key of the resource */
+/** Represents a favorite of a user. */
+export type Favorite = {
+  __typename?: 'Favorite';
+  entry?: Maybe<Entry>;
   id: Scalars['Int']['output'];
-  /** The start date of the resource */
-  startAt: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<User>;
-  video?: Maybe<Video>;
+  user: User;
 };
 
-
-/** Represents a video to be featured on the homepage of the site for a specified amount of time. */
-export type FeaturedThemeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents a video to be featured on the homepage of the site for a specified amount of time. */
-export type FeaturedThemeEndAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents a video to be featured on the homepage of the site for a specified amount of time. */
-export type FeaturedThemeStartAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents a video to be featured on the homepage of the site for a specified amount of time. */
-export type FeaturedThemeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A fuzzy date in YYYYMMDD format. */
-export type FuzzyDate = {
-  __typename?: 'FuzzyDate';
-  day?: Maybe<Scalars['Int']['output']>;
-  month?: Maybe<Scalars['Int']['output']>;
-  year?: Maybe<Scalars['Int']['output']>;
+export type FavoriteableType = {
+  entry?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
@@ -2123,11 +549,9 @@ export type FuzzyDate = {
  */
 export type Image = {
   __typename?: 'Image';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The component that the resource is intended for */
   facet: ImageFacet;
-  /** The formatted string value of the facet field */
+  /** The localized string value of the facet field */
   facetLocalized: Scalars['String']['output'];
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
@@ -2135,61 +559,25 @@ export type Image = {
   link: Scalars['String']['output'];
   /** The path of the file in storage */
   path: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-
-/**
- * Represents a visual component for another resource such as an anime or artist.
- *
- * For example, the Bakemonogatari anime has two images to represent small and large cover images.
- */
-export type ImageCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a visual component for another resource such as an anime or artist.
- *
- * For example, the Bakemonogatari anime has two images to represent small and large cover images.
- */
-export type ImageUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of Image edges. */
 export type ImageConnection = {
   __typename?: 'ImageConnection';
-  /** A list of Image edges. */
+  /** A list of edges. */
   edges: Array<ImageEdge>;
-  /** A list of Image resources. Use this if you don't care about pivot fields. */
+  /** A list of nodes. */
   nodes: Array<Image>;
-  /** Pagination information about the list of edges. */
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
+/** An edge in a connection. */
 export type ImageEdge = {
   __typename?: 'ImageEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** Used to sort the images */
-  depth: Scalars['Int']['output'];
-  /** The Image node. */
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
   node: Image;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type ImageEdgeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-export type ImageEdgeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
 };
 
 export enum ImageFacet {
@@ -2201,21 +589,8 @@ export enum ImageFacet {
   SmallCover = 'SMALL_COVER'
 }
 
-export enum ImageFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Facet = 'FACET',
-  Id = 'ID',
-  Path = 'PATH',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of Image items. */
-export type ImagePaginator = {
-  __typename?: 'ImagePaginator';
-  /** A list of Image items. */
-  data: Array<Image>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
+export type ImageFilterInput = {
+  facet?: InputMaybe<ImageFacet>;
 };
 
 export enum ImageSort {
@@ -2228,199 +603,132 @@ export enum ImageSort {
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
-export enum ImageableSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Depth = 'DEPTH',
-  DepthDesc = 'DEPTH_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Random = 'RANDOM',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/** Represents a like of a user. */
-export type Like = {
-  __typename?: 'Like';
-  likeable: LikeableUnion;
-  user: User;
+export type ImageableConnection = {
+  __typename?: 'ImageableConnection';
+  /** A list of edges. */
+  edges: Array<ImageableEdge>;
+  /** A list of nodes. */
+  nodes: Array<Image>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-/** Represents the resources that can be liked */
-export type LikeableUnion = AnimeThemeEntry | Playlist;
+/** An edge in a connection. */
+export type ImageableEdge = {
+  __typename?: 'ImageableEdge';
+  /** The date that the resource was created */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** Used to sort the images */
+  depth: Scalars['Int']['output'];
+  /** The item at the end of the edge */
+  node: Image;
+  /** The date that the resource was updated */
+  updatedAt: Scalars['String']['output'];
+};
 
-/** Represents the currently authenticated user. */
+
+/** An edge in a connection. */
+export type ImageableEdgeCreatedAtArgs = {
+  format?: Scalars['String']['input'];
+};
+
+
+/** An edge in a connection. */
+export type ImageableEdgeUpdatedAtArgs = {
+  format?: Scalars['String']['input'];
+};
+
+export type LoginInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+/** Represents an Themes account. */
 export type Me = {
   __typename?: 'Me';
   /** The date that the resource was created */
-  createdAt: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
   /** The email of the user */
   email: Scalars['String']['output'];
   /** The date the user verified their email */
-  emailVerifiedAt: Scalars['String']['output'];
+  emailVerifiedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The favorites of the authenticated user. */
+  favorites: Array<Favorite>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  likes: Array<Like>;
-  /** The username of authenticated user */
+  /** The username of the resource */
   name: Scalars['String']['output'];
-  permissions: PermissionConnection;
-  playlists: Array<Playlist>;
-  roles: RoleConnection;
-  /** The date the user confirmed their two-factor authentication */
-  twoFactorConfirmedAt: Scalars['String']['output'];
+  /** The playlists of the authenticated user. */
+  playlists: PlaylistConnection;
+  /** The ratings of the authenticated user. */
+  ratings: Array<Rating>;
+  /** The roles of the authenticated user. */
+  roles: Array<Role>;
   /** The date that the resource was updated */
-  updatedAt: Scalars['String']['output'];
-  watchHistory: Array<WatchHistory>;
+  updatedAt: Scalars['DateTime']['output'];
+  /** The watch history of the authenticated user. */
+  watchHistory: WatchHistoryConnection;
 };
 
 
-/** Represents the currently authenticated user. */
-export type MeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
+/** Represents an Themes account. */
+export type MeFavoritesArgs = {
+  filter?: InputMaybe<UserFavoritesFilterInput>;
 };
 
 
-/** Represents the currently authenticated user. */
-export type MeEmailVerifiedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents the currently authenticated user. */
-export type MeLikesArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/** Represents the currently authenticated user. */
-export type MePermissionsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  default?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: Scalars['Int']['input'];
-  priority_greater?: InputMaybe<Scalars['Int']['input']>;
-  priority_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PermissionSort>>;
-};
-
-
-/** Represents the currently authenticated user. */
+/** Represents an Themes account. */
 export type MePlaylistsArgs = {
-  first?: Scalars['Int']['input'];
-  name_like?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<PlaylistSort>>;
-  visibility?: InputMaybe<PlaylistVisibility>;
-  where?: InputMaybe<MePlaylistsWhereWhereConditions>;
 };
 
 
-/** Represents the currently authenticated user. */
-export type MeRolesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  default?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: Scalars['Int']['input'];
-  priority_greater?: InputMaybe<Scalars['Int']['input']>;
-  priority_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<RoleSort>>;
+/** Represents an Themes account. */
+export type MeRatingsArgs = {
+  sort?: InputMaybe<Array<RatingSort>>;
 };
 
 
-/** Represents the currently authenticated user. */
-export type MeTwoFactorConfirmedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents the currently authenticated user. */
-export type MeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents the currently authenticated user. */
+/** Represents an Themes account. */
 export type MeWatchHistoryArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `playlists`. */
-export type MePlaylistsWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<MePlaylistsWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<MePlaylistsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<MePlaylistsWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PlaylistFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `playlists`. */
-export type MePlaylistsWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<MePlaylistsWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<MePlaylistsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<MePlaylistsWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `playlists`. */
-export type MePlaylistsWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<MePlaylistsWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Represents a response containing a message. */
-export type MessageResponse = {
-  __typename?: 'MessageResponse';
-  message: Scalars['String']['output'];
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  CreatePlaylist: Playlist;
-  CreatePlaylistTrack: PlaylistTrack;
-  DeletePlaylist: MessageResponse;
-  DeletePlaylistTrack: MessageResponse;
-  ToggleLike?: Maybe<Like>;
-  UpdatePlaylist: Playlist;
-  UpdatePlaylistTrack: PlaylistTrack;
-  /** Mark a video as watched. */
-  Watch?: Maybe<WatchHistory>;
+  /** Clear the watch history for the authenticated user. */
+  clearWatchHistory: Scalars['Boolean']['output'];
+  createPlaylist: Playlist;
+  createPlaylistTrack: PlaylistTrack;
+  deletePlaylist: Scalars['Boolean']['output'];
+  deletePlaylistTrack: Scalars['Boolean']['output'];
+  forgotPassword: Scalars['Boolean']['output'];
+  login: Me;
+  logout: Scalars['Boolean']['output'];
+  register: Me;
+  resendEmailVerification: Scalars['Boolean']['output'];
+  resetPassword: Scalars['Boolean']['output'];
+  toggleFavorite?: Maybe<Favorite>;
+  updatePassword: Scalars['Boolean']['output'];
+  updatePlaylist: Playlist;
+  updatePlaylistTrack: PlaylistTrack;
+  updateUserInformation: Scalars['Boolean']['output'];
+  /** Mark a video as watched for the authenticated user. */
+  watch: WatchHistory;
 };
 
 
 export type MutationCreatePlaylistArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  visibility: PlaylistVisibility;
+  input: CreatePlaylistInput;
 };
 
 
 export type MutationCreatePlaylistTrackArgs = {
-  entryId: Scalars['Int']['input'];
+  input: CreatePlaylistTrackInput;
   playlist: Scalars['String']['input'];
-  position?: InputMaybe<Scalars['Int']['input']>;
-  videoId: Scalars['Int']['input'];
 };
 
 
@@ -2435,26 +743,51 @@ export type MutationDeletePlaylistTrackArgs = {
 };
 
 
-export type MutationToggleLikeArgs = {
-  entryId?: InputMaybe<Scalars['Int']['input']>;
-  playlistId?: InputMaybe<Scalars['String']['input']>;
+export type MutationForgotPasswordArgs = {
+  email: Scalars['String']['input'];
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInput;
+};
+
+
+export type MutationRegisterArgs = {
+  input: RegisterInput;
+};
+
+
+export type MutationResetPasswordArgs = {
+  input: ResetPasswordInput;
+};
+
+
+export type MutationToggleFavoriteArgs = {
+  favorite: FavoriteableType;
+};
+
+
+export type MutationUpdatePasswordArgs = {
+  input: UpdatePasswordInput;
 };
 
 
 export type MutationUpdatePlaylistArgs = {
-  description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
-  visibility?: InputMaybe<PlaylistVisibility>;
+  input: UpdatePlaylistInput;
 };
 
 
 export type MutationUpdatePlaylistTrackArgs = {
-  entryId?: InputMaybe<Scalars['Int']['input']>;
   id: Scalars['String']['input'];
+  input: UpdatePlaylistTrackInput;
   playlist: Scalars['String']['input'];
-  position?: InputMaybe<Scalars['Int']['input']>;
-  videoId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationUpdateUserInformationArgs = {
+  input: UpdateUserInformationInput;
 };
 
 
@@ -2463,40 +796,19 @@ export type MutationWatchArgs = {
   videoId: Scalars['Int']['input'];
 };
 
-export enum NotificationType {
-  ProfileSynced = 'PROFILE_SYNCED'
-}
-
-/** Represents the notification types. */
-export type NotificationUnion = ExternalProfileSyncedNotification;
-
-/** Allows ordering a list of records. */
-export type OrderByClause = {
-  /** The column that is used for ordering. */
-  column: Scalars['String']['input'];
-  /** The direction that is used for ordering. */
-  order: SortOrder;
+export type OffsetPageInfo = {
+  __typename?: 'OffsetPageInfo';
+  /** The number of items per page. */
+  first: Scalars['Int']['output'];
+  /** When paginating forwards, are there more items? */
+  hasNextPage: Scalars['Boolean']['output'];
+  /** When paginating backwards, are there more items? Note: Paginating backwards is not supported. */
+  hasPreviousPage: Scalars['Boolean']['output'];
+  /** The offset of the current page. */
+  offset: Scalars['Int']['output'];
+  /** The total number of items. */
+  total: Scalars['Int']['output'];
 };
-
-/** Aggregate functions when ordering by a relation without specifying a column. */
-export enum OrderByRelationAggregateFunction {
-  /** Amount of items. */
-  Count = 'COUNT'
-}
-
-/** Aggregate functions when ordering by a relation that may specify a column. */
-export enum OrderByRelationWithColumnAggregateFunction {
-  /** Average. */
-  Avg = 'AVG',
-  /** Amount of items. */
-  Count = 'COUNT',
-  /** Maximum. */
-  Max = 'MAX',
-  /** Minimum. */
-  Min = 'MIN',
-  /** Sum. */
-  Sum = 'SUM'
-}
 
 /**
  * Represents a static markdown page used for guides and other documentation.
@@ -2541,43 +853,40 @@ export type PageUpdatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
-export enum PageFilterableColumns {
-  Body = 'BODY',
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Name = 'NAME',
-  Slug = 'SLUG',
-  UpdatedAt = 'UPDATED_AT'
-}
+export type PageConnection = {
+  __typename?: 'PageConnection';
+  /** A list of edges. */
+  edges: Array<PageEdge>;
+  /** A list of nodes. */
+  nodes: Array<Page>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
 
-/** Information about pagination using a Relay style cursor connection. */
+/** An edge in a connection. */
+export type PageEdge = {
+  __typename?: 'PageEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Page;
+};
+
+export type PageFilterInput = {
+  nameLike?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Information about pagination in a connection */
 export type PageInfo = {
   __typename?: 'PageInfo';
-  /** Number of nodes in the current page. */
-  count: Scalars['Int']['output'];
-  /** Index of the current page. */
-  currentPage: Scalars['Int']['output'];
-  /** The cursor to continue paginating forwards. */
+  /** When paginating forwards, the cursor to continue. */
   endCursor?: Maybe<Scalars['String']['output']>;
   /** When paginating forwards, are there more items? */
   hasNextPage: Scalars['Boolean']['output'];
   /** When paginating backwards, are there more items? */
   hasPreviousPage: Scalars['Boolean']['output'];
-  /** Index of the last available page. */
-  lastPage: Scalars['Int']['output'];
-  /** The cursor to continue paginating backwards. */
+  /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars['String']['output']>;
-  /** Total number of nodes in the paginated connection. */
-  total: Scalars['Int']['output'];
-};
-
-/** A paginated list of Page items. */
-export type PagePaginator = {
-  __typename?: 'PagePaginator';
-  /** A list of Page items. */
-  data: Array<Page>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
 };
 
 export enum PageSort {
@@ -2588,167 +897,30 @@ export enum PageSort {
   Name = 'NAME',
   NameDesc = 'NAME_DESC',
   Random = 'RANDOM',
-  Slug = 'SLUG',
-  SlugDesc = 'SLUG_DESC',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
-/** Information about pagination using a fully featured paginator. */
-export type PaginatorInfo = {
-  __typename?: 'PaginatorInfo';
-  /** Number of items in the current page. */
-  count: Scalars['Int']['output'];
-  /** Index of the current page. */
-  currentPage: Scalars['Int']['output'];
-  /** Index of the first item in the current page. */
-  firstItem?: Maybe<Scalars['Int']['output']>;
-  /** Are there more pages after this one? */
-  hasMorePages: Scalars['Boolean']['output'];
-  /** Index of the last item in the current page. */
-  lastItem?: Maybe<Scalars['Int']['output']>;
-  /** Index of the last available page. */
-  lastPage: Scalars['Int']['output'];
-  /** Number of items per page. */
-  perPage: Scalars['Int']['output'];
-  /** Number of total available items. */
-  total: Scalars['Int']['output'];
+export type PaginationInput = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** Represents the link between a song and an artist or group. */
-export type Performance = {
-  __typename?: 'Performance';
-  /** The alias the artist is using for this performance */
-  alias?: Maybe<Scalars['String']['output']>;
-  artist: Artist;
-  /** The character the artist is performing as */
-  as?: Maybe<Scalars['String']['output']>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The primary key of the resource */
-  id: Scalars['Int']['output'];
-  member?: Maybe<Artist>;
-  /** The alias the member is using for this performance */
-  memberAlias?: Maybe<Scalars['String']['output']>;
-  /** The character the member is performing as */
-  memberAs?: Maybe<Scalars['String']['output']>;
-  /** Used to determine the relevance order of artists in performances */
-  relevance: Scalars['Int']['output'];
-  song: Song;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+export type Permissions = {
+  __typename?: 'Permissions';
+  canCreatePlaylist: PermissionsResult;
+  canRevalidatePages: Scalars['Boolean']['output'];
 };
 
-
-/** Represents the link between a song and an artist or group. */
-export type PerformanceCreatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type PermissionsResult = {
+  __typename?: 'PermissionsResult';
+  /** Whether the permission check was successful. */
+  allow: Scalars['Boolean']['output'];
+  /** The reason for the permission check failure, if any. */
+  reason?: Maybe<Scalars['String']['output']>;
 };
-
-
-/** Represents the link between a song and an artist or group. */
-export type PerformanceUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum PerformanceFilterableColumns {
-  Alias = 'ALIAS',
-  As = 'AS',
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  MemberAlias = 'MEMBER_ALIAS',
-  MemberAs = 'MEMBER_AS',
-  Relevance = 'RELEVANCE',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-export enum PerformanceSort {
-  Alias = 'ALIAS',
-  AliasDesc = 'ALIAS_DESC',
-  As = 'AS',
-  AsDesc = 'AS_DESC',
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  MemberAlias = 'MEMBER_ALIAS',
-  MemberAliasDesc = 'MEMBER_ALIAS_DESC',
-  MemberAs = 'MEMBER_AS',
-  MemberAsDesc = 'MEMBER_AS_DESC',
-  Random = 'RANDOM',
-  Relevance = 'RELEVANCE',
-  RelevanceDesc = 'RELEVANCE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/** Represents an assignable label for users and roles that authorizes a particular action in AnimeThemes. */
-export type Permission = {
-  __typename?: 'Permission';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The primary key of the resource */
-  id: Scalars['Int']['output'];
-  /** The label of the resource */
-  name: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-/** Represents an assignable label for users and roles that authorizes a particular action in AnimeThemes. */
-export type PermissionCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents an assignable label for users and roles that authorizes a particular action in AnimeThemes. */
-export type PermissionUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of Permission edges. */
-export type PermissionConnection = {
-  __typename?: 'PermissionConnection';
-  /** A list of Permission edges. */
-  edges: Array<PermissionEdge>;
-  /** A list of Permission resources. Use this if you don't care about pivot fields. */
-  nodes: Array<Permission>;
-  /** Pagination information about the list of edges. */
-  pageInfo: PageInfo;
-};
-
-export type PermissionEdge = {
-  __typename?: 'PermissionEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Permission node. */
-  node: Permission;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type PermissionEdgeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-export type PermissionEdgeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum PermissionSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Name = 'NAME',
-  NameDesc = 'NAME_DESC',
-  Random = 'RANDOM',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
 
 /**
  * Represents a list of ordered tracks intended for continuous playback.
@@ -2757,30 +929,22 @@ export enum PermissionSort {
  */
 export type Playlist = {
   __typename?: 'Playlist';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The description of the playlist */
   description?: Maybe<Scalars['String']['output']>;
-  first?: Maybe<PlaylistTrack>;
   /** The primary key of the resource */
   id: Scalars['String']['output'];
-  images: ImageConnection;
-  last?: Maybe<PlaylistTrack>;
   /** The title of the playlist */
   name: Scalars['String']['output'];
+  permissions: PlaylistPermissions;
   /** The URL for the playlist page on the website */
   siteUrl: Scalars['String']['output'];
   tracks: Array<PlaylistTrack>;
-  /** The number of tracks belonging to the resource */
   tracksCount: Scalars['Int']['output'];
-  /** The existence of tracks belonging to the resource */
   tracksExists: Scalars['Boolean']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
   user: User;
   /** The state of who can see the playlist */
   visibility: PlaylistVisibility;
-  /** The formatted string value of the visibility field */
+  /** The localized string value of the visibility field */
   visibilityLocalized: Scalars['String']['output'];
 };
 
@@ -2790,109 +954,47 @@ export type Playlist = {
  *
  * For example, a "/r/anime's Best OPs and EDs of 2022" playlist may contain a collection of tracks allowing the continuous playback of Best OP and ED nominations for the /r/anime Awards.
  */
-export type PlaylistCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a list of ordered tracks intended for continuous playback.
- *
- * For example, a "/r/anime's Best OPs and EDs of 2022" playlist may contain a collection of tracks allowing the continuous playback of Best OP and ED nominations for the /r/anime Awards.
- */
-export type PlaylistImagesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  facet?: InputMaybe<ImageFacet>;
-  first?: Scalars['Int']['input'];
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ImageSort>>;
-  where?: InputMaybe<PlaylistImagesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a list of ordered tracks intended for continuous playback.
- *
- * For example, a "/r/anime's Best OPs and EDs of 2022" playlist may contain a collection of tracks allowing the continuous playback of Best OP and ED nominations for the /r/anime Awards.
- */
 export type PlaylistTracksArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  position?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<PlaylistTracksFilterInput>;
   sort?: InputMaybe<Array<PlaylistTrackSort>>;
-  where?: InputMaybe<PlaylistTracksWhereWhereConditions>;
 };
 
-
-/**
- * Represents a list of ordered tracks intended for continuous playback.
- *
- * For example, a "/r/anime's Best OPs and EDs of 2022" playlist may contain a collection of tracks allowing the continuous playback of Best OP and ED nominations for the /r/anime Awards.
- */
-export type PlaylistUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type PlaylistConnection = {
+  __typename?: 'PlaylistConnection';
+  /** A list of edges. */
+  edges: Array<PlaylistEdge>;
+  /** A list of nodes. */
+  nodes: Array<Playlist>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-export enum PlaylistFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Description = 'DESCRIPTION',
-  Id = 'ID',
-  Name = 'NAME',
-  UpdatedAt = 'UPDATED_AT',
-  Visibility = 'VISIBILITY'
-}
-
-/** Dynamic WHERE conditions for the `where` argument of the query `images`. */
-export type PlaylistImagesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<PlaylistImagesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<PlaylistImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<PlaylistImagesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ImageFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+/** An edge in a connection. */
+export type PlaylistEdge = {
+  __typename?: 'PlaylistEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Playlist;
 };
 
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `images`. */
-export type PlaylistImagesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<PlaylistImagesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<PlaylistImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<PlaylistImagesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+export type PlaylistFilterInput = {
+  nameLike?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `images`. */
-export type PlaylistImagesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<PlaylistImagesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** A paginated list of Playlist items. */
-export type PlaylistPaginator = {
-  __typename?: 'PlaylistPaginator';
-  /** A list of Playlist items. */
+export type PlaylistPagination = {
+  __typename?: 'PlaylistPagination';
+  /** The data for the current page. */
   data: Array<Playlist>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
+};
+
+export type PlaylistPermissions = {
+  __typename?: 'PlaylistPermissions';
+  canDelete: Scalars['Boolean']['output'];
+  canReorderTracks: Scalars['Boolean']['output'];
+  canUpdate: Scalars['Boolean']['output'];
 };
 
 export enum PlaylistSort {
@@ -2903,8 +1005,6 @@ export enum PlaylistSort {
   Name = 'NAME',
   NameDesc = 'NAME_DESC',
   Random = 'RANDOM',
-  TracksCount = 'TRACKS_COUNT',
-  TracksCountDesc = 'TRACKS_COUNT_DESC',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
@@ -2916,66 +1016,18 @@ export enum PlaylistSort {
  */
 export type PlaylistTrack = {
   __typename?: 'PlaylistTrack';
-  animethemeentry: AnimeThemeEntry;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
+  entry: Entry;
   /** The primary key of the resource */
   id: Scalars['String']['output'];
-  /** @deprecated No longer supported */
-  next?: Maybe<PlaylistTrack>;
   playlist: Playlist;
   /** The position of the playlist track within the playlist */
   position: Scalars['Int']['output'];
-  /** @deprecated No longer supported */
-  previous?: Maybe<PlaylistTrack>;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
   video: Video;
-};
-
-
-/**
- * Represents an entry in a playlist.
- *
- * For example, a "/r/anime's Best OPs and EDs of 2022" playlist may contain a track for the ParipiKoumei-OP1.webm video.
- */
-export type PlaylistTrackCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents an entry in a playlist.
- *
- * For example, a "/r/anime's Best OPs and EDs of 2022" playlist may contain a track for the ParipiKoumei-OP1.webm video.
- */
-export type PlaylistTrackUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum PlaylistTrackFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  EntryId = 'ENTRY_ID',
-  Id = 'ID',
-  Position = 'POSITION',
-  UpdatedAt = 'UPDATED_AT',
-  VideoId = 'VIDEO_ID'
-}
-
-/** A paginated list of PlaylistTrack items. */
-export type PlaylistTrackPaginator = {
-  __typename?: 'PlaylistTrackPaginator';
-  /** A list of PlaylistTrack items. */
-  data: Array<PlaylistTrack>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
 };
 
 export enum PlaylistTrackSort {
   CreatedAt = 'CREATED_AT',
   CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
   Position = 'POSITION',
   PositionDesc = 'POSITION_DESC',
   Random = 'RANDOM',
@@ -2983,48 +1035,9 @@ export enum PlaylistTrackSort {
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
-/** Dynamic WHERE conditions for the `where` argument of the query `tracks`. */
-export type PlaylistTracksWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<PlaylistTracksWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<PlaylistTracksWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<PlaylistTracksWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PlaylistTrackFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `tracks`. */
-export type PlaylistTracksWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<PlaylistTracksWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<PlaylistTracksWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<PlaylistTracksWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `tracks`. */
-export type PlaylistTracksWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<PlaylistTracksWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+export type PlaylistTracksFilterInput = {
+  entryId?: InputMaybe<Scalars['Int']['input']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export enum PlaylistVisibility {
@@ -3033,1040 +1046,190 @@ export enum PlaylistVisibility {
   Unlisted = 'UNLISTED'
 }
 
-/** Indicates what fields are available at the top level of a query operation. */
 export type Query = {
   __typename?: 'Query';
-  /** Returns an anime resource. */
   anime?: Maybe<Anime>;
-  /** Returns a listing of anime resources given fields. */
-  animePagination: AnimePaginator;
-  /** Returns a listing of anime themes resources given fields. */
-  animethemePagination: AnimeThemePaginator;
-  /** Shuffle themes. */
-  animethemeShuffle: Array<AnimeTheme>;
-  animethemeentryPagination: AnimeThemeEntryPaginator;
+  animeConnection: AnimeConnection;
   /** Returns a list of years grouped by its seasons. */
   animeyears: Array<AnimeYear>;
-  /** Returns a listing of announcement resources given fields. */
-  announcementPagination: AnnouncementPaginator;
-  /** Returns an artist resource. */
   artist?: Maybe<Artist>;
-  /** Returns a listing of artist resources given fields. */
-  artistPagination: ArtistPaginator;
-  /** Returns a listing of audio resources given fields. */
-  audioPagination: AudioPaginator;
-  /** Returns the first featured theme where the current date is between start_at and end_at dates. */
-  currentFeaturedTheme?: Maybe<FeaturedTheme>;
-  /** Returns a listing of external profile resources given fields. */
-  externalprofilePagination: ExternalProfilePaginator;
-  /** Filter anime by its external id on given site. */
-  findAnimeByExternalSite: Array<Anime>;
-  /** Returns a listing of images resources given fields. */
-  imagePagination: ImagePaginator;
-  /** Returns the data of the currently authenticated user. */
+  artistConnection: ArtistConnection;
+  blogPages: PageConnection;
+  currentAnnouncements: Array<Announcement>;
+  currentFeaturedTheme?: Maybe<CurrentFeaturedTheme>;
+  imageConnection: ImageConnection;
   me?: Maybe<Me>;
-  /** Returns a page resource. */
+  mostPopularEntries: EntryConnection;
   page?: Maybe<Page>;
-  /** Returns a listing of page resources given fields. */
-  pagePagination: PagePaginator;
-  /** Returns a playlist resource. */
+  pageConnection: PageConnection;
+  permissions: Permissions;
   playlist?: Maybe<Playlist>;
-  /** Returns a listing of playlist resources given fields. */
-  playlistPagination: PlaylistPaginator;
-  /** Returns a playlist track resource. */
-  playlisttrack?: Maybe<PlaylistTrack>;
-  /** Returns a listing of playlist track resources given fields. */
-  playlisttrackPagination: PlaylistTrackPaginator;
-  /** Returns a listing of resources that match a given search term. */
+  playlistConnection: PlaylistConnection;
   search: Search;
-  /** Returns a series resource. */
   series?: Maybe<Series>;
-  /** Returns a listing of series resources given fields. */
-  seriesPagination: SeriesPaginator;
-  /** Returns a listing of song resources given fields. */
-  songPagination: SongPaginator;
-  /** Returns a studio resource. */
+  seriesConnection: SeriesConnection;
   studio?: Maybe<Studio>;
-  /** Returns a listing of studio resources given fields. */
-  studioPagination: StudioPaginator;
-  /** Returns a listing of theme group resources given fields. */
-  themegroupPagination: ThemeGroupPaginator;
-  /** Returns a video resource. */
+  studioConnection: StudioConnection;
+  themeConnection: ThemeConnection;
+  themeShuffle: Array<Theme>;
   video?: Maybe<Video>;
-  /** Returns a listing of video resources given fields. */
-  videoPagination: VideoPaginator;
+  videoConnection: VideoConnection;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
 export type QueryAnimeArgs = {
   slug: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryAnimePaginationArgs = {
-  first?: Scalars['Int']['input'];
-  format?: InputMaybe<AnimeFormat>;
-  format_in?: InputMaybe<Array<AnimeFormat>>;
-  id?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  season?: InputMaybe<AnimeSeason>;
-  season_in?: InputMaybe<Array<AnimeSeason>>;
-  slug?: InputMaybe<Scalars['String']['input']>;
+export type QueryAnimeConnectionArgs = {
+  filter?: InputMaybe<AnimeFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<AnimeSort>>;
-  titleRomaji?: InputMaybe<Scalars['String']['input']>;
-  titleRomaji_like?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<QueryAnimePaginationWhereWhereConditions>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-  year_greater?: InputMaybe<Scalars['Int']['input']>;
-  year_lesser?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryAnimethemePaginationArgs = {
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sequence?: InputMaybe<Scalars['Int']['input']>;
-  sequence_greater?: InputMaybe<Scalars['Int']['input']>;
-  sequence_lesser?: InputMaybe<Scalars['Int']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<AnimeThemeSort>>;
-  type?: InputMaybe<ThemeType>;
-  type_in?: InputMaybe<Array<ThemeType>>;
-  where?: InputMaybe<QueryAnimethemePaginationWhereWhereConditions>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryAnimethemeShuffleArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  format?: InputMaybe<Array<AnimeFormat>>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  spoiler?: InputMaybe<Scalars['Boolean']['input']>;
-  type?: InputMaybe<Array<ThemeType>>;
-  year_gte?: InputMaybe<Scalars['Int']['input']>;
-  year_lte?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryAnimethemeentryPaginationArgs = {
-  episodes?: InputMaybe<Scalars['String']['input']>;
-  episodes_like?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  nsfw?: InputMaybe<Scalars['Boolean']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<AnimeThemeEntrySort>>;
-  spoiler?: InputMaybe<Scalars['Boolean']['input']>;
-  version?: InputMaybe<Scalars['Int']['input']>;
-  version_greater?: InputMaybe<Scalars['Int']['input']>;
-  version_lesser?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<QueryAnimethemeentryPaginationWhereWhereConditions>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
 export type QueryAnimeyearsArgs = {
   year?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryAnnouncementPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<AnnouncementSort>>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
 export type QueryArtistArgs = {
   slug: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryArtistPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  nameMain?: InputMaybe<Scalars['String']['input']>;
-  nameMain_like?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
+export type QueryArtistConnectionArgs = {
+  filter?: InputMaybe<ArtistFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<ArtistSort>>;
-  where?: InputMaybe<QueryArtistPaginationWhereWhereConditions>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryAudioPaginationArgs = {
-  basename?: InputMaybe<Scalars['String']['input']>;
-  filename?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  mimetype?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  path?: InputMaybe<Scalars['String']['input']>;
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  size_greater?: InputMaybe<Scalars['Int']['input']>;
-  size_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<AudioSort>>;
-  where?: InputMaybe<QueryAudioPaginationWhereWhereConditions>;
+export type QueryBlogPagesArgs = {
+  pagination?: InputMaybe<PaginationInput>;
+  sort?: InputMaybe<Array<PageSort>>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryExternalprofilePaginationArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<QueryExternalprofilePaginationWhereWhereConditions>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryFindAnimeByExternalSiteArgs = {
-  id?: InputMaybe<Array<Scalars['Int']['input']>>;
-  link?: InputMaybe<Scalars['String']['input']>;
-  site: ResourceSite;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryImagePaginationArgs = {
-  facet?: InputMaybe<ImageFacet>;
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  path?: InputMaybe<Scalars['String']['input']>;
-  path_like?: InputMaybe<Scalars['String']['input']>;
+export type QueryImageConnectionArgs = {
+  filter?: InputMaybe<ImageFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<ImageSort>>;
-  where?: InputMaybe<QueryImagePaginationWhereWhereConditions>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
+export type QueryMostPopularEntriesArgs = {
+  filter?: InputMaybe<EntryFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
+};
+
+
 export type QueryPageArgs = {
   slug: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryPagePaginationArgs = {
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  name_like?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<PageSort>>;
-  where?: InputMaybe<QueryPagePaginationWhereWhereConditions>;
+export type QueryPageConnectionArgs = {
+  filter?: InputMaybe<PageFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
 export type QueryPlaylistArgs = {
   id: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryPlaylistPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
-  name_like?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
+export type QueryPlaylistConnectionArgs = {
+  filter?: InputMaybe<PlaylistFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<PlaylistSort>>;
-  visibility?: InputMaybe<PlaylistVisibility>;
-  where?: InputMaybe<QueryPlaylistPaginationWhereWhereConditions>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryPlaylisttrackArgs = {
-  id: Scalars['String']['input'];
-  playlist: Scalars['String']['input'];
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryPlaylisttrackPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  playlist: Scalars['String']['input'];
-  position?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PlaylistTrackSort>>;
-  where?: InputMaybe<QueryPlaylisttrackPaginationWhereWhereConditions>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
 export type QuerySearchArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
+  first?: Scalars['Int']['input'];
+  page?: Scalars['Int']['input'];
   search: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
 export type QuerySeriesArgs = {
   slug: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QuerySeriesPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
+export type QuerySeriesConnectionArgs = {
+  filter?: InputMaybe<SeriesFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<SeriesSort>>;
-  titleRomaji?: InputMaybe<Scalars['String']['input']>;
-  titleRomaji_like?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<QuerySeriesPaginationWhereWhereConditions>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QuerySongPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<SongSort>>;
-  titleNative?: InputMaybe<Scalars['String']['input']>;
-  titleRomaji?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<QuerySongPaginationWhereWhereConditions>;
-};
-
-
-/** Indicates what fields are available at the top level of a query operation. */
 export type QueryStudioArgs = {
   slug: Scalars['String']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryStudioPaginationArgs = {
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  name_like?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
+export type QueryStudioConnectionArgs = {
+  filter?: InputMaybe<StudioFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<StudioSort>>;
-  where?: InputMaybe<QueryStudioPaginationWhereWhereConditions>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryThemegroupPaginationArgs = {
+export type QueryThemeConnectionArgs = {
+  filter?: InputMaybe<ThemeFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
+  sort?: InputMaybe<Array<ThemeSort>>;
+};
+
+
+export type QueryThemeShuffleArgs = {
   first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ThemeGroupSort>>;
-  where?: InputMaybe<QueryThemegroupPaginationWhereWhereConditions>;
+  input?: InputMaybe<ThemeShuffleInput>;
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
 export type QueryVideoArgs = {
   id: Scalars['Int']['input'];
 };
 
 
-/** Indicates what fields are available at the top level of a query operation. */
-export type QueryVideoPaginationArgs = {
-  basename?: InputMaybe<Scalars['String']['input']>;
-  filename?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  lyrics?: InputMaybe<Scalars['Boolean']['input']>;
-  mimetype?: InputMaybe<Scalars['String']['input']>;
-  nc?: InputMaybe<Scalars['Boolean']['input']>;
-  overlap?: InputMaybe<VideoOverlap>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  path?: InputMaybe<Scalars['String']['input']>;
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  resolution?: InputMaybe<Scalars['Int']['input']>;
-  resolution_greater?: InputMaybe<Scalars['Int']['input']>;
-  resolution_lesser?: InputMaybe<Scalars['Int']['input']>;
-  size_greater?: InputMaybe<Scalars['Int']['input']>;
-  size_lesser?: InputMaybe<Scalars['Int']['input']>;
+export type QueryVideoConnectionArgs = {
+  filter?: InputMaybe<VideoFilterInput>;
+  pagination?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<Array<VideoSort>>;
-  source?: InputMaybe<VideoSource>;
-  subbed?: InputMaybe<Scalars['Boolean']['input']>;
-  uncen?: InputMaybe<Scalars['Boolean']['input']>;
-  where?: InputMaybe<QueryVideoPaginationWhereWhereConditions>;
 };
 
-/** Dynamic WHERE conditions for the `where` argument of the query `animePagination`. */
-export type QueryAnimePaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAnimePaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAnimePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAnimePaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+/** Represents the rating of the authenticated user. */
+export type Rating = {
+  __typename?: 'Rating';
+  entry: Entry;
+  /** The score of the rating. */
+  score: Scalars['Float']['output'];
 };
 
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `animePagination`. */
-export type QueryAnimePaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAnimePaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAnimePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAnimePaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+export enum RatingSort {
+  Random = 'RANDOM',
+  Score = 'SCORE',
+  ScoreDesc = 'SCORE_DESC'
+}
+
+export type RegisterInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  passwordConfirmation: Scalars['String']['input'];
+  terms: Scalars['Boolean']['input'];
 };
 
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `animePagination`. */
-export type QueryAnimePaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryAnimePaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `animethemePagination`. */
-export type QueryAnimethemePaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAnimethemePaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAnimethemePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAnimethemePaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeThemeFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `animethemePagination`. */
-export type QueryAnimethemePaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAnimethemePaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAnimethemePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAnimethemePaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `animethemePagination`. */
-export type QueryAnimethemePaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryAnimethemePaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `animethemeentryPagination`. */
-export type QueryAnimethemeentryPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAnimethemeentryPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAnimethemeentryPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAnimethemeentryPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeThemeEntryFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `animethemeentryPagination`. */
-export type QueryAnimethemeentryPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAnimethemeentryPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAnimethemeentryPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAnimethemeentryPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `animethemeentryPagination`. */
-export type QueryAnimethemeentryPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryAnimethemeentryPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `artistPagination`. */
-export type QueryArtistPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryArtistPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryArtistPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryArtistPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ArtistFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `artistPagination`. */
-export type QueryArtistPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryArtistPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryArtistPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryArtistPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `artistPagination`. */
-export type QueryArtistPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryArtistPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `audioPagination`. */
-export type QueryAudioPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAudioPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAudioPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAudioPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AudioFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `audioPagination`. */
-export type QueryAudioPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryAudioPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryAudioPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryAudioPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `audioPagination`. */
-export type QueryAudioPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryAudioPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `externalprofilePagination`. */
-export type QueryExternalprofilePaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryExternalprofilePaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryExternalprofilePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryExternalprofilePaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ExternalProfileFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `externalprofilePagination`. */
-export type QueryExternalprofilePaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryExternalprofilePaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryExternalprofilePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryExternalprofilePaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `externalprofilePagination`. */
-export type QueryExternalprofilePaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryExternalprofilePaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `imagePagination`. */
-export type QueryImagePaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryImagePaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryImagePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryImagePaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ImageFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `imagePagination`. */
-export type QueryImagePaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryImagePaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryImagePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryImagePaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `imagePagination`. */
-export type QueryImagePaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryImagePaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `pagePagination`. */
-export type QueryPagePaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryPagePaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryPagePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryPagePaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PageFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `pagePagination`. */
-export type QueryPagePaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryPagePaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryPagePaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryPagePaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `pagePagination`. */
-export type QueryPagePaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryPagePaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `playlistPagination`. */
-export type QueryPlaylistPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryPlaylistPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryPlaylistPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryPlaylistPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PlaylistFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `playlistPagination`. */
-export type QueryPlaylistPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryPlaylistPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryPlaylistPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryPlaylistPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `playlistPagination`. */
-export type QueryPlaylistPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryPlaylistPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `playlisttrackPagination`. */
-export type QueryPlaylisttrackPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryPlaylisttrackPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryPlaylisttrackPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryPlaylisttrackPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PlaylistTrackFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `playlisttrackPagination`. */
-export type QueryPlaylisttrackPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryPlaylisttrackPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryPlaylisttrackPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryPlaylisttrackPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `playlisttrackPagination`. */
-export type QueryPlaylisttrackPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryPlaylisttrackPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `seriesPagination`. */
-export type QuerySeriesPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QuerySeriesPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QuerySeriesPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QuerySeriesPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<SeriesFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `seriesPagination`. */
-export type QuerySeriesPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QuerySeriesPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QuerySeriesPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QuerySeriesPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `seriesPagination`. */
-export type QuerySeriesPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QuerySeriesPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `songPagination`. */
-export type QuerySongPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QuerySongPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QuerySongPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QuerySongPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<SongFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `songPagination`. */
-export type QuerySongPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QuerySongPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QuerySongPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QuerySongPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `songPagination`. */
-export type QuerySongPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QuerySongPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `studioPagination`. */
-export type QueryStudioPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryStudioPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryStudioPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryStudioPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<StudioFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `studioPagination`. */
-export type QueryStudioPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryStudioPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryStudioPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryStudioPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `studioPagination`. */
-export type QueryStudioPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryStudioPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `themegroupPagination`. */
-export type QueryThemegroupPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryThemegroupPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryThemegroupPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryThemegroupPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ThemeGroupFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `themegroupPagination`. */
-export type QueryThemegroupPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryThemegroupPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryThemegroupPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryThemegroupPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `themegroupPagination`. */
-export type QueryThemegroupPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryThemegroupPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `videoPagination`. */
-export type QueryVideoPaginationWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryVideoPaginationWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryVideoPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryVideoPaginationWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<VideoFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `videoPagination`. */
-export type QueryVideoPaginationWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<QueryVideoPaginationWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<QueryVideoPaginationWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<QueryVideoPaginationWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `videoPagination`. */
-export type QueryVideoPaginationWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<QueryVideoPaginationWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+export type ResetPasswordInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  passwordConfirmation: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 export enum ResourceSite {
@@ -4093,146 +1256,186 @@ export enum ResourceSite {
   YoutubeMusic = 'YOUTUBE_MUSIC'
 }
 
+export type ResourceableConnection = {
+  __typename?: 'ResourceableConnection';
+  /** A list of edges. */
+  edges: Array<ResourceableEdge>;
+  /** A list of nodes. */
+  nodes: Array<ExternalResource>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type ResourceableEdge = {
+  __typename?: 'ResourceableEdge';
+  /** Used to distinguish resources that map to the same resourceable */
+  as?: Maybe<Scalars['String']['output']>;
+  /** The date that the resource was created */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: ExternalResource;
+  updatedAt: Scalars['String']['output'];
+};
+
+
+/** An edge in a connection. */
+export type ResourceableEdgeCreatedAtArgs = {
+  format?: Scalars['String']['input'];
+};
+
+
+/** An edge in a connection. */
+export type ResourceableEdgeUpdatedAtArgs = {
+  format?: Scalars['String']['input'];
+};
+
 /** Represents an assignable label for users that provides a configured group of permissions. */
 export type Role = {
   __typename?: 'Role';
   /** The hex representation of the color used to distinguish the resource */
   color?: Maybe<Scalars['String']['output']>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** Is the role assigned on account verification? */
-  default: Scalars['String']['output'];
+  default: Scalars['Boolean']['output'];
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
   /** The label of the resource */
   name: Scalars['String']['output'];
-  permissions: PermissionConnection;
   /** The weight assigned to the resource, where higher values correspond to higher priority */
   priority: Scalars['Int']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
-
-
-/** Represents an assignable label for users that provides a configured group of permissions. */
-export type RoleCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents an assignable label for users that provides a configured group of permissions. */
-export type RolePermissionsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  default?: InputMaybe<Scalars['Boolean']['input']>;
-  first?: Scalars['Int']['input'];
-  priority_greater?: InputMaybe<Scalars['Int']['input']>;
-  priority_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PermissionSort>>;
-};
-
-
-/** Represents an assignable label for users that provides a configured group of permissions. */
-export type RoleUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of Role edges. */
-export type RoleConnection = {
-  __typename?: 'RoleConnection';
-  /** A list of Role edges. */
-  edges: Array<RoleEdge>;
-  /** A list of Role resources. Use this if you don't care about pivot fields. */
-  nodes: Array<Role>;
-  /** Pagination information about the list of edges. */
-  pageInfo: PageInfo;
-};
-
-export type RoleEdge = {
-  __typename?: 'RoleEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Role node. */
-  node: Role;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type RoleEdgeCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-export type RoleEdgeUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum RoleSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Name = 'NAME',
-  NameDesc = 'NAME_DESC',
-  Priority = 'PRIORITY',
-  PriorityDesc = 'PRIORITY_DESC',
-  Random = 'RANDOM',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
-
-/** The available SQL operators that are used to filter query results. */
-export enum SqlOperator {
-  /** Whether a value is within a range of values (`BETWEEN`) */
-  Between = 'BETWEEN',
-  /** Equal operator (`=`) */
-  Eq = 'EQ',
-  /** Greater than operator (`>`) */
-  Gt = 'GT',
-  /** Greater than or equal operator (`>=`) */
-  Gte = 'GTE',
-  /** Whether a value is within a set of values (`IN`) */
-  In = 'IN',
-  /** Whether a value is not null (`IS NOT NULL`) */
-  IsNotNull = 'IS_NOT_NULL',
-  /** Whether a value is null (`IS NULL`) */
-  IsNull = 'IS_NULL',
-  /** Simple pattern matching (`LIKE`) */
-  Like = 'LIKE',
-  /** Less than operator (`<`) */
-  Lt = 'LT',
-  /** Less than or equal operator (`<=`) */
-  Lte = 'LTE',
-  /** Not equal operator (`!=`) */
-  Neq = 'NEQ',
-  /** Whether a value is not within a range of values (`NOT BETWEEN`) */
-  NotBetween = 'NOT_BETWEEN',
-  /** Whether a value is not within a set of values (`NOT IN`) */
-  NotIn = 'NOT_IN',
-  /** Negation of simple pattern matching (`NOT LIKE`) */
-  NotLike = 'NOT_LIKE'
-}
 
 /** Returns a listing of resources that match a given search term. */
 export type Search = {
   __typename?: 'Search';
   /** The anime results of the search */
-  anime: Array<Anime>;
-  /** The theme results of the search */
-  animethemes: Array<AnimeTheme>;
+  anime: AnimePagination;
   /** The artist results of the search */
-  artists: Array<Artist>;
+  artists: ArtistPagination;
   /** The playlist results of the search */
-  playlists: Array<Playlist>;
+  playlists: PlaylistPagination;
   /** The series results of the search */
-  series: Array<Series>;
+  series: SeriesPagination;
   /** The song results of the search */
-  songs: Array<Song>;
+  songs: SongPagination;
   /** The studio results of the search */
-  studios: Array<Studio>;
+  studios: StudioPagination;
+  /** The theme results of the search */
+  themes: ThemePagination;
   /** The video results of the search */
-  videos: Array<Video>;
+  videos: VideoPagination;
 };
+
+
+/** Returns a listing of resources that match a given search term. */
+export type SearchAnimeArgs = {
+  filter?: InputMaybe<SearchAnimeFilterInput>;
+  sort?: InputMaybe<Array<SearchAnimeSort>>;
+};
+
+
+/** Returns a listing of resources that match a given search term. */
+export type SearchArtistsArgs = {
+  filter?: InputMaybe<SearchArtistFilterInput>;
+  sort?: InputMaybe<Array<SearchArtistSort>>;
+};
+
+
+/** Returns a listing of resources that match a given search term. */
+export type SearchPlaylistsArgs = {
+  sort?: InputMaybe<Array<SearchPlaylistSort>>;
+};
+
+
+/** Returns a listing of resources that match a given search term. */
+export type SearchSeriesArgs = {
+  filter?: InputMaybe<SearchSeriesFilterInput>;
+  sort?: InputMaybe<Array<SearchSeriesSort>>;
+};
+
+
+/** Returns a listing of resources that match a given search term. */
+export type SearchStudiosArgs = {
+  filter?: InputMaybe<SearchStudioFilterInput>;
+  sort?: InputMaybe<Array<SearchStudioSort>>;
+};
+
+
+/** Returns a listing of resources that match a given search term. */
+export type SearchThemesArgs = {
+  filter?: InputMaybe<SearchThemeFilterInput>;
+  sort?: InputMaybe<Array<SearchThemeSort>>;
+};
+
+export type SearchAnimeFilterInput = {
+  format?: InputMaybe<AnimeFormat>;
+  season?: InputMaybe<AnimeSeason>;
+  titleRomajiPrefix?: InputMaybe<Scalars['String']['input']>;
+  year?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export enum SearchAnimeSort {
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  Season = 'SEASON',
+  SeasonDesc = 'SEASON_DESC',
+  TitleRomaji = 'TITLE_ROMAJI',
+  TitleRomajiDesc = 'TITLE_ROMAJI_DESC',
+  Year = 'YEAR',
+  YearDesc = 'YEAR_DESC'
+}
+
+export type SearchArtistFilterInput = {
+  nameMainPrefix?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum SearchArtistSort {
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameMain = 'NAME_MAIN',
+  NameMainDesc = 'NAME_MAIN_DESC'
+}
+
+export enum SearchPlaylistSort {
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  Name = 'NAME',
+  NameDesc = 'NAME_DESC'
+}
+
+export type SearchSeriesFilterInput = {
+  titleRomajiPrefix?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum SearchSeriesSort {
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  TitleRomaji = 'TITLE_ROMAJI',
+  TitleRomajiDesc = 'TITLE_ROMAJI_DESC'
+}
+
+export type SearchStudioFilterInput = {
+  namePrefix?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum SearchStudioSort {
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  Name = 'NAME',
+  NameDesc = 'NAME_DESC'
+}
+
+export type SearchThemeFilterInput = {
+  songTitleRomajiPrefix?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<ThemeType>;
+};
+
+export enum SearchThemeSort {
+  AnimeSeason = 'ANIME_SEASON',
+  AnimeSeasonDesc = 'ANIME_SEASON_DESC',
+  AnimeYear = 'ANIME_YEAR',
+  AnimeYearDesc = 'ANIME_YEAR_DESC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  SongTitleRomaji = 'SONG_TITLE_ROMAJI',
+  SongTitleRomajiDesc = 'SONG_TITLE_ROMAJI_DESC'
+}
 
 /**
  * Represents a collection of related anime.
@@ -4242,155 +1445,78 @@ export type Search = {
 export type Series = {
   __typename?: 'Series';
   anime: SeriesAnimeConnection;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  /** The primary title of the series */
-  name: Scalars['String']['output'];
   /** The URL for the series page on the website */
   siteUrl: Scalars['String']['output'];
   /** The URL slug & route key of the resource */
   slug: Scalars['String']['output'];
   /** The primary title of the series */
   title: SeriesTitle;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-
-/**
- * Represents a collection of related anime.
- *
- * For example, the Monogatari series is the collection of the Bakemonogatari anime and its related productions.
- */
-export type SeriesAnimeArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  format?: InputMaybe<AnimeFormat>;
-  format_in?: InputMaybe<Array<AnimeFormat>>;
-  season?: InputMaybe<AnimeSeason>;
-  season_in?: InputMaybe<Array<AnimeSeason>>;
-  sort?: InputMaybe<Array<AnimeSort>>;
-  titleRomaji_like?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<SeriesAnimeWhereWhereConditions>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-  year_greater?: InputMaybe<Scalars['Int']['input']>;
-  year_lesser?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/**
- * Represents a collection of related anime.
- *
- * For example, the Monogatari series is the collection of the Bakemonogatari anime and its related productions.
- */
-export type SeriesCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a collection of related anime.
- *
- * For example, the Monogatari series is the collection of the Bakemonogatari anime and its related productions.
- */
-export type SeriesUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of Anime edges. */
 export type SeriesAnimeConnection = {
   __typename?: 'SeriesAnimeConnection';
-  /** A list of Anime edges. */
+  /** A list of edges. */
   edges: Array<SeriesAnimeEdge>;
-  /** A list of Anime resources. Use this if you don't care about pivot fields. */
+  /** A list of nodes. */
   nodes: Array<Anime>;
-  /** Pagination information about the list of edges. */
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
+/** An edge in a connection. */
 export type SeriesAnimeEdge = {
   __typename?: 'SeriesAnimeEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Anime node. */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
   node: Anime;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
 };
 
 
+/** An edge in a connection. */
 export type SeriesAnimeEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
+/** An edge in a connection. */
 export type SeriesAnimeEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
-/** Dynamic WHERE conditions for the `where` argument of the query `anime`. */
-export type SeriesAnimeWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<SeriesAnimeWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<SeriesAnimeWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<SeriesAnimeWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+export type SeriesConnection = {
+  __typename?: 'SeriesConnection';
+  /** A list of edges. */
+  edges: Array<SeriesEdge>;
+  /** A list of nodes. */
+  nodes: Array<Series>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `anime`. */
-export type SeriesAnimeWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<SeriesAnimeWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<SeriesAnimeWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<SeriesAnimeWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+/** An edge in a connection. */
+export type SeriesEdge = {
+  __typename?: 'SeriesEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Series;
 };
 
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `anime`. */
-export type SeriesAnimeWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<SeriesAnimeWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+export type SeriesFilterInput = {
+  titleRomajiLike?: InputMaybe<Scalars['String']['input']>;
 };
 
-export enum SeriesFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  /** @deprecated Use TITLE_ROMAJI instead */
-  Name = 'NAME',
-  Slug = 'SLUG',
-  TitleRomaji = 'TITLE_ROMAJI',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of Series items. */
-export type SeriesPaginator = {
-  __typename?: 'SeriesPaginator';
-  /** A list of Series items. */
+export type SeriesPagination = {
+  __typename?: 'SeriesPagination';
+  /** The data for the current page. */
   data: Array<Series>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
 export enum SeriesSort {
@@ -4398,10 +1524,6 @@ export enum SeriesSort {
   CreatedAtDesc = 'CREATED_AT_DESC',
   Id = 'ID',
   IdDesc = 'ID_DESC',
-  /** @deprecated Use 'TITLE_ROMAJI' instead */
-  Name = 'NAME',
-  /** @deprecated Use 'TITLE_ROMAJI_DESC' instead */
-  NameDesc = 'NAME_DESC',
   Random = 'RANDOM',
   TitleRomaji = 'TITLE_ROMAJI',
   TitleRomajiDesc = 'TITLE_ROMAJI_DESC',
@@ -4411,237 +1533,55 @@ export enum SeriesSort {
 
 export type SeriesTitle = {
   __typename?: 'SeriesTitle';
-  /** The romaji title of the series */
   romaji: Scalars['String']['output'];
 };
 
-/** Information about pagination using a simple paginator. */
-export type SimplePaginatorInfo = {
-  __typename?: 'SimplePaginatorInfo';
-  /** Number of items in the current page. */
-  count: Scalars['Int']['output'];
-  /** Index of the current page. */
-  currentPage: Scalars['Int']['output'];
-  /** Index of the first item in the current page. */
-  firstItem?: Maybe<Scalars['Int']['output']>;
-  /** Are there more pages after this one? */
-  hasMorePages: Scalars['Boolean']['output'];
-  /** Index of the last item in the current page. */
-  lastItem?: Maybe<Scalars['Int']['output']>;
-  /** Number of items per page. */
-  perPage: Scalars['Int']['output'];
-};
-
 /**
- * Represents the composition that accompanies an AnimeTheme.
+ * Represents the composition that accompanies an Theme.
  *
- * For example, Staple Stable is the song for the Bakemonogatari OP1 AnimeTheme.
+ * For example, Staple Stable is the song for the Bakemonogatari OP1 Theme.
  */
 export type Song = {
   __typename?: 'Song';
-  animethemes: Array<AnimeTheme>;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  performances: Array<Performance>;
-  resources: ExternalResourceConnection;
+  /** @deprecated Use `performances` instead */
+  performances: Array<SongStaff>;
+  staff: Array<SongStaff>;
+  themes: Array<Theme>;
   /** The title of the composition */
   title: SongTitle;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-
-/**
- * Represents the composition that accompanies an AnimeTheme.
- *
- * For example, Staple Stable is the song for the Bakemonogatari OP1 AnimeTheme.
- */
-export type SongAnimethemesArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sequence?: InputMaybe<Scalars['Int']['input']>;
-  sequence_greater?: InputMaybe<Scalars['Int']['input']>;
-  sequence_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<AnimeThemeSort>>;
-  type?: InputMaybe<ThemeType>;
-  type_in?: InputMaybe<Array<ThemeType>>;
-};
-
-
-/**
- * Represents the composition that accompanies an AnimeTheme.
- *
- * For example, Staple Stable is the song for the Bakemonogatari OP1 AnimeTheme.
- */
-export type SongCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents the composition that accompanies an AnimeTheme.
- *
- * For example, Staple Stable is the song for the Bakemonogatari OP1 AnimeTheme.
- */
-export type SongPerformancesArgs = {
-  alias?: InputMaybe<Scalars['String']['input']>;
-  as?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  memberAlias?: InputMaybe<Scalars['String']['input']>;
-  memberAs?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  relevance?: InputMaybe<Scalars['Int']['input']>;
-  relevance_greater?: InputMaybe<Scalars['Int']['input']>;
-  relevance_lesser?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PerformanceSort>>;
-  where?: InputMaybe<SongPerformancesWhereWhereConditions>;
-};
-
-
-/**
- * Represents the composition that accompanies an AnimeTheme.
- *
- * For example, Staple Stable is the song for the Bakemonogatari OP1 AnimeTheme.
- */
-export type SongResourcesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  externalId?: InputMaybe<Scalars['Int']['input']>;
-  first?: Scalars['Int']['input'];
-  site?: InputMaybe<ResourceSite>;
-  sort?: InputMaybe<Array<ExternalResourceSort>>;
-  where?: InputMaybe<SongResourcesWhereWhereConditions>;
-};
-
-
-/**
- * Represents the composition that accompanies an AnimeTheme.
- *
- * For example, Staple Stable is the song for the Bakemonogatari OP1 AnimeTheme.
- */
-export type SongUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-export enum SongFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Title = 'TITLE',
-  TitleNative = 'TITLE_NATIVE',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of Song items. */
-export type SongPaginator = {
-  __typename?: 'SongPaginator';
-  /** A list of Song items. */
+export type SongPagination = {
+  __typename?: 'SongPagination';
+  /** The data for the current page. */
   data: Array<Song>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
-/** Dynamic WHERE conditions for the `where` argument of the query `performances`. */
-export type SongPerformancesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<SongPerformancesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<SongPerformancesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<SongPerformancesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PerformanceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+/** Represents the link between a song and an artist or group. */
+export type SongStaff = {
+  __typename?: 'SongStaff';
+  /** The alias the artist is using for this staff */
+  alias?: Maybe<Scalars['String']['output']>;
+  artist: Artist;
+  /** The character the artist is performing as */
+  as?: Maybe<Scalars['String']['output']>;
+  /** The primary key of the resource */
+  id: Scalars['Int']['output'];
+  member?: Maybe<Artist>;
+  /** The alias the member is using for this staff */
+  memberAlias?: Maybe<Scalars['String']['output']>;
+  /** The character the member is performing as */
+  memberAs?: Maybe<Scalars['String']['output']>;
+  /** Used to determine the relevance order of artists in staffs */
+  relevance: Scalars['Int']['output'];
+  /** The role the artist is performing */
+  role: Scalars['String']['output'];
+  song: Song;
 };
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `performances`. */
-export type SongPerformancesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<SongPerformancesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<SongPerformancesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<SongPerformancesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `performances`. */
-export type SongPerformancesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<SongPerformancesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `resources`. */
-export type SongResourcesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<SongResourcesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<SongResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<SongResourcesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ExternalResourceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `resources`. */
-export type SongResourcesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<SongResourcesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<SongResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<SongResourcesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `resources`. */
-export type SongResourcesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<SongResourcesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-export enum SongSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Random = 'RANDOM',
-  Title = 'TITLE',
-  TitleDesc = 'TITLE_DESC',
-  TitleNative = 'TITLE_NATIVE',
-  TitleNativeDesc = 'TITLE_NATIVE_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
 
 export type SongTitle = {
   __typename?: 'SongTitle';
@@ -4651,14 +1591,6 @@ export type SongTitle = {
   romaji?: Maybe<Scalars['String']['output']>;
 };
 
-/** Directions for ordering a list of records. */
-export enum SortOrder {
-  /** Sort records in ascending order. */
-  Asc = 'ASC',
-  /** Sort records in descending order. */
-  Desc = 'DESC'
-}
-
 /**
  * Represents a company that produces anime.
  *
@@ -4667,271 +1599,80 @@ export enum SortOrder {
 export type Studio = {
   __typename?: 'Studio';
   anime: StudioAnimeConnection;
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  images: ImageConnection;
+  images: ImageableConnection;
   /** The primary title of the Studio */
   name: Scalars['String']['output'];
-  resources: ExternalResourceConnection;
+  resources: ResourceableConnection;
   /** The URL for the studio page on the website */
   siteUrl: Scalars['String']['output'];
   /** The URL slug & route key of the resource */
   slug: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-
-/**
- * Represents a company that produces anime.
- *
- * For example, Shaft is the studio that produced the anime Bakemonogatari.
- */
-export type StudioAnimeArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  format?: InputMaybe<AnimeFormat>;
-  format_in?: InputMaybe<Array<AnimeFormat>>;
-  season?: InputMaybe<AnimeSeason>;
-  season_in?: InputMaybe<Array<AnimeSeason>>;
-  sort?: InputMaybe<Array<AnimeSort>>;
-  title_like?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<StudioAnimeWhereWhereConditions>;
-  year?: InputMaybe<Scalars['Int']['input']>;
-  year_greater?: InputMaybe<Scalars['Int']['input']>;
-  year_lesser?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-/**
- * Represents a company that produces anime.
- *
- * For example, Shaft is the studio that produced the anime Bakemonogatari.
- */
-export type StudioCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a company that produces anime.
- *
- * For example, Shaft is the studio that produced the anime Bakemonogatari.
- */
-export type StudioImagesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  facet?: InputMaybe<ImageFacet>;
-  first?: Scalars['Int']['input'];
-  path_like?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<ImageSort>>;
-  where?: InputMaybe<StudioImagesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a company that produces anime.
- *
- * For example, Shaft is the studio that produced the anime Bakemonogatari.
- */
-export type StudioResourcesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  externalId?: InputMaybe<Scalars['Int']['input']>;
-  first?: Scalars['Int']['input'];
-  site?: InputMaybe<ResourceSite>;
-  sort?: InputMaybe<Array<ExternalResourceSort>>;
-  where?: InputMaybe<StudioResourcesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a company that produces anime.
- *
- * For example, Shaft is the studio that produced the anime Bakemonogatari.
- */
-export type StudioUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of Anime edges. */
 export type StudioAnimeConnection = {
   __typename?: 'StudioAnimeConnection';
-  /** A list of Anime edges. */
+  /** A list of edges. */
   edges: Array<StudioAnimeEdge>;
-  /** A list of Anime resources. Use this if you don't care about pivot fields. */
+  /** A list of nodes. */
   nodes: Array<Anime>;
-  /** Pagination information about the list of edges. */
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
+/** An edge in a connection. */
 export type StudioAnimeEdge = {
   __typename?: 'StudioAnimeEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The Anime node. */
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
   node: Anime;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
 };
 
 
+/** An edge in a connection. */
 export type StudioAnimeEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
+/** An edge in a connection. */
 export type StudioAnimeEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
-/** Dynamic WHERE conditions for the `where` argument of the query `anime`. */
-export type StudioAnimeWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<StudioAnimeWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<StudioAnimeWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<StudioAnimeWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+export type StudioConnection = {
+  __typename?: 'StudioConnection';
+  /** A list of edges. */
+  edges: Array<StudioEdge>;
+  /** A list of nodes. */
+  nodes: Array<Studio>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `anime`. */
-export type StudioAnimeWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<StudioAnimeWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<StudioAnimeWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<StudioAnimeWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+/** An edge in a connection. */
+export type StudioEdge = {
+  __typename?: 'StudioEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Studio;
 };
 
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `anime`. */
-export type StudioAnimeWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<StudioAnimeWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+export type StudioFilterInput = {
+  nameLike?: InputMaybe<Scalars['String']['input']>;
 };
 
-export enum StudioFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Name = 'NAME',
-  Slug = 'SLUG',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** Dynamic WHERE conditions for the `where` argument of the query `images`. */
-export type StudioImagesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<StudioImagesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<StudioImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<StudioImagesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ImageFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `images`. */
-export type StudioImagesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<StudioImagesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<StudioImagesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<StudioImagesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `images`. */
-export type StudioImagesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<StudioImagesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-/** A paginated list of Studio items. */
-export type StudioPaginator = {
-  __typename?: 'StudioPaginator';
-  /** A list of Studio items. */
+export type StudioPagination = {
+  __typename?: 'StudioPagination';
+  /** The data for the current page. */
   data: Array<Studio>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `resources`. */
-export type StudioResourcesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<StudioResourcesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<StudioResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<StudioResourcesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<ExternalResourceFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `resources`. */
-export type StudioResourcesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<StudioResourcesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<StudioResourcesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<StudioResourcesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `resources`. */
-export type StudioResourcesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<StudioResourcesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
 export enum StudioSort {
@@ -4953,127 +1694,118 @@ export enum StudioSort {
  */
 export type Synonym = {
   __typename?: 'Synonym';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
   /** The language of the synonym. It may be used for short synonyms */
   language?: Maybe<Scalars['String']['output']>;
   /** The alternate title or common abbreviations */
   text: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
-
 
 /**
- * Represents an alternate title or common abbreviation for an entity.
+ * Represents an OP or ED sequence for an anime.
  *
- * For example, the anime Bakemonogatari has the synonym "Monstory".
+ * For example, the anime Bakemonogatari has five OP themes and one ED theme.
  */
-export type SynonymCreatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type Theme = {
+  __typename?: 'Theme';
+  anime: Anime;
+  entries: Array<Entry>;
+  group?: Maybe<ThemeGroup>;
+  /** The primary key of the resource */
+  id: Scalars['Int']['output'];
+  /** The numeric ordering of the theme */
+  sequence?: Maybe<Scalars['Int']['output']>;
+  /** The slug that represents the theme. */
+  slug: Scalars['String']['output'];
+  song?: Maybe<Song>;
+  staff: Array<ThemeStaff>;
+  /** The type of the sequence */
+  type: ThemeType;
+  /** The localized string value of the type field */
+  typeLocalized: Scalars['String']['output'];
 };
 
-
-/**
- * Represents an alternate title or common abbreviation for an entity.
- *
- * For example, the anime Bakemonogatari has the synonym "Monstory".
- */
-export type SynonymUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type ThemeConnection = {
+  __typename?: 'ThemeConnection';
+  /** A list of edges. */
+  edges: Array<ThemeEdge>;
+  /** A list of nodes. */
+  nodes: Array<Theme>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-export enum SynonymFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Language = 'LANGUAGE',
-  Text = 'TEXT',
-  UpdatedAt = 'UPDATED_AT'
-}
+/** An edge in a connection. */
+export type ThemeEdge = {
+  __typename?: 'ThemeEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Theme;
+};
 
-export enum SynonymSort {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Id = 'ID',
-  IdDesc = 'ID_DESC',
-  Random = 'RANDOM',
-  Text = 'TEXT',
-  TextDesc = 'TEXT_DESC',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
-}
+export type ThemeFilterInput = {
+  idIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+  type?: InputMaybe<ThemeType>;
+};
 
 /**
  * Represents the group that accompanies a Theme.
- *
- * For example, English Version is the group for english dubbed Theme.
+ * For example, English Version is the group for english dubbed Theme.For example, Staple Stable is the song for the Bakemonogatari OP1 Theme.
  */
 export type ThemeGroup = {
   __typename?: 'ThemeGroup';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
   /** The name of the group */
   name: Scalars['String']['output'];
   /** The slug of the group */
   slug: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
-
-/**
- * Represents the group that accompanies a Theme.
- *
- * For example, English Version is the group for english dubbed Theme.
- */
-export type ThemeGroupCreatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type ThemePagination = {
+  __typename?: 'ThemePagination';
+  /** The data for the current page. */
+  data: Array<Theme>;
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
-
-/**
- * Represents the group that accompanies a Theme.
- *
- * For example, English Version is the group for english dubbed Theme.
- */
-export type ThemeGroupUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
+export type ThemeShuffleInput = {
+  format?: InputMaybe<AnimeFormat>;
+  spoiler?: InputMaybe<Scalars['Boolean']['input']>;
+  type?: InputMaybe<Array<ThemeType>>;
+  yearGte?: InputMaybe<Scalars['Int']['input']>;
+  yearLte?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export enum ThemeGroupFilterableColumns {
-  CreatedAt = 'CREATED_AT',
-  Id = 'ID',
-  Name = 'NAME',
-  Slug = 'SLUG',
-  UpdatedAt = 'UPDATED_AT'
-}
-
-/** A paginated list of ThemeGroup items. */
-export type ThemeGroupPaginator = {
-  __typename?: 'ThemeGroupPaginator';
-  /** A list of ThemeGroup items. */
-  data: Array<ThemeGroup>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
-};
-
-export enum ThemeGroupSort {
+export enum ThemeSort {
   CreatedAt = 'CREATED_AT',
   CreatedAtDesc = 'CREATED_AT_DESC',
   Id = 'ID',
   IdDesc = 'ID_DESC',
-  Name = 'NAME',
-  NameDesc = 'NAME_DESC',
   Random = 'RANDOM',
-  Slug = 'SLUG',
-  SlugDesc = 'SLUG_DESC',
+  Sequence = 'SEQUENCE',
+  SequenceDesc = 'SEQUENCE_DESC',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
+
+/** Represents the link between a theme and an artist. */
+export type ThemeStaff = {
+  __typename?: 'ThemeStaff';
+  /** The alias the artist is using for this staff */
+  alias?: Maybe<Scalars['String']['output']>;
+  artist: Artist;
+  /** The primary key of the resource */
+  id: Scalars['Int']['output'];
+  /** Used to determine the relevance order of artists in staffs */
+  relevance: Scalars['Int']['output'];
+  /** The role the artist is performing */
+  role: Scalars['String']['output'];
+  theme: Theme;
+};
 
 export enum ThemeType {
   /** Ending */
@@ -5084,110 +1816,60 @@ export enum ThemeType {
   Op = 'OP'
 }
 
-/** Specify if you want to include or exclude trashed results from a query. */
-export enum Trashed {
-  /** Only return trashed results. */
-  Only = 'ONLY',
-  /** Return both trashed and non-trashed results. */
-  With = 'WITH',
-  /** Only return non-trashed results. */
-  Without = 'WITHOUT'
-}
+export type UpdatePasswordInput = {
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+  newPasswordConfirmation: Scalars['String']['input'];
+};
 
-/** Represents an AnimeThemes account. */
+export type UpdatePlaylistInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  visibility?: InputMaybe<PlaylistVisibility>;
+};
+
+export type UpdatePlaylistTrackInput = {
+  entryId?: InputMaybe<Scalars['Int']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  videoId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateUserInformationInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Represents an Themes account. */
 export type User = {
   __typename?: 'User';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
   /** The username of the resource */
   name: Scalars['String']['output'];
   playlists: Array<Playlist>;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
 
-/** Represents an AnimeThemes account. */
-export type UserCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/** Represents an AnimeThemes account. */
+/** Represents an Themes account. */
 export type UserPlaylistsArgs = {
-  first?: Scalars['Int']['input'];
-  name_like?: InputMaybe<Scalars['String']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
   sort?: InputMaybe<Array<PlaylistSort>>;
-  visibility?: InputMaybe<PlaylistVisibility>;
-  where?: InputMaybe<UserPlaylistsWhereWhereConditions>;
 };
 
-
-/** Represents an AnimeThemes account. */
-export type UserUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** Dynamic WHERE conditions for the `where` argument of the query `playlists`. */
-export type UserPlaylistsWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<UserPlaylistsWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<UserPlaylistsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<UserPlaylistsWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<PlaylistFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `playlists`. */
-export type UserPlaylistsWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<UserPlaylistsWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<UserPlaylistsWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<UserPlaylistsWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `playlists`. */
-export type UserPlaylistsWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<UserPlaylistsWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+export type UserFavoritesFilterInput = {
+  entryId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /**
- * Represents a WebM of an anime theme.
+ * Represents a WebM of a theme.
  *
  * For example, the video Bakemonogatari-OP1.webm represents the WebM of the Bakemonogatari OP1 theme.
  */
 export type Video = {
   __typename?: 'Video';
-  animethemeentries: VideoAnimeThemeEntryConnection;
-  audio: Audio;
+  audio?: Maybe<Audio>;
   /** The basename of the file in storage */
   basename: Scalars['String']['output'];
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
+  entries: VideoEntryConnection;
   /** The filename of the file in storage */
   filename: Scalars['String']['output'];
   /** The primary key of the resource */
@@ -5206,12 +1888,10 @@ export type Video = {
   overlapLocalized: Scalars['String']['output'];
   /** The path of the file in storage */
   path: Scalars['String']['output'];
-  /** The priority value for the video */
-  priority: Scalars['Int']['output'];
   /** The frame height of the file in storage */
   resolution?: Maybe<Scalars['Int']['output']>;
   /** The size of the file in storage in Bytes */
-  size: Scalars['Int']['output'];
+  size?: Maybe<Scalars['Int']['output']>;
   /** Where did this video come from? */
   source?: Maybe<VideoSource>;
   /** The formatted string value of the source field */
@@ -5219,159 +1899,68 @@ export type Video = {
   /** Does the video include subtitles of dialogue? */
   subbed: Scalars['Boolean']['output'];
   /** The attributes used to distinguish the file within the context of a theme */
-  tags?: Maybe<Scalars['String']['output']>;
+  tags: Scalars['String']['output'];
   tracks: Array<PlaylistTrack>;
   /** Is the video an uncensored version of a censored sequence? */
   uncen: Scalars['Boolean']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
   videoscript?: Maybe<VideoScript>;
 };
 
-
-/**
- * Represents a WebM of an anime theme.
- *
- * For example, the video Bakemonogatari-OP1.webm represents the WebM of the Bakemonogatari OP1 theme.
- */
-export type VideoAnimethemeentriesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  episodes?: InputMaybe<Scalars['String']['input']>;
-  episodes_like?: InputMaybe<Scalars['String']['input']>;
-  first?: Scalars['Int']['input'];
-  nsfw?: InputMaybe<Scalars['Boolean']['input']>;
-  sort?: InputMaybe<Array<AnimeThemeEntrySort>>;
-  spoiler?: InputMaybe<Scalars['Boolean']['input']>;
-  version?: InputMaybe<Scalars['Int']['input']>;
-  version_greater?: InputMaybe<Scalars['Int']['input']>;
-  version_lesser?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<VideoAnimethemeentriesWhereWhereConditions>;
-};
-
-
-/**
- * Represents a WebM of an anime theme.
- *
- * For example, the video Bakemonogatari-OP1.webm represents the WebM of the Bakemonogatari OP1 theme.
- */
-export type VideoCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents a WebM of an anime theme.
- *
- * For example, the video Bakemonogatari-OP1.webm represents the WebM of the Bakemonogatari OP1 theme.
- */
-export type VideoTracksArgs = {
-  first?: Scalars['Int']['input'];
-  page?: InputMaybe<Scalars['Int']['input']>;
-  sort?: InputMaybe<Array<PlaylistTrackSort>>;
-};
-
-
-/**
- * Represents a WebM of an anime theme.
- *
- * For example, the video Bakemonogatari-OP1.webm represents the WebM of the Bakemonogatari OP1 theme.
- */
-export type VideoUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-/** A paginated list of AnimeThemeEntry edges. */
-export type VideoAnimeThemeEntryConnection = {
-  __typename?: 'VideoAnimeThemeEntryConnection';
-  /** A list of AnimeThemeEntry edges. */
-  edges: Array<VideoAnimeThemeEntryEdge>;
-  /** A list of AnimeThemeEntry resources. Use this if you don't care about pivot fields. */
-  nodes: Array<AnimeThemeEntry>;
-  /** Pagination information about the list of edges. */
+export type VideoConnection = {
+  __typename?: 'VideoConnection';
+  /** A list of edges. */
+  edges: Array<VideoEdge>;
+  /** A list of nodes. */
+  nodes: Array<Video>;
+  /** Information to aid in pagination. */
   pageInfo: PageInfo;
 };
 
-export type VideoAnimeThemeEntryEdge = {
-  __typename?: 'VideoAnimeThemeEntryEdge';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
-  /** The anime theme entry node. */
-  node: AnimeThemeEntry;
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
+/** An edge in a connection. */
+export type VideoEdge = {
+  __typename?: 'VideoEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Video;
+};
+
+export type VideoEntryConnection = {
+  __typename?: 'VideoEntryConnection';
+  /** A list of edges. */
+  edges: Array<VideoEntryEdge>;
+  /** A list of nodes. */
+  nodes: Array<Entry>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type VideoEntryEdge = {
+  __typename?: 'VideoEntryEdge';
+  createdAt: Scalars['String']['output'];
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: Entry;
+  updatedAt: Scalars['String']['output'];
 };
 
 
-export type VideoAnimeThemeEntryEdgeCreatedAtArgs = {
+/** An edge in a connection. */
+export type VideoEntryEdgeCreatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
 
-export type VideoAnimeThemeEntryEdgeUpdatedAtArgs = {
+/** An edge in a connection. */
+export type VideoEntryEdgeUpdatedAtArgs = {
   format?: Scalars['String']['input'];
 };
 
-/** Dynamic WHERE conditions for the `where` argument of the query `animethemeentries`. */
-export type VideoAnimethemeentriesWhereWhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<VideoAnimethemeentriesWhereWhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<VideoAnimethemeentriesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<VideoAnimethemeentriesWhereWhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<AnimeThemeEntryFilterableColumns>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+export type VideoFilterInput = {
+  nc?: InputMaybe<Scalars['Boolean']['input']>;
 };
-
-/** Dynamic WHERE HAS conditions for the `where` argument of the query `animethemeentries`. */
-export type VideoAnimethemeentriesWhereWhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<VideoAnimethemeentriesWhereWhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<VideoAnimethemeentriesWhereWhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<VideoAnimethemeentriesWhereWhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE conditions for the `where` argument of the query `animethemeentries`. */
-export type VideoAnimethemeentriesWhereWhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<VideoAnimethemeentriesWhereWhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
-};
-
-export enum VideoFilterableColumns {
-  Basename = 'BASENAME',
-  CreatedAt = 'CREATED_AT',
-  Filename = 'FILENAME',
-  Id = 'ID',
-  Lyrics = 'LYRICS',
-  Mimetype = 'MIMETYPE',
-  Nc = 'NC',
-  Overlap = 'OVERLAP',
-  Path = 'PATH',
-  Resolution = 'RESOLUTION',
-  Size = 'SIZE',
-  Source = 'SOURCE',
-  Subbed = 'SUBBED',
-  Uncen = 'UNCEN',
-  UpdatedAt = 'UPDATED_AT'
-}
 
 export enum VideoOverlap {
   None = 'NONE',
@@ -5379,13 +1968,12 @@ export enum VideoOverlap {
   Trans = 'TRANS'
 }
 
-/** A paginated list of Video items. */
-export type VideoPaginator = {
-  __typename?: 'VideoPaginator';
-  /** A list of Video items. */
+export type VideoPagination = {
+  __typename?: 'VideoPagination';
+  /** The data for the current page. */
   data: Array<Video>;
-  /** Pagination information about the list of items. */
-  paginatorInfo: PaginatorInfo;
+  /** Information to aid in pagination. */
+  pageInfo: OffsetPageInfo;
 };
 
 /**
@@ -5395,53 +1983,20 @@ export type VideoPaginator = {
  */
 export type VideoScript = {
   __typename?: 'VideoScript';
-  /** The date that the resource was created */
-  createdAt?: Maybe<Scalars['String']['output']>;
   /** The primary key of the resource */
   id: Scalars['Int']['output'];
-  /** The URL to download the file from storage */
+  /** The URL to stream the file from storage */
   link: Scalars['String']['output'];
   /** The path of the file in storage */
   path: Scalars['String']['output'];
-  /** The date that the resource was updated */
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  video: Video;
-};
-
-
-/**
- * Represents an encoding script used to produce a video.
- *
- * For example, the 2009/Summer/Bakemonogatari-OP1.txt video script represents the encoding script of the Bakemonogatari-OP1.webm video.
- */
-export type VideoScriptCreatedAtArgs = {
-  format?: Scalars['String']['input'];
-};
-
-
-/**
- * Represents an encoding script used to produce a video.
- *
- * For example, the 2009/Summer/Bakemonogatari-OP1.txt video script represents the encoding script of the Bakemonogatari-OP1.webm video.
- */
-export type VideoScriptUpdatedAtArgs = {
-  format?: Scalars['String']['input'];
 };
 
 export enum VideoSort {
-  Basename = 'BASENAME',
-  BasenameDesc = 'BASENAME_DESC',
   CreatedAt = 'CREATED_AT',
   CreatedAtDesc = 'CREATED_AT_DESC',
-  Filename = 'FILENAME',
-  FilenameDesc = 'FILENAME_DESC',
   Id = 'ID',
   IdDesc = 'ID_DESC',
   Random = 'RANDOM',
-  Resolution = 'RESOLUTION',
-  ResolutionDesc = 'RESOLUTION_DESC',
-  Size = 'SIZE',
-  SizeDesc = 'SIZE_DESC',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
@@ -5455,55 +2010,29 @@ export enum VideoSource {
   Web = 'WEB'
 }
 
-/** Represents the watch history of the authenticated user. */
 export type WatchHistory = {
   __typename?: 'WatchHistory';
-  animethemeentry: AnimeThemeEntry;
+  entry: Entry;
   video: Video;
 };
 
-/** Dynamic WHERE conditions for queries. */
-export type WhereConditions = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<WhereConditions>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<WhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<WhereConditions>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
+export type WatchHistoryConnection = {
+  __typename?: 'WatchHistoryConnection';
+  /** A list of edges. */
+  edges: Array<WatchHistoryEdge>;
+  /** A list of nodes. */
+  nodes: Array<WatchHistory>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
 };
 
-/** Dynamic WHERE conditions for HAS conditions. */
-export type WhereConditionsHasCondition = {
-  /** A set of conditions that requires all conditions to match. */
-  AND?: InputMaybe<Array<WhereConditionsHasCondition>>;
-  /** Check whether a relation exists. Extra conditions or a minimum amount can be applied. */
-  HAS?: InputMaybe<WhereConditionsRelation>;
-  /** A set of conditions that requires at least one condition to match. */
-  OR?: InputMaybe<Array<WhereConditionsHasCondition>>;
-  /** The column that is used for the condition. */
-  column?: InputMaybe<Scalars['String']['input']>;
-  /** The operator that is used for the condition. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The value that is used for the condition. */
-  value?: InputMaybe<Scalars['Mixed']['input']>;
-};
-
-/** Dynamic HAS conditions for WHERE condition queries. */
-export type WhereConditionsRelation = {
-  /** The amount to test. */
-  amount?: InputMaybe<Scalars['Int']['input']>;
-  /** Additional condition logic. */
-  condition?: InputMaybe<WhereConditionsHasCondition>;
-  /** The comparison operator to test against the amount. */
-  operator?: InputMaybe<SqlOperator>;
-  /** The relation that is checked. */
-  relation: Scalars['String']['input'];
+/** An edge in a connection. */
+export type WatchHistoryEdge = {
+  __typename?: 'WatchHistoryEdge';
+  /** A cursor for use in pagination */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge */
+  node: WatchHistory;
 };
 
 export type VideoNotificationQueryVariables = Exact<{
@@ -5511,35 +2040,35 @@ export type VideoNotificationQueryVariables = Exact<{
 }>;
 
 
-export type VideoNotificationQuery = { __typename?: 'Query', video?: { __typename?: 'Video', tags?: string | null, overlap: VideoOverlap, overlapLocalized: string, resolution?: number | null, sourceLocalized?: string | null, animethemeentries: { __typename?: 'VideoAnimeThemeEntryConnection', nodes: Array<{ __typename?: 'AnimeThemeEntry', episodes?: string | null, notes?: string | null, nsfw: boolean, spoiler: boolean, version: number, animetheme: { __typename?: 'AnimeTheme', typeLocalized: string, sequence?: number | null, anime: { __typename?: 'Anime', siteUrl: string, title: { __typename?: 'AnimeTitle', romaji: string }, images: { __typename?: 'ImageConnection', nodes: Array<{ __typename?: 'Image', link: string }> } }, song?: { __typename?: 'Song', title: { __typename?: 'SongTitle', romaji?: string | null }, performances: Array<{ __typename?: 'Performance', alias?: string | null, as?: string | null, artist: { __typename?: 'Artist', id: number, siteUrl: string, name: { __typename?: 'ArtistName', main: string } }, member?: { __typename?: 'Artist', id: number } | null }> } | null, group?: { __typename?: 'ThemeGroup', slug: string } | null } }> } } | null };
+export type VideoNotificationQuery = { __typename?: 'Query', video?: { __typename?: 'Video', tags: string, overlap: VideoOverlap, overlapLocalized: string, resolution?: number | null, sourceLocalized?: string | null, entries: { __typename?: 'VideoEntryConnection', nodes: Array<{ __typename?: 'Entry', episodes?: string | null, notes?: string | null, nsfw: boolean, spoiler: boolean, version: number, theme: { __typename?: 'Theme', typeLocalized: string, sequence?: number | null, anime: { __typename?: 'Anime', siteUrl: string, title: { __typename?: 'AnimeTitle', romaji: string }, images: { __typename?: 'ImageableConnection', nodes: Array<{ __typename?: 'Image', link: string }> } }, song?: { __typename?: 'Song', title: { __typename?: 'SongTitle', romaji?: string | null }, staff: Array<{ __typename?: 'SongStaff', alias?: string | null, as?: string | null, role: string, artist: { __typename?: 'Artist', id: number, siteUrl: string, name: { __typename?: 'ArtistName', main: string } }, member?: { __typename?: 'Artist', id: number } | null }> } | null, group?: { __typename?: 'ThemeGroup', slug: string } | null } }> } } | null };
 
-export type VideoEmbedFragment = { __typename?: 'Video', overlap: VideoOverlap, overlapLocalized: string, resolution?: number | null, sourceLocalized?: string | null, tags?: string | null, animethemeentries: { __typename?: 'VideoAnimeThemeEntryConnection', nodes: Array<{ __typename?: 'AnimeThemeEntry', episodes?: string | null, notes?: string | null, nsfw: boolean, spoiler: boolean, version: number, animetheme: { __typename?: 'AnimeTheme', typeLocalized: string, sequence?: number | null, anime: { __typename?: 'Anime', siteUrl: string, title: { __typename?: 'AnimeTitle', romaji: string }, images: { __typename?: 'ImageConnection', nodes: Array<{ __typename?: 'Image', link: string }> } }, song?: { __typename?: 'Song', title: { __typename?: 'SongTitle', romaji?: string | null }, performances: Array<{ __typename?: 'Performance', alias?: string | null, as?: string | null, artist: { __typename?: 'Artist', id: number, siteUrl: string, name: { __typename?: 'ArtistName', main: string } }, member?: { __typename?: 'Artist', id: number } | null }> } | null, group?: { __typename?: 'ThemeGroup', slug: string } | null } }> } };
+export type VideoEmbedFragment = { __typename?: 'Video', overlap: VideoOverlap, overlapLocalized: string, resolution?: number | null, sourceLocalized?: string | null, tags: string, entries: { __typename?: 'VideoEntryConnection', nodes: Array<{ __typename?: 'Entry', episodes?: string | null, notes?: string | null, nsfw: boolean, spoiler: boolean, version: number, theme: { __typename?: 'Theme', typeLocalized: string, sequence?: number | null, anime: { __typename?: 'Anime', siteUrl: string, title: { __typename?: 'AnimeTitle', romaji: string }, images: { __typename?: 'ImageableConnection', nodes: Array<{ __typename?: 'Image', link: string }> } }, song?: { __typename?: 'Song', title: { __typename?: 'SongTitle', romaji?: string | null }, staff: Array<{ __typename?: 'SongStaff', alias?: string | null, as?: string | null, role: string, artist: { __typename?: 'Artist', id: number, siteUrl: string, name: { __typename?: 'ArtistName', main: string } }, member?: { __typename?: 'Artist', id: number } | null }> } | null, group?: { __typename?: 'ThemeGroup', slug: string } | null } }> } };
 
 export type CurrentFeaturedThemeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentFeaturedThemeQuery = { __typename?: 'Query', currentFeaturedTheme?: { __typename?: 'FeaturedTheme', animethemeentry?: { __typename?: 'AnimeThemeEntry', version: number, animetheme: { __typename?: 'AnimeTheme', typeLocalized: string, sequence?: number | null, anime: { __typename?: 'Anime', title: { __typename?: 'AnimeTitle', romaji: string } }, group?: { __typename?: 'ThemeGroup', slug: string } | null } } | null, video?: { __typename?: 'Video', tags?: string | null } | null } | null };
+export type CurrentFeaturedThemeQuery = { __typename?: 'Query', currentFeaturedTheme?: { __typename?: 'CurrentFeaturedTheme', entry: { __typename?: 'Entry', version: number, theme: { __typename?: 'Theme', typeLocalized: string, sequence?: number | null, anime: { __typename?: 'Anime', title: { __typename?: 'AnimeTitle', romaji: string } }, group?: { __typename?: 'ThemeGroup', slug: string } | null } }, video: { __typename?: 'Video', tags: string } } | null };
 
 export type SearchAnimeQueryVariables = Exact<{
   search: Scalars['String']['input'];
 }>;
 
 
-export type SearchAnimeQuery = { __typename?: 'Query', animePagination: { __typename?: 'AnimePaginator', paginatorInfo: { __typename?: 'PaginatorInfo', count: number }, data: Array<{ __typename?: 'Anime', formatLocalized?: string | null, siteUrl: string, seasonLocalized?: string | null, synopsis?: string | null, year?: number | null, title: { __typename?: 'AnimeTitle', romaji: string }, images: { __typename?: 'ImageConnection', nodes: Array<{ __typename?: 'Image', link: string }> } }> } };
+export type SearchAnimeQuery = { __typename?: 'Query', search: { __typename?: 'Search', anime: { __typename?: 'AnimePagination', pageInfo: { __typename?: 'OffsetPageInfo', first: number }, data: Array<{ __typename?: 'Anime', formatLocalized?: string | null, siteUrl: string, seasonLocalized?: string | null, synopsis?: string | null, year?: number | null, title: { __typename?: 'AnimeTitle', romaji: string }, images: { __typename?: 'ImageableConnection', nodes: Array<{ __typename?: 'Image', facet: ImageFacet, link: string }> } }> } } };
 
-export type ArtistDescriptionFragmentPerformanceFragment = { __typename?: 'Performance', alias?: string | null, as?: string | null, artist: { __typename?: 'Artist', id: number, siteUrl: string, name: { __typename?: 'ArtistName', main: string } }, member?: { __typename?: 'Artist', id: number } | null };
+export type ArtistDescriptionFragmentSongStaffFragment = { __typename?: 'SongStaff', alias?: string | null, as?: string | null, role: string, artist: { __typename?: 'Artist', id: number, siteUrl: string, name: { __typename?: 'ArtistName', main: string } }, member?: { __typename?: 'Artist', id: number } | null };
 
-export type CreateVideoSlugThemeFragment = { __typename?: 'AnimeTheme', typeLocalized: string, sequence?: number | null, group?: { __typename?: 'ThemeGroup', slug: string } | null };
+export type CreateVideoSlugThemeFragment = { __typename?: 'Theme', typeLocalized: string, sequence?: number | null, group?: { __typename?: 'ThemeGroup', slug: string } | null };
 
-export type CreateVideoSlugEntryFragment = { __typename?: 'AnimeThemeEntry', version: number };
+export type CreateVideoSlugEntryFragment = { __typename?: 'Entry', version: number };
 
-export type CreateVideoSlugVideoFragment = { __typename?: 'Video', tags?: string | null };
+export type CreateVideoSlugVideoFragment = { __typename?: 'Video', tags: string };
 
 export const CreateVideoSlugVideoFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]} as unknown as DocumentNode<CreateVideoSlugVideoFragment, unknown>;
-export const CreateVideoSlugEntryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeThemeEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]} as unknown as DocumentNode<CreateVideoSlugEntryFragment, unknown>;
-export const CreateVideoSlugThemeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]} as unknown as DocumentNode<CreateVideoSlugThemeFragment, unknown>;
-export const ArtistDescriptionFragmentPerformanceFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ArtistDescriptionFragmentPerformance"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Performance"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alias"}},{"kind":"Field","name":{"kind":"Name","value":"as"}},{"kind":"Field","name":{"kind":"Name","value":"artist"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<ArtistDescriptionFragmentPerformanceFragment, unknown>;
-export const VideoEmbedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"VideoEmbed"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}},{"kind":"Field","name":{"kind":"Name","value":"overlap"}},{"kind":"Field","name":{"kind":"Name","value":"overlapLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"resolution"}},{"kind":"Field","name":{"kind":"Name","value":"sourceLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"animethemeentries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugEntry"}},{"kind":"Field","name":{"kind":"Name","value":"episodes"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}},{"kind":"Field","name":{"kind":"Name","value":"spoiler"}},{"kind":"Field","name":{"kind":"Name","value":"animetheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugTheme"}},{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"link"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"song"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"performances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ArtistDescriptionFragmentPerformance"}}]}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeThemeEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ArtistDescriptionFragmentPerformance"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Performance"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alias"}},{"kind":"Field","name":{"kind":"Name","value":"as"}},{"kind":"Field","name":{"kind":"Name","value":"artist"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<VideoEmbedFragment, unknown>;
-export const VideoNotificationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"VideoNotification"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"video"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"VideoEmbed"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeThemeEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ArtistDescriptionFragmentPerformance"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Performance"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alias"}},{"kind":"Field","name":{"kind":"Name","value":"as"}},{"kind":"Field","name":{"kind":"Name","value":"artist"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"VideoEmbed"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}},{"kind":"Field","name":{"kind":"Name","value":"overlap"}},{"kind":"Field","name":{"kind":"Name","value":"overlapLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"resolution"}},{"kind":"Field","name":{"kind":"Name","value":"sourceLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"animethemeentries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugEntry"}},{"kind":"Field","name":{"kind":"Name","value":"episodes"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}},{"kind":"Field","name":{"kind":"Name","value":"spoiler"}},{"kind":"Field","name":{"kind":"Name","value":"animetheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugTheme"}},{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"link"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"song"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"performances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ArtistDescriptionFragmentPerformance"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<VideoNotificationQuery, VideoNotificationQueryVariables>;
-export const CurrentFeaturedThemeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentFeaturedTheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentFeaturedTheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"animethemeentry"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugEntry"}},{"kind":"Field","name":{"kind":"Name","value":"animetheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugTheme"}},{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"video"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeThemeEntry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AnimeTheme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]} as unknown as DocumentNode<CurrentFeaturedThemeQuery, CurrentFeaturedThemeQueryVariables>;
-export const SearchAnimeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SearchAnime"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"search"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"animePagination"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"search"},"value":{"kind":"Variable","name":{"kind":"Name","value":"search"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"5"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paginatorInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formatLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}},{"kind":"Field","name":{"kind":"Name","value":"seasonLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"synopsis"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"facet"},"value":{"kind":"EnumValue","value":"SMALL_COVER"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"link"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<SearchAnimeQuery, SearchAnimeQueryVariables>;
+export const CreateVideoSlugEntryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Entry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]} as unknown as DocumentNode<CreateVideoSlugEntryFragment, unknown>;
+export const CreateVideoSlugThemeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Theme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]} as unknown as DocumentNode<CreateVideoSlugThemeFragment, unknown>;
+export const ArtistDescriptionFragmentSongStaffFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ArtistDescriptionFragmentSongStaff"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SongStaff"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alias"}},{"kind":"Field","name":{"kind":"Name","value":"as"}},{"kind":"Field","name":{"kind":"Name","value":"artist"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<ArtistDescriptionFragmentSongStaffFragment, unknown>;
+export const VideoEmbedFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"VideoEmbed"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}},{"kind":"Field","name":{"kind":"Name","value":"overlap"}},{"kind":"Field","name":{"kind":"Name","value":"overlapLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"resolution"}},{"kind":"Field","name":{"kind":"Name","value":"sourceLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"entries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugEntry"}},{"kind":"Field","name":{"kind":"Name","value":"episodes"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}},{"kind":"Field","name":{"kind":"Name","value":"spoiler"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugTheme"}},{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"link"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"song"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"staff"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ArtistDescriptionFragmentSongStaff"}}]}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Entry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Theme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ArtistDescriptionFragmentSongStaff"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SongStaff"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alias"}},{"kind":"Field","name":{"kind":"Name","value":"as"}},{"kind":"Field","name":{"kind":"Name","value":"artist"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<VideoEmbedFragment, unknown>;
+export const VideoNotificationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"VideoNotification"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"video"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"VideoEmbed"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Entry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Theme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ArtistDescriptionFragmentSongStaff"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SongStaff"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alias"}},{"kind":"Field","name":{"kind":"Name","value":"as"}},{"kind":"Field","name":{"kind":"Name","value":"artist"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"VideoEmbed"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}},{"kind":"Field","name":{"kind":"Name","value":"overlap"}},{"kind":"Field","name":{"kind":"Name","value":"overlapLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"resolution"}},{"kind":"Field","name":{"kind":"Name","value":"sourceLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"tags"}},{"kind":"Field","name":{"kind":"Name","value":"entries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugEntry"}},{"kind":"Field","name":{"kind":"Name","value":"episodes"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}},{"kind":"Field","name":{"kind":"Name","value":"spoiler"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugTheme"}},{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"link"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"song"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"staff"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ArtistDescriptionFragmentSongStaff"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<VideoNotificationQuery, VideoNotificationQueryVariables>;
+export const CurrentFeaturedThemeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CurrentFeaturedTheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentFeaturedTheme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"entry"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugEntry"}},{"kind":"Field","name":{"kind":"Name","value":"theme"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugTheme"}},{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"video"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"createVideoSlugVideo"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugEntry"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Entry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugTheme"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Theme"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"typeLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"group"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"createVideoSlugVideo"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Video"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"tags"}}]}}]} as unknown as DocumentNode<CurrentFeaturedThemeQuery, CurrentFeaturedThemeQueryVariables>;
+export const SearchAnimeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SearchAnime"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"search"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"search"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"search"},"value":{"kind":"Variable","name":{"kind":"Name","value":"search"}}},{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"5"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"anime"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first"}}]}},{"kind":"Field","name":{"kind":"Name","value":"data"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formatLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"title"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"romaji"}}]}},{"kind":"Field","name":{"kind":"Name","value":"siteUrl"}},{"kind":"Field","name":{"kind":"Name","value":"seasonLocalized"}},{"kind":"Field","name":{"kind":"Name","value":"synopsis"}},{"kind":"Field","name":{"kind":"Name","value":"year"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"facet"}},{"kind":"Field","name":{"kind":"Name","value":"link"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<SearchAnimeQuery, SearchAnimeQueryVariables>;

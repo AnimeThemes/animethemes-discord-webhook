@@ -9,9 +9,9 @@ import { graphql } from 'graphql/generated';
 const CURRENT_FEATURED_THEME_QUERY = graphql(`
     query CurrentFeaturedTheme {
         currentFeaturedTheme {
-            animethemeentry {
+            entry {
                 ...createVideoSlugEntry
-                animetheme {
+                theme {
                     ...createVideoSlugTheme
                     anime {
                         title {
@@ -41,10 +41,9 @@ export default new Event({
                     return;
                 }
 
-                const entry = currentFeaturedTheme.animethemeentry;
+                const entry = currentFeaturedTheme.entry;
 
-                // @ts-expect-error Different context for featuredtheme.
-                const featuredThemeName = `${entry.animetheme.anime.title.romaji} ${createVideoSlug(entry.animetheme, entry, currentFeaturedTheme.video)}`;
+                const featuredThemeName = `${entry.theme.anime.title.romaji} ${createVideoSlug(entry.theme, entry, currentFeaturedTheme.video)}`;
                 client.user?.setActivity({
                     name: featuredThemeName,
                     type: ActivityType.Listening,

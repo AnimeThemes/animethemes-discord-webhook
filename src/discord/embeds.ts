@@ -14,14 +14,14 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
         resolution
         sourceLocalized
         tags
-        animethemeentries {
+        entries {
             nodes {
                 ...createVideoSlugEntry
                 episodes
                 notes
                 nsfw
                 spoiler
-                animetheme {
+                theme {
                     ...createVideoSlugTheme
                     anime {
                         title {
@@ -38,8 +38,8 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
                         title {
                             romaji
                         }
-                        performances {
-                            ...ArtistDescriptionFragmentPerformance
+                        staff {
+                            ...ArtistDescriptionFragmentSongStaff
                         }
                     }
                 }
@@ -63,23 +63,37 @@ export const createVideoNotificationEmbed = (
 
     const description: string[] = [];
 
-    const entry = video.animethemeentries.nodes[0];
-    const theme = entry.animetheme;
+    const entry = video.entries.nodes[0];
+    const theme = entry.theme;
     const anime = theme.anime;
 
     const themeSlug = createThemeSlug(theme, entry);
     const videoSlug = createVideoSlug(theme, entry, video);
     const videoSlugLink = `[${themeSlug}](${anime.siteUrl}/${videoSlug})`;
 
-    const performances =
-        theme.song?.performances && theme.song.performances.length !== 0
-            ? ' by ' + artistsDescription(theme.song.performances)
+    const songStaff = theme.song?.staff;
+
+    const performers =
+        songStaff && songStaff.length !== 0
+            ? ' by ' + artistsDescription(songStaff, 'Performance')
             : '';
 
     description.push(type === 'added' ? `${videoSlugLink} has been added.\n` : `${videoSlugLink} has been updated.\n`);
     description.push(entry.spoiler ? '⚠️ Spoiler' : '');
     description.push(entry.nsfw ? '🔞 NSFW' : '');
-    description.push(`**Song:** ${theme.song?.title.romaji ?? '*T.B.A.*'}${performances}\n`);
+    description.push(`**Song:** ${theme.song?.title.romaji ?? '*T.B.A.*'}${performers}\n`);
+
+    if (songStaff) {
+        const staffByRole = Object.groupBy(songStaff, staff => staff.role);
+
+        const staffDescriptions = Object.entries(staffByRole)
+            .filter(([role]) => role !== 'Performance')
+            .map(([role, staff]) => `${role}: ${artistsDescription(staff ?? [], role)}`);
+
+        if (staffDescriptions.length !== 0) {
+            description.push(`${staffDescriptions.join('\n')}\n`);
+        }
+    }
 
     if (entry.episodes) {
         description.push(`**Episodes:** ${entry.episodes}`);

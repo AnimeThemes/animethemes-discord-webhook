@@ -7,22 +7,25 @@ import { graphql } from 'graphql/generated';
 
 export const SEARCH_ANIME_QUERY = graphql(`
     query SearchAnime($search: String!) {
-        animePagination(search: $search, first: 5) {
-            paginatorInfo {
-                count
-            }
-            data {
-                formatLocalized
-                title {
-                    romaji
+        search(search: $search, first: 5) {
+            anime {
+                pageInfo {
+                    first
                 }
-                siteUrl
-                seasonLocalized
-                synopsis
-                year
-                images(facet: SMALL_COVER) {
-                    nodes {
-                        link
+                data {
+                    formatLocalized
+                    title {
+                        romaji
+                    }
+                    siteUrl
+                    seasonLocalized
+                    synopsis
+                    year
+                    images {
+                        nodes {
+                            facet
+                            link
+                        }
                     }
                 }
             }
@@ -31,7 +34,7 @@ export const SEARCH_ANIME_QUERY = graphql(`
 `);
 
 const makeEmbed = (
-    anime: ResultOf<typeof SEARCH_ANIME_QUERY>['animePagination']['data'][number],
+    anime: ResultOf<typeof SEARCH_ANIME_QUERY>['search']['anime']['data'][number],
     index: number,
     count: number,
 ) => {
@@ -43,7 +46,7 @@ const makeEmbed = (
                 .replace(/\n{3,}/g, '\n\n')
                 .trim()}`,
         )
-        .setThumbnail(anime.images.nodes[0].link)
+        .setThumbnail(anime.images.nodes.find(n => n.facet === 'SMALL_COVER')!.link)
         .setColor('Blue')
         .setURL(anime.siteUrl)
         .setFooter({
@@ -58,15 +61,13 @@ const animeSlashCommand = new SlashCommand({
         .addStringOption((option) => option.setName('search').setDescription('Term to search').setRequired(true)),
 
     async execute(interaction) {
-        const search = interaction.options.getString('search', true);
+        const term = interaction.options.getString('search', true);
 
-        const { animePagination } = await gql(SEARCH_ANIME_QUERY, { search: search });
-
-        const pageInfo = animePagination.paginatorInfo;
+        const { search: { anime: { pageInfo, data } } } = await gql(SEARCH_ANIME_QUERY, { search: term });
 
         let index = 0;
 
-        const animeEmbed = makeEmbed(animePagination.data[index], index, pageInfo.count);
+        const animeEmbed = makeEmbed(data[index], index, pageInfo.first);
 
         const reply = await interaction.reply({
             embeds: [animeEmbed],
@@ -92,27 +93,27 @@ const animeSlashCommand = new SlashCommand({
             }
 
             if (i.customId === 'veryNext') {
-                index = pageInfo.count - 1;
+                index = pageInfo.first - 1;
             }
 
             if (i.customId === 'previous') {
                 index--;
 
                 if (index < 0) {
-                    index = pageInfo.count - 1;
+                    index = pageInfo.first - 1;
                 }
             }
 
             if (i.customId === 'next') {
                 index++;
 
-                if (index >= pageInfo.count) {
+                if (index >= pageInfo.first) {
                     index = 0;
                 }
             }
 
             await i.update({
-                embeds: [makeEmbed(animePagination.data[index], index, pageInfo.count)],
+                embeds: [makeEmbed(data[index], index, pageInfo.first)],
                 components: [previousNextRow],
             });
         });

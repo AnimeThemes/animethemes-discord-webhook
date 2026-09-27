@@ -3,8 +3,8 @@ import { joinWithLastSeparator } from 'utils/functions';
 import { graphql } from 'graphql/generated';
 import { ResultOf } from '@graphql-typed-document-node/core';
 
-export const ARTIST_DESCRIPTION_PERFORMANCE = graphql(`
-    fragment ArtistDescriptionFragmentPerformance on Performance {
+export const ARTIST_DESCRIPTION_SONG_STAFF = graphql(`
+    fragment ArtistDescriptionFragmentSongStaff on SongStaff {
         alias
         as
         artist {
@@ -17,18 +17,19 @@ export const ARTIST_DESCRIPTION_PERFORMANCE = graphql(`
         member {
             id
         }
+        role
     }
 `);
 
 /**
  * Format Artists to a string.
  */
-export const artistsDescription = (performances: ResultOf<typeof ARTIST_DESCRIPTION_PERFORMANCE>[]): string => {
+export const artistsDescription = (staffs: ResultOf<typeof ARTIST_DESCRIPTION_SONG_STAFF>[], role: string): string => {
     const artistsArray: string[] = [];
 
     const groups: number[] = [];
-    for (const performance of performances) {
-        const { alias, as, artist, member } = performance;
+    for (const staff of staffs.filter(staff => staff.role === role)) {
+        const { alias, as, artist, member } = staff;
 
         if (member !== null) {
             if (groups.includes(artist.id)) {
@@ -49,7 +50,7 @@ export const artistsDescription = (performances: ResultOf<typeof ARTIST_DESCRIPT
 };
 
 export const CREATE_VIDEO_SLUG_THEME = graphql(`
-    fragment createVideoSlugTheme on AnimeTheme {
+    fragment createVideoSlugTheme on Theme {
         typeLocalized
         sequence
         group {
@@ -59,7 +60,7 @@ export const CREATE_VIDEO_SLUG_THEME = graphql(`
 `);
 
 export const CREATE_VIDEO_SLUG_ENTRY = graphql(`
-    fragment createVideoSlugEntry on AnimeThemeEntry {
+    fragment createVideoSlugEntry on Entry {
         version
     }
 `);

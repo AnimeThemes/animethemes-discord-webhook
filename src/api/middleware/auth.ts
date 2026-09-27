@@ -6,7 +6,9 @@ const auth = (req: FastifyRequest, res: FastifyReply, done: HookHandlerDoneFunct
     const apiKey = req.headers['x-api-key'];
 
     if (config.NODE_ENV === 'production' && apiKey !== config.API_KEY) {
-        return res.code(401).send({ error: 'Unauthorized' });
+        res.code(401).send({ error: 'Unauthorized' });
+
+        return;
     }
 
     done();
