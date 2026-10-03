@@ -40,6 +40,7 @@ export const VIDEO_NOTIFICATION_EMBED = graphql(`
                         }
                         staff {
                             ...ArtistDescriptionFragmentSongStaff
+                            relevance
                         }
                     }
                 }
@@ -71,7 +72,7 @@ export const createVideoNotificationEmbed = (
     const videoSlug = createVideoSlug(theme, entry, video);
     const videoSlugLink = `[${themeSlug}](${anime.siteUrl}/${videoSlug})`;
 
-    const songStaff = theme.song?.staff;
+    const songStaff = theme.song?.staff.sort((a, b) => a.relevance - b.relevance);
 
     const performers =
         songStaff && songStaff.length !== 0
